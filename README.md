@@ -26,7 +26,7 @@ This app allows users to share and discover new recipes.
 * Users can add nutritional information to their recipes
 * Users can search for other users
 
-## Database Schema
+## Database Schema (ERD)
 In progress.
 
 ## Wireframes
