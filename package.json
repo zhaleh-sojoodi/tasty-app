@@ -1,0 +1,33 @@
+{
+  "name": "recipe-app",
+  "version": "1.0.0",
+  "description": "> Members: Nicole, Zhaleh, Anthony, Vibha",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicole-ling/recipe-app.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nicole-ling/recipe-app/issues"
+  },
+  "homepage": "https://github.com/nicole-ling/recipe-app#readme",
+  "dependencies": {
+    "bcrypt": "^4.0.1",
+    "config": "^3.3.1",
+    "express": "^4.17.1",
+    "express-validator": "^6.4.0",
+    "gravatar": "^1.8.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.7",
+    "request": "^2.88.2"
+  },
+  "devDependencies": {
+    "concurrently": "^5.1.0",
+    "nodemon": "^2.0.2"
+  }
+}
