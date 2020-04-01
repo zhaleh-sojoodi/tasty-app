@@ -3,6 +3,10 @@
 
 This app allows users to share and discover new recipes.
 
+## Roles
+**Frontend**: Nicole, Anthony
+**Backend**: Zhaleh, Vibha
+
 ## Must Have Features
 * Users can register and login with an account
 * Users can create new recipes
