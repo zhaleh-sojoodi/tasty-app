@@ -11,6 +11,7 @@ This app allows users to share and discover new recipes.
 * Users can register and login with an account
 * Users can create new recipes
 * Users can 'like' a recipe
+* Users can give a rating to a recipe (stars)
 * Users can print out recipes
 * Users can delete their own recipes
 * Users can search for recipes with keywords
