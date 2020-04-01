@@ -20,6 +20,7 @@ This app allows users to share and discover new recipes.
 ## Future Enhancements
 * Users can 'follow' other users to see their recipes on their dashboard
 * Additional 'Categories' page to browse recipes
+* Add date that recipe was created
 
 ## Nice To Have Features
 * Users can see related recipes on a recipe page
