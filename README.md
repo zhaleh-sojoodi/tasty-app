@@ -4,7 +4,7 @@
 This app allows users to share and discover new recipes.
 
 ## Roles
-**Frontend**: Nicole, Anthony
+**Frontend**: Nicole, Anthony<br>
 **Backend**: Zhaleh, Vibha
 
 ## Must Have Features
