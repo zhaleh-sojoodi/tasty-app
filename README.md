@@ -24,6 +24,7 @@ This app allows users to share and discover new recipes.
 ## Nice To Have Features
 * Users can see related recipes on a recipe page
 * Users can add nutritional information to their recipes
+* Users can search for other users
 
 ## Database Schema
 In progress.
