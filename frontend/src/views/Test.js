@@ -2,14 +2,15 @@ import React from 'react';
 
 import NavigationBar from '../components/NavigationBar';
 
-function Dashboard() {
+function Test() {
   return (
     <div>
       <NavigationBar />
       <main className="main">
+        TEST PAGE
       </main>
     </div >
   );
 }
 
-export default Dashboard;
+export default Test;
