@@ -1,5 +1,10 @@
-const mongoose = require('mongoose');
-const UserSchema = new mongoose.Schema({
+
+  
+const mongoose = require('mongoose')
+const uniqueValidator = require('mongoose-unique-validator')
+const Schema = mongoose.Schema;
+
+const userSchema = new Schema({
     name: {
         type: String,
         required: true
@@ -11,24 +16,21 @@ const UserSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true
+        required: true, 
+        minlength : 6
     },
     avatar: {
         type: String
     },
-    
-    date: {
-        type: Date,
-        default: Date.now
+    recipes : {
+        type : mongoose.Types.ObjectId, 
+        require : true, ref : 'Recipe'
     },
-    userRecipes: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Recipe'
-      }],
-      favRecipes: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Recipe'
-        //one more component thats a form add favorite, sent user and recipe id
-      }]
+    favoriteRecipes : {
+        type: mongoose.Types.ObjectId,
+        ref : 'Recipe'
+    }
+    
 });
-module.exports =  mongoose.model('User', userSchema);
+
+

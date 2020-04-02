@@ -10,10 +10,11 @@ app.use(bodyParser.json())
 //Init Middleware
 app.use(express.json({ extended : false}))
 
-app.use('/api/user', userRoute)
-app.use('/api/recipe', recipeRoute)
+ app.use('/api/user', userRoute)
+ app.use('/api/recipe', recipeRoute)
 
-
+// app.use(app.router);
+// routes.initialize(app);
 
 
 

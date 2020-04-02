@@ -1,39 +1,48 @@
-// const mongoose = require('mongoose');
-// const recipeSchema = new mongoose.Schema({
-//     title: {
-//        type: String,
-//        required: true
-//     },
-//     userId: {
-//         type: mongoose.Schema.ObjectId,
-//         ref: 'User'
-//     },
-//     image: {
-//         type: String,
-//         required: true
-//     },
-//     servings: {
-//         required: true,
-//         type: Number
-//     },
-//     description: {
-//         required: true,
-//         type: String,
-//         minlength: 1,
-//         maxlength: 200
-//     },
-//     directions: {
-//         required: true,
-//         type: [String]
-//     },
-//     ingredients: {
-//         required: true,
-//         type: [String]
-//     },
-//     date: {
-//         type: Date,
-//         default: Date.now
-//     }
-    
-// })
-// module.exports = Recipe = mongoose.model('Recipe', RecipeSchema);
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
+
+const recipeSchema = new Schema({
+    title : {
+        type : String , 
+        required : true
+    }, 
+    description : {type : String }, 
+    imageURL : {type : String }, 
+    difficulty : {
+        type : Number , 
+        required : true
+    }, 
+    cookingTime : {
+        type : Number , 
+        required : true
+    },
+    preparationTime : {
+        type : Number , 
+        required : true
+    }, 
+    ratings : {
+        rating : [{type : Number}], 
+        averageRating : {type :rating}
+    }, 
+    likedNumber : {type : Number},
+    category : {
+        type :String, 
+        required: true
+    }, 
+    ingredients : [{
+        type : String, 
+        required : true
+    }], 
+    servings : {type : Number},
+    addedDate : {
+        type : Date, 
+        default: Date.now, 
+        required: true
+    },
+    creator : {
+        type : mongoose.Types.ObjectId, 
+        require : true, ref : 'User'
+    }
+})
+
+module.exports = mangoose.Schema('Recipe', recipeSchema)

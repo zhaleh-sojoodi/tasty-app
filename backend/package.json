@@ -4,8 +4,9 @@
   "description": "Members: Nicole, Zhaleh, Anthony, Vibha\"",
   "main": "appnode app.js.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+
+    "start": "node server",
+    "server": "nodemon server"
   },
   "repository": {
     "type": "git",
