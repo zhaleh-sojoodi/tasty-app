@@ -20,14 +20,14 @@ const userSchema = new Schema({
     avatar: {
         type: String
     },
-    recipes : {
+    recipes : [{
         type : mongoose.Types.ObjectId, 
         require : true, ref : 'Recipe'
-    },
-    favoriteRecipes : {
+    }],
+    favorites : [{
         type: mongoose.Types.ObjectId,
         ref : 'Recipe'
-    }
+    }]
     
 });
 

@@ -22,7 +22,7 @@ const recipeSchema = new Schema({
     }, 
     ratings : {
         rating : [{type : Number}], 
-        averageRating : {type :rating}
+        averageRating : {type : Number}
     }, 
     likedNumber : {type : Number},
     category : {
@@ -45,4 +45,4 @@ const recipeSchema = new Schema({
     }
 })
 
-module.exports = mangoose.Schema('Recipe', recipeSchema)
+module.exports = mongoose.model('Recipe', recipeSchema);

@@ -1,0 +1,7 @@
+{
+    "env" : {
+        "DB_USER" :  "jaleh36",
+        "DB_PASSWORD" : "Jalehs",
+        "DB_NAME" : "recipeApp"
+    }
+}
