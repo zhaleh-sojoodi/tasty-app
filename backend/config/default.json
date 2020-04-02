@@ -1,3 +1,4 @@
 {
-    "mongoURI" :  "mongodb+srv://vibharana:7Rs07Kmi3fJK0iRP@cluster0-vkvjv.mongodb.net/test?retryWrites=true&w=majority"
+    "mongoURI" :  "mongodb+srv://vibharana:7Rs07Kmi3fJK0iRP@cluster0-vkvjv.mongodb.net/test?retryWrites=true&w=majority",
+    "jwtSecret": "mysecrettoken"
  }

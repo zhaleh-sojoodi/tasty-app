@@ -1,9 +1,31 @@
-const express = require('express')
-const connectDB = require('./config/db')
-const app = express()
+// const express = require('express')
+// const connectDB = require('./config/db')
+// const app = express()
+//  const bodyParser = require('body-parser')
+//  const mongoose = require('mongoose')
+//  const httpError = require('./models/http-error')
+ //const userRoute = require('./routes/user-route')
+ //const recipeRoute = require('./routes/recipe-route')
 
-//connect to database
-connectDB()
+
+
+const express = require('express');
+const connectDB = require('./config/db');
+
+
+const app = express();
+
+// Connect Database
+connectDB();
 app.get('/', (req, res) => res.send('API Running'))
-const PORT = process.env.PORT || 5000
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
+
+// Init Middleware
+app.use(express.json({extended : false}));
+
+// Define Routes
+app.use('/api/user', require('./routes/user-route'))
+ // app.use('/api/recipe', require('./routes/recipe-route'))
+  
+
+  const PORT = process.env.PORT || 5000
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
