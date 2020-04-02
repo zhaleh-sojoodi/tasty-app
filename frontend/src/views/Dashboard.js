@@ -1,6 +1,7 @@
 import React from 'react';
 
 import NavigationBar from '../components/NavigationBar';
+import Footer from '../components/Footer';
 
 function Dashboard() {
   return (
@@ -8,6 +9,7 @@ function Dashboard() {
       <NavigationBar />
       <main className="main">
       </main>
+      <Footer />
     </div >
   );
 }
