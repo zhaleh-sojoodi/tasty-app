@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import {
@@ -15,9 +15,19 @@ import {
   Row,
   UncontrolledCollapse,
   UncontrolledDropdown
-} from "reactstrap";
+} from 'reactstrap';
+
+import {
+  FormGroup,
+  InputGroup,
+  InputGroupAddon,
+  InputGroupText,
+  Input
+} from 'reactstrap';
 
 function NavigationBar() {
+  const [searchValue, setSearchValue] = useState("");
+
   return (
     <header className="header-global">
       <Navbar className="navbar-dark bg-danger mt-4" expand="lg">
@@ -39,36 +49,17 @@ function NavigationBar() {
                 </Col>
               </Row>
             </div>
-            {/* Comment section only needed if we need more headers */}
-           
-            {/* <Nav className="navbar-nav-hover align-items-lg-center" navbar>
-              <NavItem>
-                <NavLink className="nav-link-icon" href="/">
-                  <i className="ni ni-ui-04 d-lg-none mr-1" />
-                  <span className="nav-link-inner--text">Components</span>
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink className="nav-link-icon" href="/">
-                  <i className="ni ni-ui-04 d-lg-none mr-1" />
-                  <span className="nav-link-inner--text">Components</span>
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink className="nav-link-icon" href="/" >
-                  <i className="ni ni-ui-04 d-lg-none mr-1" />
-                  <span className="nav-link-inner--text">Components</span>
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink className="nav-link-icon" href="/test" >
-                  <i className="ni ni-ui-04 d-lg-none mr-1" />
-                  <span className="nav-link-inner--text">Test</span>
-                </NavLink>
-              </NavItem>
-            </Nav> */}
             <Nav className="navbar-nav-hover align-items-lg-center ml-lg-auto" navbar>
-              
+              <FormGroup className="mb-0">
+                <InputGroup className="input-group-alternative">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>
+                      <i className="ni ni-zoom-split-in" />
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input placeholder="Search" type="text" value={searchValue} onChange={(value) => setSearchValue(value.target.value)} />
+                </InputGroup>
+              </FormGroup>
               <UncontrolledDropdown nav>
                 <DropdownToggle nav caret>
                   <i className="ni ni-collection d-lg-none mr-1" />
@@ -95,7 +86,7 @@ function NavigationBar() {
           </UncontrolledCollapse>
         </Container>
       </Navbar>
-    
+
     </header>
   );
 }

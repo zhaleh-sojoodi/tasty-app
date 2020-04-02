@@ -23,7 +23,7 @@ function Footer() {
           <Col md="6">
             <Nav className="nav-footer justify-content-end">
               <NavItem>
-                <NavLink href="https://github.com/nicole-ling/recipe-app/">GitHub</NavLink>
+                <NavLink href="https://github.com/nicole-ling/recipe-app/" target="_blank">GitHub</NavLink>
               </NavItem>
               <NavItem>
                 <NavLink href="/">About Us</NavLink>
