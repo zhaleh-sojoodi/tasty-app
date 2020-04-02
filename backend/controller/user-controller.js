@@ -1,20 +1,31 @@
 const bcrypt = require('bcryptjs')
-const {validationResult} = require('express-validator')
+const { validationResult } = require('express-validator')
 const httpError = require('../models/http-error')
 const User = require('../models/user')
 
-const addUser = async (req, res, next) => {
+const getUsers = async (req, res, next) => {
+    let users;
+    try {
+        users = await User.find({} , -password)
+    } catch(err) {
+        return next(new httpError('Fetching users failed' , 500) )
+    }
+    res.json({ 
+        users : users.map(usr => usr.toObject({ getters : true}))
+    })
+}
+
+const signup = async (req, res, next) => {
     const error = validationResult(req)
     if(!error.isEmpty()) {
-        return next(httpError('Invalid input passed.', 422))
+        return next(new httpError('Invalid input passed.', 422))
     }
     const { name, email, password } = req.body;
     let existingUser;
     try {
         existingUser = await User.findOne({ email : email })
-    }
-    catch (err) {
-        return naxt(new httpError('Sign up failed', 500))
+    } catch (err) {
+        return naxt(new httpError('Signing up failed', 500))
     }
     if (existingUser) {
         return next(new httpError('User exists already, please login instead', 422))
@@ -40,9 +51,13 @@ const addUser = async (req, res, next) => {
         console.log(err)
         return next(new httpError('Adding a user failed'), 500)
     }
-    res.json(newUser)
+    res.json({ user : newUser.toObject({ "getters" : true }) })
 }
 
-exports.addUser = addUser
+
+
+exports.getUsers = getUsers
+exports.signup = signup
+
 
  

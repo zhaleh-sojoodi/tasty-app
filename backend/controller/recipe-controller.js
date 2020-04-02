@@ -7,7 +7,7 @@ const User = require('../models/user')
 const addRecipe = async (req, res, next) => {
     const error = validationResult(req)
     if (!error.isEmpty()) {
-        return next(httpError('Invalid input passed.', 422))
+        return next(new httpError('Invalid input passed.', 422))
     }
     const {title, description, imageURL, difficulty, cookingTime, preparationTime, category, ingredients, directions, servings, creator } = req.body
     const newRecipe = new Recipe ({
