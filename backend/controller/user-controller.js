@@ -9,20 +9,35 @@ const addUser = async (req, res, next) => {
         return next(httpError('Invalid input passed.', 422))
     }
     const { name, email, password } = req.body;
+    let existingUser;
+    try {
+        existingUser = await User.findOne({ email : email })
+    }
+    catch (err) {
+        return naxt(new httpError('Sign up failed', 500))
+    }
+    if (existingUser) {
+        return next(new httpError('User exists already, please login instead', 422))
+    }
+    //Encrypt password 
+    let hashedPassword;
+    try {
+        hashedPassword = await bcrypt.hash(password, 12)
+    } catch (err) {
+        return next(new httpError('Could not create user', 500))
+    }
     const newUser = new User({
         name,
         email,
-        password, 
+        password : hashedPassword, 
         recipes : [],
         favorites : []
     });
-    //Encrypt password
-    // const salt = await bcrypt.genSalt(10);
-    // user.password = await bcrypt.hash(password, salt)
-
+    
     try {
         await newUser.save()
     } catch (err) {
+        console.log(err)
         return next(new httpError('Adding a user failed'), 500)
     }
     res.json(newUser)

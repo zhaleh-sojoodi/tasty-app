@@ -33,6 +33,10 @@ const recipeSchema = new Schema({
         type : String, 
         required : true
     }], 
+    directions : [{
+        type : String, 
+        required : true
+    }], 
     servings : {type : Number},
     addedDate : {
         type : Date, 

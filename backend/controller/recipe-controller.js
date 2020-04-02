@@ -9,7 +9,7 @@ const addRecipe = async (req, res, next) => {
     if (!error.isEmpty()) {
         return next(httpError('Invalid input passed.', 422))
     }
-    const {title, description, imageURL, difficulty, cookingTime, preparationTime, category, ingredients, servings, creator } = req.body
+    const {title, description, imageURL, difficulty, cookingTime, preparationTime, category, ingredients, directions, servings, creator } = req.body
     const newRecipe = new Recipe ({
         title,
         description, 
@@ -19,6 +19,7 @@ const addRecipe = async (req, res, next) => {
         preparationTime, 
         category,
         ingredients,
+        directions, 
         servings, 
         creator
     })
