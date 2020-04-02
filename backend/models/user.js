@@ -16,9 +16,19 @@ const UserSchema = new mongoose.Schema({
     avatar: {
         type: String
     },
+    
     date: {
         type: Date,
         default: Date.now
-    }
+    },
+    userRecipes: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Recipe'
+      }],
+      favRecipes: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Recipe'
+        //one more component thats a form add favorite, sent user and recipe id
+      }]
 });
-module.exports = User = mongoose.model('user', UserSchema);
+module.exports =  mongoose.model('User', userSchema);
