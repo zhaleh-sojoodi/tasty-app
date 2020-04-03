@@ -68,12 +68,12 @@ function Recipe() {
   const [averageRating, changeAverageRating] = useState();
 
   useEffect(() => {
-    if(recipe.ratings.averageRating) {
-        changeAverageRating(recipe.ratings.averageRating);
+    if (recipe.ratings.averageRating) {
+      changeAverageRating(recipe.ratings.averageRating);
     } else {
-        changeAverageRating(0);
+      changeAverageRating(0);
     }
-  }, [recipe.ratings.averageRating])
+  }, [recipe.ratings.averageRating]);
   // Note: Add [averageRating] to the dependency array of useEffect once the POST to submit the user's rating is completed.
 
   return (
@@ -256,8 +256,7 @@ function Recipe() {
                   <Ratings.Widget widgetDimension="25px" />
                 </Ratings>
                 <p className="mt-3">
-                  {recipe.ratings.averageRating} average from{" "}
-                  {recipe.ratings.ratings.length} votes
+                  {recipe.ratings.averageRating} average from {recipe.ratings.ratings.length} votes
                 </p>
               </div>
             </Col>
