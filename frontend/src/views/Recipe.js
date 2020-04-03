@@ -105,7 +105,9 @@ function Recipe() {
                   <span className="btn-inner--icon">
                     <i className="ni ni-favourite-28" />
                   </span>
-                  <span className="btn-inner--text">81</span>
+                  <span className="btn-inner--text">
+                    {recipe.likes.length}
+                  </span>
                 </Button>
               </div>
               <hr className="mt-2 mb-3" />
