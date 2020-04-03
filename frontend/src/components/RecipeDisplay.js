@@ -9,7 +9,7 @@ import {
   Row
 } from 'reactstrap';
 
-function RecipeList(props) {
+function RecipeDisplay(props) {
   return (
     <Row className="ml-1 mr-1">
       {props.props.map(function (recipe, index) {
@@ -31,4 +31,4 @@ function RecipeList(props) {
   );
 }
 
-export default RecipeList;
+export default RecipeDisplay;

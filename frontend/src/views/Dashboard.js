@@ -6,7 +6,7 @@ import {
 
 import NavigationBar from '../components/NavigationBar';
 import Footer from '../components/Footer';
-import RecipeList from '../components/RecipeList';
+import RecipeDisplay from '../components/RecipeDisplay';
 
 function Dashboard() {
   var mostPopular = [
@@ -275,11 +275,12 @@ function Dashboard() {
       <main className="main">
         <Container className="mt-4 mb-4">
           <h4 className="display-4 mb-0">Most Popular</h4>
-          <RecipeList props={mostPopular} />
+          <RecipeDisplay props={mostPopular} />
+          <hr />
         </Container>
         <Container className="mt-4 mb-4">
           <h4 className="display-4 mb-0">Highest Rated</h4>
-          <RecipeList props={highestRated} />
+          <RecipeDisplay props={highestRated} />
         </Container>
       </main>
       <Footer />

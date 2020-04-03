@@ -10,9 +10,9 @@ function MyRecipes() {
     <div>
       <NavigationBar />
       <Container>
-      <main className="main">
-        MY RECIPES
-      </main>
+        <main className="main">
+          MY RECIPES
+        </main>
       </Container>
       <Footer />
     </div >

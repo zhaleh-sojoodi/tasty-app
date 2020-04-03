@@ -10,9 +10,9 @@ function Liked() {
     <div>
       <NavigationBar />
       <Container>
-      <main className="main">
-        RECIPES I LIKE
-      </main>
+        <main className="main">
+          RECIPES I LIKE
+        </main>
       </Container>
       <Footer />
     </div >
