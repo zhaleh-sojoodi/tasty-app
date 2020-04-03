@@ -30,7 +30,7 @@ function NavigationBar() {
 
   return (
     <header className="header-global">
-      <Navbar className="navbar-dark bg-danger mt-4" expand="lg">
+      <Navbar className="navbar-dark bg-danger" expand="lg">
         <Container>
           <NavbarBrand href="/">Logo</NavbarBrand>
           <button className="navbar-toggler" id="navbar-danger">
