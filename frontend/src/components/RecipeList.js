@@ -14,7 +14,7 @@ function RecipeList(props) {
     <Row className="ml-1 mr-1">
       {props.props.map(function (recipe, index) {
         return (
-          <Col xs="12" sm="6" md="3" lg="3">
+          <Col xs="12" sm="6" lg="3">
             <Card className="p-1 m-auto">
               <CardImg top width="100%" src={recipe.image} alt="Card image cap" />
               <CardTitle>{recipe.title}</CardTitle>
