@@ -6,7 +6,7 @@ const User = require('../models/user')
 const getUsers = async (req, res, next) => {
     let users;
     try {
-        users = await User.find({} , -password)
+        users = await User.find({}, '-password')
     } catch(err) {
         return next(new httpError('Fetching users failed' , 500) )
     }
@@ -53,7 +53,6 @@ const signup = async (req, res, next) => {
     }
     res.json({ user : newUser.toObject({ "getters" : true }) })
 }
-
 
 
 exports.getUsers = getUsers

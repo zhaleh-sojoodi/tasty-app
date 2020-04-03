@@ -4,6 +4,7 @@ const recipeController = require('../controller/recipe-controller')
 
 const router = express.Router()
 
+router.get('/user/:uid' , recipeController.getRecipesByUserId )
 router.post(
     '/', 
     [

@@ -4,6 +4,24 @@ const httpError = require('../models/http-error')
 const Recipe = require('../models/recipe')
 const User = require('../models/user')
 
+const getRecipesByUserId = async (req, res, next) => {
+    const userId = req.params.uid
+    let userWithRecipes;
+    try {
+        userWithRecipes = await User.findById(userId).populate('recipes');
+    }  catch (err) {
+        return next(new httpError('Fetching recipes by userId failed', 500))
+    }
+    
+    if(!userWithRecipes || userWithRecipes.length == 0) {
+        return next(new httpError('Could not find any recipes by provided user Id'), 404)
+    }
+    return res.json({ recipes : 
+        userWithRecipes.recipes.map( recipe => recipe.toObject({ getters : true }))
+    })
+
+}
+
 const addRecipe = async (req, res, next) => {
     const error = validationResult(req)
     if (!error.isEmpty()) {
@@ -47,4 +65,5 @@ const addRecipe = async (req, res, next) => {
     res.json(newRecipe)
 }
 
+exports.getRecipesByUserId = getRecipesByUserId
 exports.addRecipe = addRecipe;
