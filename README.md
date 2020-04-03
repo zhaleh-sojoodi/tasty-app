@@ -31,7 +31,7 @@ This app allows users to share and discover new recipes.
 In progress.
 
 ## Wireframes
-In progress.
+Figma [invite link](https://www.figma.com/file/mBoGae8rnqbR7CeMHdjX3S/Recipe-App?node-id=24%3A56)
 
 ## Communication Plan
 Meet everyday for up to 30 minutes.
