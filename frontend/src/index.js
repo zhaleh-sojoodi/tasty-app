@@ -11,7 +11,6 @@ import Liked from './views/Liked';
 import Profile from './views/Profile';
 import Recipe from './views/Recipe';
 import MyRecipes from './views/MyRecipes';
-import Recipe from './views/Recipe';
 
 ReactDOM.render(
     <BrowserRouter>
