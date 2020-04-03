@@ -13,6 +13,6 @@ router.post(
         check('password').isLength({ min : 6 })
     ],
     userController.signup)
-//router.post('/login', userController.login)
+router.post('/login', userController.login)
 
 module.exports = router 
