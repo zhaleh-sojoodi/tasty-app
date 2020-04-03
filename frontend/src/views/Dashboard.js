@@ -21,7 +21,9 @@ function Dashboard() {
         { ingredient: "Ingredient2" }
       ],
       addedDate: Date.now,
-      creator: "UserId1"
+      creator: "UserId1",
+      image:
+      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
     },
     {
       title: "Recipe2",
@@ -35,7 +37,9 @@ function Dashboard() {
         { ingredient: "Ingredient3" }
       ],
       addedDate: Date.now,
-      creator: "UserId2"
+      creator: "UserId2",
+      image:
+      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
     },
     {
       title: "Recipe3",
@@ -50,7 +54,9 @@ function Dashboard() {
         { ingredient: "Ingredient4" }
       ],
       addedDate: Date.now,
-      creator: "UserId3"
+      creator: "UserId3",
+      image:
+      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
     },
     {
       title: "Recipe1",
@@ -63,7 +69,9 @@ function Dashboard() {
         { ingredient: "Ingredient2" }
       ],
       addedDate: Date.now,
-      creator: "UserId1"
+      creator: "UserId1",
+      image:
+      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
     },
     {
       title: "Recipe2",
@@ -77,7 +85,9 @@ function Dashboard() {
         { ingredient: "Ingredient3" }
       ],
       addedDate: Date.now,
-      creator: "UserId2"
+      creator: "UserId2",
+      image:
+      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
     },
     {
       title: "Recipe3",
@@ -92,7 +102,9 @@ function Dashboard() {
         { ingredient: "Ingredient4" }
       ],
       addedDate: Date.now,
-      creator: "UserId3"
+      creator: "UserId3",
+      image:
+      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
     },
     {
       title: "Recipe1",
@@ -105,7 +117,9 @@ function Dashboard() {
         { ingredient: "Ingredient2" }
       ],
       addedDate: Date.now,
-      creator: "UserId1"
+      creator: "UserId1",
+      image:
+      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
     },
     {
       title: "Recipe2",
@@ -119,7 +133,9 @@ function Dashboard() {
         { ingredient: "Ingredient3" }
       ],
       addedDate: Date.now,
-      creator: "UserId2"
+      creator: "UserId2",
+      image:
+      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
     }
   ];
 
@@ -135,7 +151,9 @@ function Dashboard() {
         { ingredient: "Ingredient2" }
       ],
       addedDate: Date.now,
-      creator: "UserId1"
+      creator: "UserId1",
+      image:
+      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
     },
     {
       title: "Recipe2",
@@ -149,7 +167,9 @@ function Dashboard() {
         { ingredient: "Ingredient3" }
       ],
       addedDate: Date.now,
-      creator: "UserId2"
+      creator: "UserId2",
+      image:
+      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
     },
     {
       title: "Recipe3",
@@ -164,7 +184,9 @@ function Dashboard() {
         { ingredient: "Ingredient4" }
       ],
       addedDate: Date.now,
-      creator: "UserId3"
+      creator: "UserId3",
+      image:
+      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
     },
     {
       title: "Recipe1",
@@ -177,7 +199,9 @@ function Dashboard() {
         { ingredient: "Ingredient2" }
       ],
       addedDate: Date.now,
-      creator: "UserId1"
+      creator: "UserId1",
+      image:
+      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
     },
     {
       title: "Recipe2",
@@ -191,7 +215,9 @@ function Dashboard() {
         { ingredient: "Ingredient3" }
       ],
       addedDate: Date.now,
-      creator: "UserId2"
+      creator: "UserId2",
+      image:
+      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
     },
     {
       title: "Recipe3",
@@ -206,7 +232,9 @@ function Dashboard() {
         { ingredient: "Ingredient4" }
       ],
       addedDate: Date.now,
-      creator: "UserId3"
+      creator: "UserId3",
+      image:
+      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
     },
     {
       title: "Recipe1",
@@ -219,7 +247,9 @@ function Dashboard() {
         { ingredient: "Ingredient2" }
       ],
       addedDate: Date.now,
-      creator: "UserId1"
+      creator: "UserId1",
+      image:
+      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
     },
     {
       title: "Recipe2",
@@ -233,7 +263,9 @@ function Dashboard() {
         { ingredient: "Ingredient3" }
       ],
       addedDate: Date.now,
-      creator: "UserId2"
+      creator: "UserId2",
+      image:
+        "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
     }
   ];
 

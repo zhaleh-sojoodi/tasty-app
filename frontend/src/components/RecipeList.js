@@ -16,7 +16,7 @@ function RecipeList(props) {
         return (
           <Col xs="12" sm="6" md="3" lg="3">
             <Card className="p-1 m-auto">
-              <CardImg top width="100%" alt="Card image cap" />
+              <CardImg top width="100%" src={recipe.image} alt="Card image cap" />
               <CardTitle>{recipe.title}</CardTitle>
               <CardSubtitle>Created By: {recipe.creator}</CardSubtitle>
               <CardSubtitle>Difficulty: {recipe.difficulty}</CardSubtitle>
