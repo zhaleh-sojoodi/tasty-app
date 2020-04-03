@@ -24,7 +24,7 @@ app.use(express.json({extended : false}));
 
 // Define Routes
 app.use('/api/user', require('./routes/user-route'))
- // app.use('/api/recipe', require('./routes/recipe-route'))
+  app.use('/api/recipe', require('./routes/recipe-route'))
   
 
   const PORT = process.env.PORT || 5000
