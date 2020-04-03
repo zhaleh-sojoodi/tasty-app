@@ -69,6 +69,7 @@ function NavigationBar() {
                   <DropdownItem to="/profile" tag={Link}>Profile</DropdownItem>
                   <DropdownItem to="/liked" tag={Link}>Liked Recipes</DropdownItem>
                   <DropdownItem to="/my-recipes" tag={Link}>My Recipes</DropdownItem>
+                  <DropdownItem to="/recipe" tag={Link}>Recipe</DropdownItem>
                   <DropdownItem onClick={() => alert("logout")}>Logout</DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
