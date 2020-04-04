@@ -1,7 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
-var dotenv = require('dotenv');
+const dotenv = require('dotenv');
 const httpError = require('./models/http-error')
 const userRoute = require('./routes/user-route')
 const recipeRoute = require('./routes/recipe-route')
@@ -21,6 +21,7 @@ app.use(function(req, res, next) {
 app.use('/api/user', userRoute)
 app.use('/api/recipe', recipeRoute)
 
+
 //handle 404 error
 app.use((req,res,next) => {
     const error = new httpError('Could not find the route' , 404);
@@ -36,6 +37,7 @@ app.use((error,req,res,next) => {
 });
 
 
+
 mongoose.connect(process.env.DB_CONN)
 .then(() => {
     app.listen(5000)
@@ -43,5 +45,4 @@ mongoose.connect(process.env.DB_CONN)
 .catch(err => {
     console.log(err)
 })
-
 
