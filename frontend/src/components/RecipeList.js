@@ -1,33 +1,41 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import {
-  Card,
   Col,
-  CardImg,
-  CardSubtitle,
+  CardText,
   CardTitle,
+  CardSubtitle,
+  ListGroup,
+  ListGroupItem,
   Row
 } from 'reactstrap';
 
 function RecipeList(props) {
   return (
-    <Row className="ml-1 mr-1">
+    <ListGroup>
       {props.props.map(function (recipe, index) {
         return (
-          <Col xs="12" sm="6" md="3" lg="3">
-            <Card className="p-1 m-auto">
-              <CardImg top width="100%" src={recipe.image} alt="Card image cap" />
-              <CardTitle>{recipe.title}</CardTitle>
-              <CardSubtitle>Created By: {recipe.creator}</CardSubtitle>
-              <CardSubtitle>Difficulty: {recipe.difficulty}</CardSubtitle>
-              <CardSubtitle>Cooking Time: {recipe.cookingTime} min</CardSubtitle>
-              <CardSubtitle>Prep Time: {recipe.preparationTime} min</CardSubtitle>
-              <CardSubtitle>Category: {recipe.category}</CardSubtitle>
-            </Card>
-          </Col>
+          // {/* State to be changed to ObjectID */ }
+          <Link to={{ pathname: "/recipe", state: recipe.creator }} key={index}>
+            <ListGroupItem className="mb-3" tag="button" action >
+              <Row>
+                <Col sm="12" md="4" lg="3">
+                  <img width="200" src={recipe.image} alt="..." className="img-thumbnail float-left"></img>
+                </Col>
+                <Col sm="12" md="8" lg="9">
+                  <CardTitle>{recipe.title}</CardTitle>
+                  <CardSubtitle>{recipe.description}</CardSubtitle>
+                  <CardText>
+                    <small className="text-muted">Created By: {recipe.creator}</small>
+                  </CardText>
+                </Col>
+              </Row>
+            </ListGroupItem>
+          </Link>
         )
       })}
-    </Row>
+    </ListGroup >
   );
 }
 

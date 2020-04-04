@@ -1,61 +1,18 @@
 import React, { useState, useEffect } from "react";
-import Ratings from "react-ratings-declarative";
+import { Link } from "react-router-dom";
 
+import Ratings from "react-ratings-declarative";
 import NavigationBar from "../components/NavigationBar";
 import Footer from "../components/Footer";
 
 import { Button, Container, Row, Col } from "reactstrap";
 
-function Recipe() {
-  let recipe = {
-    title: "Healthy Pesto Pasta",
-    description:
-      "Rich and creamy pesto pasta with tomatoes, whole wheat noodles, bright pesto, and greek yogurt. Super creamy and rich pesto sauce made with protein-packed greek yogurt! So amazing you'll ditch store-bought versions for good!",
-    difficulty: "Easy",
-    cookingTime: 10,
-    preparationTime: 20,
-    servings: 2,
-    category: "Dinner",
-    ingredients: [
-      "1 bag whole wheat pasta",
-      "1 cup sliced spinach",
-      "3 tomatoes",
-      "3/4 cup plain greek yogurt",
-      "1 jar (7 oz) genovese pesto",
-      "Extra virgin olive oil, to taste",
-    ],
-    steps: [
-      "Melt butter in a large skillet over medium high heat. Add garlic and cook, stirring frequently, until fragrant, about 1-2 minutes.",
-      "Stir in chicken broth, milk and fettuccine; season with salt and pepper, to taste.",
-      "Bring to a boil; reduce heat and simmer, stirring occasionally, until pasta is cooked through, about 18-20 minutes. Stir in Parmesan. If the mixture is too thick, add more milk as needed until desired consistency is reached.",
-      "Serve immediately, garnished with parsley, if desired.",
-    ],
-    ratings: {
-      averageRating: 4.5,
-      ratings: [
-        {
-          user: "UserId1",
-          rating: 4,
-        },
-        {
-          user: "UserId2",
-          rating: 5,
-        },
-      ],
-    },
-    likes: [
-      {
-        user: "UserId1",
-      },
-      {
-        user: "UserId2",
-      },
-    ],
-    addedDate: Date.now,
-    creator: "UserId1",
-    image:
-      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
-  };
+import { mostPopular } from "../dummydata";
+
+function Recipe(props) {
+  console.log(props.location.state);
+
+  let recipe = mostPopular[0];
 
   let creator = {
     name: "Jane Doe",
@@ -68,12 +25,12 @@ function Recipe() {
   const [averageRating, changeAverageRating] = useState();
 
   useEffect(() => {
-    if(recipe.ratings.averageRating) {
-        changeAverageRating(recipe.ratings.averageRating);
+    if (recipe.ratings.averageRating) {
+      changeAverageRating(recipe.ratings.averageRating);
     } else {
-        changeAverageRating(0);
+      changeAverageRating(0);
     }
-  }, [recipe.ratings.averageRating])
+  }, [recipe.ratings.averageRating]);
   // Note: Add [averageRating] to the dependency array of useEffect once the POST to submit the user's rating is completed.
 
   return (
@@ -94,7 +51,7 @@ function Recipe() {
               {/* Title & Like Recipe*/}
               <div className="d-flex justify-content-between">
                 {/* Title */}
-                <h2 className="mt-3">{recipe.title}</h2>
+                <h3 className="mt-3 display-4">{recipe.title}</h3>
 
                 {/* Like Button */}
                 <Button
@@ -105,7 +62,7 @@ function Recipe() {
                   <span className="btn-inner--icon">
                     <i className="ni ni-favourite-28" />
                   </span>
-                  <span className="btn-inner--text">81</span>
+                  <span className="btn-inner--text">{recipe.likes.length}</span>
                 </Button>
               </div>
               <hr className="mt-2 mb-3" />
@@ -115,7 +72,7 @@ function Recipe() {
                 {/* Preparation Time */}
                 <Col sm="6">
                   <Row>
-                    <i className="col-1 ni ni-scissors m-1" />
+                    <i className="col-1 ni ni-scissors m-1 recipe-details-icon" />
                     <Col>
                       <strong>Prep Time</strong>
                       <p>{recipe.preparationTime} minutes</p>
@@ -126,7 +83,7 @@ function Recipe() {
                 {/* Difficulty */}
                 <Col sm="6">
                   <Row>
-                    <i className="col-1 ni ni-settings-gear-65 m-1" />
+                    <i className="col-1 ni ni-settings-gear-65 m-1 recipe-details-icon" />
                     <Col>
                       <strong>Difficulty</strong>
                       <p>{recipe.difficulty}</p>
@@ -137,7 +94,7 @@ function Recipe() {
                 {/* Cooking Time */}
                 <Col sm="6">
                   <Row>
-                    <i className="col-1 ni ni-time-alarm m-1" />
+                    <i className="col-1 ni ni-time-alarm m-1 recipe-details-icon" />
                     <Col>
                       <strong>Cooking Time</strong>
                       <p>{recipe.cookingTime} minutes</p>
@@ -148,7 +105,7 @@ function Recipe() {
                 {/* Servings */}
                 <Col sm="6">
                   <Row>
-                    <i className="col-1 ni ni-single-02 m-1" />
+                    <i className="col-1 ni ni-single-02 m-1 recipe-details-icon" />
                     <Col>
                       <strong>Servings</strong>
                       <p>{recipe.servings} people</p>
@@ -159,7 +116,7 @@ function Recipe() {
                 {/* Total Time */}
                 <Col sm="6">
                   <Row>
-                    <i className="col-1 ni ni-single-02 m-1" />
+                    <i className="col-1 ni ni-single-02 m-1 recipe-details-icon" />
                     <Col>
                       <strong>Total Time</strong>
                       <p>
@@ -172,7 +129,7 @@ function Recipe() {
                 {/* Category */}
                 <Col sm="6">
                   <Row>
-                    <i className="col-1 ni ni-folder-17 m-1" />
+                    <i className="col-1 ni ni-folder-17 m-1 recipe-details-icon" />
                     <Col>
                       <strong>Category</strong>
                       <p>{recipe.category}</p>
@@ -209,41 +166,33 @@ function Recipe() {
               {/* Author Details */}
               <div className="p-3 mb-4 shadow">
                 {/* Creator Name */}
-                <h2 className="text-center">{creator.name}</h2>
+                <Link to="/profile">
+                  <h3 className="mt-3 display-4 text-center">{creator.name}</h3>
+                </Link>
 
                 {/* Creator Profile Picture */}
-                <img
-                  style={{
-                    borderRadius: "50%",
-                    width: "150px",
-                    height: "150px",
-                    objectFit: "cover",
-                    objectPosition: "35% 100%",
-                  }}
-                  className="img-fluid mx-auto d-block mb-3"
-                  src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"
-                  alt={creator.name}
-                />
+                <Link to="/profile">
+                  <img
+                    style={{
+                      borderRadius: "50%",
+                      width: "150px",
+                      height: "150px",
+                      objectFit: "cover",
+                      objectPosition: "35% 100%",
+                    }}
+                    className="img-fluid mx-auto d-block mb-3"
+                    src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"
+                    alt={creator.name}
+                  />
+                </Link>
 
                 {/* Creator Bio */}
                 <p className="text-center">{creator.bio}</p>
-
-                {/* View Creator Profile */}
-                <Button
-                  className="btn-icon btn-3 mx-auto d-block"
-                  color="danger"
-                  type="button"
-                >
-                  <span className="btn-inner--icon">
-                    <i className="ni ni-single-02" />
-                  </span>
-                  <span className="btn-inner--text">View Profile</span>
-                </Button>
               </div>
 
               {/* Ratings */}
               <div className="p-3 shadow d-flex flex-column justify-content-center align-items-center">
-                <h2>Rate this recipe</h2>
+                <h3 className="mt-3 display-4 text-center">Rate this recipe</h3>
                 <Ratings
                   rating={averageRating}
                   widgetRatedColors="#f5365c"
@@ -259,6 +208,26 @@ function Recipe() {
                   {recipe.ratings.averageRating} average from{" "}
                   {recipe.ratings.ratings.length} votes
                 </p>
+              </div>
+
+              {/* Edit Recipe (Only when the recipe belongs to the current user) */}
+              <div className="mt-5 mb-3 d-flex flex-column justify-content-center align-items-center">
+                <Link to="/edit-recipe" className="text-muted">
+                  Edit recipe
+                </Link>
+              </div>
+
+              {/* Delete Recipe (Only when the recipe belongs to the current user) */}
+              <div className="d-flex flex-column justify-content-center align-items-center">
+                <Link
+                  to="/"
+                  className="text-danger"
+                  onClick={() =>
+                    alert(`Are you sure you want to delete ${recipe.title}?`)
+                  }
+                >
+                  Delete recipe
+                </Link>
               </div>
             </Col>
           </Row>
