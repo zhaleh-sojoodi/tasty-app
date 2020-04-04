@@ -5,7 +5,7 @@ const Recipe = require('../models/recipe')
 const User = require('../models/user')
 
 const getRecipesByUserId = async (req, res, next) => {
-    const userId = req.params.uid
+    const userId = req.params.userId
     let userWithRecipes;
     try {
         userWithRecipes = await User.findById(userId).populate('recipes');

@@ -6,8 +6,10 @@ const checkAuth = require('../middleware/check-auth')
 const router = express.Router()
 
 router.get('/:recipeId', recipeController.getRecipeByRecipeId)
-router.get('/user/:uid' , recipeController.getRecipesByUserId )
-//router.use(checkAuth)
+router.get('/user/:userId' , recipeController.getRecipesByUserId )
+
+router.use(checkAuth)
+
 router.post(
     '/', 
     [
