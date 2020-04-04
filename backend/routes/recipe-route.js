@@ -7,6 +7,7 @@ const router = express.Router()
 
 router.get('/:recipeId', recipeController.getRecipeByRecipeId)
 router.get('/user/:userId' , recipeController.getRecipesByUserId )
+router.put('/:userId/:recipeId', recipeController.like)
 
 router.use(checkAuth)
 
@@ -19,7 +20,6 @@ router.post(
         check("directions").not().isEmpty(),
     ], 
     recipeController.addRecipe )
-router.put('/:userId/:recipeId', recipeController.like)
 router.patch(
     '/:recipeId',
     [

@@ -1,7 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
-var dotenv = require('dotenv');
+const dotenv = require('dotenv');
 const httpError = require('./models/http-error')
 const userRoute = require('./routes/user-route')
 const recipeRoute = require('./routes/recipe-route')
@@ -35,7 +35,7 @@ app.use((error,req,res,next) => {
     res.json({message:error.message || 'An unknown message occured'})
 });
 
-
+mongoose.set('useCreateIndex', true)
 mongoose.connect(process.env.DB_CONN)
 .then(() => {
     app.listen(5000)
