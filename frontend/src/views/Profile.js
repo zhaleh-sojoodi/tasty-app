@@ -104,7 +104,6 @@ function Profile() {
                 {/* User Liked Recipes */}
                 <h3>Liked Recipes</h3>
                 <RecipeDisplay props={recipes} />
-                <hr />
               </div>
             </Card>
           </Container>
