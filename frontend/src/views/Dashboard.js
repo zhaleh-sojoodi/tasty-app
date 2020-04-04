@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 
 import { Container, Button } from "reactstrap";
 
@@ -20,6 +21,8 @@ function Dashboard() {
             size="lg"
             color="default"
             type="button"
+            tag={Link}
+            to="/create-recipe"
           >
             Create Recipe
           </Button>
