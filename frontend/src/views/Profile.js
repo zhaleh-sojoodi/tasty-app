@@ -72,30 +72,26 @@ function Profile() {
 
                 {/* User Details */}
                 <div className="text-center mt-5">
-                  <h3>{user.name}</h3>
-                  <div className="h6 font-weight-300">
-                    <i className="ni location_pin mr-2" />
-                    Vancouver, BC
-                  </div>
+                  <h2 className="display-3">{user.name}</h2>
                 </div>
 
                 {/* Description */}
-                <div className="mt-5 py-5 border-top text-center">
+                <div className="text-center py-2">
                   <Row className="justify-content-center">
                     <Col lg="9">
                       <p>{user.bio}</p>
                     </Col>
                   </Row>
                 </div>
-                <hr />
+                <hr className="my-4" />
 
                 {/* User Recipes */}
-                <h3>Recipes Created</h3>
+                <h3 className="my-3 display-4">Recipes Created</h3>
                 <RecipeDisplay props={recipes} />
-                <hr />
+                <hr className="my-4" />
 
                 {/* User Liked Recipes */}
-                <h3>Liked Recipes</h3>
+                <h3 className="my-3 display-4">Liked Recipes</h3>
                 <RecipeDisplay props={recipes} />
               </div>
             </Card>
