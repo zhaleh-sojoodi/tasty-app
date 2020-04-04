@@ -22,6 +22,7 @@ const getRecipesByUserId = async (req, res, next) => {
 
 }
 
+
 const addRecipe = async (req, res, next) => {
     const error = validationResult(req)
     if (!error.isEmpty()) {
@@ -65,5 +66,62 @@ const addRecipe = async (req, res, next) => {
     res.json(newRecipe)
 }
 
+const updateRecipe = async (req,res, next) => {
+    const error = validationResult(req)
+    if(!error.isEmpty()) {
+        return next(new httpError('Invalid input passed.', 422))
+    }
+
+    const recipeId = req.params.recipeId
+    const {title, ingredients, directions} = req.body
+
+    let recipe
+    try {
+        recipe = await Recipe.findById(recipeId)
+
+    } catch (err) {
+        return next(new httpError('could not find the recipe by privided Id', 500))
+    }
+    recipe.title = title
+    recipe.ingredients = ingredients
+    recipe.directions = directions
+
+    try {
+        await recipe.save()
+    } catch (err) {
+        return next(new httpError('Updating the recipe failed'), 500)
+    }
+    res.json({ recipe : recipe.toObject({ getters : true})})
+}
+
+const deleteRecipe = async (req, res, next) => {
+    const recipeId = req.params.recipeId
+    let recipe 
+    try {
+        recipe = await Recipe.findById(recipeId).populate('creator')
+
+    } catch (err) {
+        return next(new httpError('Deleting the recipe failed'), 500)
+    }
+    console.log(recipe)
+    if(!recipe) {
+        return next(new httpError('Couldnot find the recipe by provided id', 404))
+    }
+    try {
+        const sess = await mongoose.startSession();
+        sess.startTransaction();
+        await recipe.remove({ session : sess })
+        recipe.creator.recipes.pull(recipe)
+        await recipe.creator.save({ session: sess})
+        sess.commitTransaction()
+    } catch (err) {
+        console.log(err)
+        return next(new httpError('Deleting the recipe failed'), 500)
+    }
+    res.json({ message : "Deleted recipe"})
+}
+
 exports.getRecipesByUserId = getRecipesByUserId
 exports.addRecipe = addRecipe;
+exports.updateRecipe = updateRecipe;
+exports.deleteRecipe = deleteRecipe
