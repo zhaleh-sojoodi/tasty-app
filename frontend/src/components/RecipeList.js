@@ -18,7 +18,7 @@ function RecipeList(props) {
         return (
           // {/* State to be changed to ObjectID */ }
           <Link to={{ pathname: "/recipe", state: recipe.creator }} key={index}>
-            <ListGroupItem tag="button" action >
+            <ListGroupItem className="mb-3" tag="button" action >
               <Row>
                 <Col sm="12" md="4" lg="3">
                   <img width="200" src={recipe.image} alt="..." className="img-thumbnail float-left"></img>
