@@ -5,10 +5,11 @@ import { Card, Container, Row, Col } from "reactstrap";
 
 import NavigationBar from "../components/NavigationBar";
 import Footer from "../components/Footer";
-import RecipeDisplay from '../components/RecipeDisplay';
+import RecipeDisplay from "../components/RecipeDisplay";
+
+import { mostPopular } from "../dummydata";
 
 function Profile() {
-
   let user = {
     name: "Jane Doe",
     image:
@@ -17,68 +18,7 @@ function Profile() {
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum provident voluptatibus aperiam amet quisquam, voluptate soluta molestias, maiores totam saepe, natus rerum facere. Doloribus distinctio fugit autem, quas ipsa veritatis!",
   };
 
-  var recipes = [
-    {
-      title: "Recipe1",
-      difficulty: "Easy",
-      cookingTime: 20,
-      preparationTime: 20,
-      category: "Breakfast",
-      ingredients: [
-        { ingredient: "Ingredient1" },
-        { ingredient: "Ingredient2" }
-      ],
-      addedDate: Date.now,
-      creator: "UserId1",
-      image:
-      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
-    },
-    {
-      title: "Recipe2",
-      difficulty: "Hard",
-      cookingTime: 20,
-      preparationTime: 20,
-      category: "Breakfast",
-      ingredients: [
-        { ingredient: "Ingredient1" },
-        { ingredient: "Ingredient2" }
-      ],
-      addedDate: Date.now,
-      creator: "UserId1",
-      image:
-      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
-    },
-    {
-      title: "Recipe1",
-      difficulty: "Easy",
-      cookingTime: 20,
-      preparationTime: 20,
-      category: "Breakfast",
-      ingredients: [
-        { ingredient: "Ingredient1" },
-        { ingredient: "Ingredient2" }
-      ],
-      addedDate: Date.now,
-      creator: "UserId1",
-      image:
-      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
-    },
-    {
-      title: "Recipe2",
-      difficulty: "Hard",
-      cookingTime: 20,
-      preparationTime: 20,
-      category: "Breakfast",
-      ingredients: [
-        { ingredient: "Ingredient1" },
-        { ingredient: "Ingredient2" }
-      ],
-      addedDate: Date.now,
-      creator: "UserId1",
-      image:
-      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
-    }
-  ];
+  let recipes = mostPopular;
 
   return (
     <div>
@@ -106,7 +46,7 @@ function Profile() {
               x="0"
               y="0"
             >
-            <polygon className="fill-white" points="2560 0 2560 100 0 100" />
+              <polygon className="fill-white" points="2560 0 2560 100 0 100" />
             </svg>
           </div>
         </section>
@@ -139,9 +79,7 @@ function Profile() {
 
                 {/* User Details */}
                 <div className="text-center mt-5">
-                  <h3>
-                    {user.name}
-                  </h3>
+                  <h3>{user.name}</h3>
                   <div className="h6 font-weight-300">
                     <i className="ni location_pin mr-2" />
                     Vancouver, BC
@@ -152,9 +90,7 @@ function Profile() {
                 <div className="mt-5 py-5 border-top text-center">
                   <Row className="justify-content-center">
                     <Col lg="9">
-                      <p>
-                        {user.bio}
-                      </p>
+                      <p>{user.bio}</p>
                     </Col>
                   </Row>
                 </div>
