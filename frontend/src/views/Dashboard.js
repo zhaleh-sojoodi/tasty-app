@@ -26,7 +26,7 @@ function Dashboard() {
         </Container>
       </main>
       <Footer />
-    </div >
+    </div>
   );
 }
 
