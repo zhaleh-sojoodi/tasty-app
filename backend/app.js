@@ -36,7 +36,7 @@ app.use((error,req,res,next) => {
 });
 
 
-mongoose.connect(`mongodb+srv://jaleh36:Jalehs@cluster0-vkvjv.mongodb.net/recipeApp?retryWrites=true&w=majority`)
+mongoose.connect(process.env.DB_CONN)
 .then(() => {
     app.listen(5000)
 })

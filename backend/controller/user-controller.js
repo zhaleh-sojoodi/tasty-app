@@ -43,7 +43,7 @@ const signup = async (req, res, next) => {
         email,
         password : hashedPassword, 
         recipes : [],
-        favorites : []
+        likes : []
     });
     
     try {

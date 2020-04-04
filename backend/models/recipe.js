@@ -9,7 +9,7 @@ const recipeSchema = new Schema({
     description : {type : String }, 
     imageURL : {type : String }, 
     difficulty : {
-        type : Number , 
+        type : String , 
         required : true
     }, 
     cookingTime : {
@@ -24,7 +24,7 @@ const recipeSchema = new Schema({
         rating : [{type : Number}], 
         averageRating : {type : Number}
     }, 
-    likedNumber : {type : Number},
+    likes : {type : Number},
     category : {
         type :String, 
         required: true

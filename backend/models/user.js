@@ -21,7 +21,7 @@ const userSchema = new Schema({
         type : mongoose.Types.ObjectId, 
         require : true, ref : 'Recipe'
     }],
-    favorites : [{
+    likes : [{
         type: mongoose.Types.ObjectId,
         ref : 'Recipe'
     }]

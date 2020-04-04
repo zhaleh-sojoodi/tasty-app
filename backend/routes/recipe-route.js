@@ -5,6 +5,7 @@ const checkAuth = require('../middleware/check-auth')
 
 const router = express.Router()
 
+router.get('/:recipeId', recipeController.getRecipeByRecipeId)
 router.get('/user/:uid' , recipeController.getRecipesByUserId )
 //router.use(checkAuth)
 router.post(
@@ -16,6 +17,7 @@ router.post(
         check("directions").not().isEmpty(),
     ], 
     recipeController.addRecipe )
+router.put('/:userId/:recipeId', recipeController.like)
 router.patch(
     '/:recipeId',
     [
