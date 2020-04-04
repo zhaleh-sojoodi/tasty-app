@@ -6,7 +6,7 @@ import Footer from "../components/Footer";
 
 import { Button, Container, Row, Col } from "reactstrap";
 
-function Recipe() {
+function Recipe(props) {
   let recipe = {
     title: "Healthy Pesto Pasta",
     description:
@@ -56,7 +56,7 @@ function Recipe() {
     image:
       "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
   };
-
+  console.log(props.location.state);
   let creator = {
     name: "Jane Doe",
     image:
