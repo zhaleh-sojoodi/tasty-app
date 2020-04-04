@@ -5,7 +5,7 @@ import { Card, Container, Row, Col } from "reactstrap";
 
 import NavigationBar from "../components/NavigationBar";
 import Footer from "../components/Footer";
-import RecipeList from '../components/RecipeList';
+import RecipeDisplay from '../components/RecipeDisplay';
 
 function Profile() {
 
@@ -158,9 +158,17 @@ function Profile() {
                     </Col>
                   </Row>
                 </div>
+                <hr />
 
                 {/* User Recipes */}
-                <RecipeList props={recipes} />
+                <h3>Recipes Created</h3>
+                <RecipeDisplay props={recipes} />
+                <hr />
+
+                {/* User Liked Recipes */}
+                <h3>Liked Recipes</h3>
+                <RecipeDisplay props={recipes} />
+                <hr />
               </div>
             </Card>
           </Container>
