@@ -21,7 +21,7 @@ function CreateRecipe() {
       <NavigationBar />
       <main className="main">
         <Container className="mt-4 mb-4" style={{minHeight:'90vh'}}>
-          <h1 className="display-3 mb-3">Create a new recipe</h1>
+          <h1 className="display-3 mb-3">Create a Recipe</h1>
 
           <Form>
             <FormGroup>
