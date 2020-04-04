@@ -1,6 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-import { Container } from 'reactstrap';
+import { Container, Button } from 'reactstrap';
 
 import NavigationBar from 'components/NavigationBar';
 import Footer from 'components/Footer';
@@ -16,10 +17,22 @@ function MyRecipes() {
     <div>
       <NavigationBar />
       <main className="main">
-        <Container className="mt-4 mb-4">
-          <h4 className="display-4 mb-0">My Recipes</h4>
+        <Container className="mt-4 d-flex justify-content-between">
+          <h1 className="display-3">Your Recipes</h1>
+          <Button
+            className="mb-4"
+            size="lg"
+            color="default"
+            type="button"
+            tag={Link}
+            to="/create-recipe"
+          >
+            Create Recipe
+          </Button>
+        </Container>
+
+        <Container>
           <RecipeList props = {myRecipes} />
-          <hr />
         </Container>
         </main>
       <Footer />
