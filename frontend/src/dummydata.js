@@ -1,3 +1,11 @@
+let user = {
+  name: "Jane Doe",
+  image:
+    "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+  bio:
+    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum provident voluptatibus aperiam amet quisquam, voluptate soluta molestias, maiores totam saepe, natus rerum facere. Doloribus distinctio fugit autem, quas ipsa veritatis!",
+};
+
 var mostPopular = [
     {
       title: "Healthy Pesto Pasta",
@@ -788,4 +796,4 @@ var mostPopular = [
     },
 ];
 
-export { mostPopular, highestRated };
+export { user, mostPopular, highestRated };
