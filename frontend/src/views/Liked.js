@@ -17,7 +17,7 @@ function Liked() {
       <NavigationBar />
         <main className="main">
         <Container className="mt-4 mb-4">
-          <h4 className="display-4 mb-0">Liked Recipes</h4>
+          <h2 className="display-3 mb-3">Liked Recipes</h2>
           <RecipeList props = {likedRecipes} />
           <hr />
         </Container>

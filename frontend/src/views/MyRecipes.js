@@ -18,16 +18,15 @@ function MyRecipes() {
       <NavigationBar />
       <main className="main">
         <Container className="mt-4 d-flex justify-content-between">
-          <h1 className="display-3">Your Recipes</h1>
+          <h2 className="display-3 mb-3">Your Recipes</h2>
           <Button
             className="mb-4"
-            size="lg"
             color="default"
             type="button"
             tag={Link}
             to="/create-recipe"
           >
-            Create Recipe
+            Create New
           </Button>
         </Container>
 
