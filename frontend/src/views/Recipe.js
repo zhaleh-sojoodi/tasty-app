@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from 'react-router-dom';
 
 import Ratings from "react-ratings-declarative";
 import NavigationBar from "../components/NavigationBar";
@@ -192,6 +193,8 @@ function Recipe(props) {
                   className="btn-icon btn-3 mx-auto d-block"
                   color="danger"
                   type="button"
+                  tag={Link}
+                  to="/profile"
                 >
                   <span className="btn-inner--icon">
                     <i className="ni ni-single-02" />
