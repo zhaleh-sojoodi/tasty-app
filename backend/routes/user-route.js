@@ -1,58 +1,18 @@
 const express = require('express')
+const { check } = require('express-validator')
+const userController = require('../controller/user-controller')
+
 const router = express.Router()
-const gravatar = require('gravatar')
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
-const config = require('config')
-const {check, validationResult } = require('express-validator')
-const User = require('../models/User')
-router.post('/', [
-  check('name', "Name is required")
-  .not()
-  .isEmpty(),
-  check('email', 'Please add valid email').isEmail(),
-  check('password', 'Please enter a password with 6 or more character').isLength({ min: 6})
 
-],
-async (req, res) => {
-  // const errors = validationResult(req)
-  // if(!errors.isEmpty()) {
-  //     return res.status(400).json({ errors : errors.array()})
-  // }
-  const {name, email, password} = req.body
-  try {
+router.get('/', userController.getUsers)
+router.post(
+    '/signup',
+    [
+        check('name').not().isEmpty(),
+        check('email').normalizeEmail().isEmail(),
+        check('password').isLength({ min : 6 })
+    ],
+    userController.signup)
+router.post('/login', userController.login)
 
-    let user = new User({
-      name,
-      email,
-      password
-    });
-
-
-  //encrypt password
-  const salt = await bcrypt.genSalt(10)
-  user.password = await bcrypt.hash(password, salt)
- await  user.save()
-
-
-  //return jsonwebtoken
- const payload = {
-   user: {
-     id: user.id
-   }
- }
- jwt.sign
- (payload,
-   'Hello',
-    {expiresIn: 360000},
-    (err, token) => {
-       if(err) throw err
-       res.json({ token})
-    }
- )
-  }catch(err){
-    console.error(err.message)
-    res.status(500).send('Server error')
-  }
-})
-module.exports = router
+module.exports = router 

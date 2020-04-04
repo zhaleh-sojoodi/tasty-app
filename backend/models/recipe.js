@@ -9,7 +9,7 @@ const recipeSchema = new Schema({
     description : {type : String }, 
     imageURL : {type : String }, 
     difficulty : {
-        type : Number , 
+        type : String , 
         required : true
     }, 
     cookingTime : {
@@ -22,14 +22,18 @@ const recipeSchema = new Schema({
     }, 
     ratings : {
         rating : [{type : Number}], 
-        averageRating : {type :rating}
+        averageRating : {type : Number}
     }, 
-    likedNumber : {type : Number},
+    likes : {type : Number},
     category : {
         type :String, 
         required: true
     }, 
     ingredients : [{
+        type : String, 
+        required : true
+    }], 
+    directions : [{
         type : String, 
         required : true
     }], 
@@ -45,4 +49,4 @@ const recipeSchema = new Schema({
     }
 })
 
-module.exports = mangoose.Schema('Recipe', recipeSchema)
+module.exports = mongoose.model('Recipe', recipeSchema);
