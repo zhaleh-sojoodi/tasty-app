@@ -14,10 +14,7 @@ import {
   NavItem,
   Row,
   UncontrolledCollapse,
-  UncontrolledDropdown
-} from 'reactstrap';
-
-import {
+  UncontrolledDropdown,
   FormGroup,
   InputGroup,
   InputGroupAddon,
@@ -63,16 +60,17 @@ function NavigationBar() {
               <UncontrolledDropdown nav>
                 <DropdownToggle nav caret>
                   <i className="ni ni-collection d-lg-none mr-1" />
-                  <span className="nav-link-inner--text">User Name</span>
+                  <span className="nav-link-inner--text">Jane Doe</span>
                 </DropdownToggle>
                 <DropdownMenu>
-                  <DropdownItem to="/profile" tag={Link}>Profile</DropdownItem>
+                  <DropdownItem to="/profile" tag={Link}>My Profile</DropdownItem>
+                  <DropdownItem to="/create-recipe" tag={Link}>Create Recipe</DropdownItem>
                   <DropdownItem to="/liked" tag={Link}>Liked Recipes</DropdownItem>
-                  <DropdownItem to="/my-recipes" tag={Link}>My Recipes</DropdownItem>
+                  <DropdownItem to="/my-recipes" tag={Link}>Your Recipes</DropdownItem>
                   <DropdownItem onClick={() => alert("logout")}>Logout</DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
-              <NavItem className="d-none d-lg-block ml-lg-4">
+              <NavItem to="/login" tag={Link} className="d-none d-lg-block ml-lg-4">
                 <Button className="btn-neutral btn-icon" color="default" href="/">
                   <span className="btn-inner--icon">
                     <i className="fa fa-cloud-download mr-2" />

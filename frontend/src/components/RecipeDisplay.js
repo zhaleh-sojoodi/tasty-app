@@ -5,6 +5,7 @@ import {
   Card,
   Col,
   CardImg,
+  CardBody,
   CardSubtitle,
   CardTitle,
   Row
@@ -12,22 +13,26 @@ import {
 
 function RecipeDisplay(props) {
   return (
-    <Row className="ml-1 mr-1">
+    <Row>
       {props.props.map(function (recipe, index) {
         return (
-          <Col xs="12" sm="6" lg="3" key={index}>
+          <Col key={index} lg="4" md="6" className="pb-4">
             <Link to={{ pathname: "/recipe", state: recipe.creator }}>
-              <Card tag="button" className="p-1 m-auto">
-                <CardImg top width="100%" src={recipe.image} alt="Card image cap" />
-                <CardTitle>{recipe.title}</CardTitle>
-                <CardSubtitle>Created By: {recipe.creator}</CardSubtitle>
-                <CardSubtitle>Difficulty: {recipe.difficulty}</CardSubtitle>
-                <CardSubtitle>Cooking Time: {recipe.cookingTime} min</CardSubtitle>
-                <CardSubtitle>Prep Time: {recipe.preparationTime} min</CardSubtitle>
-                <CardSubtitle>Category: {recipe.category}</CardSubtitle>
+              <Card>
+                <CardImg top width="100%" src={recipe.image} alt={recipe.title} />
+                <CardBody>
+                  <CardTitle className="h4 mt--2">{recipe.title}</CardTitle>
+                  <CardSubtitle className="mt--3 mb-3">
+                    <i className="ni ni-favourite-28 text-danger" />
+                    <small className="ml-2 text-default">{recipe.likes.length} people liked this</small>
+                  </CardSubtitle>
+                  <CardSubtitle>
+                    <i className="ni ni-satisfied text-danger" />
+                    <small className="ml-2 text-default">{recipe.ratings.averageRating} ({recipe.ratings.ratings.length} ratings)</small>
+                  </CardSubtitle>
+                </CardBody>
               </Card>
             </Link>
-
           </Col>
         )
       })}
