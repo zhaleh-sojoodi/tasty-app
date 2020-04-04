@@ -13,15 +13,15 @@ import Recipe from './views/Recipe';
 import MyRecipes from './views/MyRecipes';
 
 ReactDOM.render(
-    <BrowserRouter>
-      <Switch>
-        <Route path="/" exact render={props => <Dashboard {...props} />} />
-        <Route path="/liked" exact render={props => <Liked {...props} />} />
-        <Route path="/profile" exact render={props => <Profile {...props} />} />
-        <Route path="/my-recipes" exact render={props => <MyRecipes {...props} />} />
-        <Route path="/recipe" exact render={props => <Recipe {...props} />} />
-        <Redirect to="/" />
-      </Switch>
-    </BrowserRouter>,
+  <BrowserRouter>
+    <Switch>
+      <Route path="/" exact render={props => <Dashboard {...props} />} />
+      <Route path="/liked" exact render={props => <Liked {...props} />} />
+      <Route path="/profile" exact render={props => <Profile {...props} />} />
+      <Route path="/my-recipes" exact render={props => <MyRecipes {...props} />} />
+      <Route path="/recipe" exact render={props => <Recipe {...props} />} />
+      <Redirect to="/" />
+    </Switch>
+  </BrowserRouter>,
   document.getElementById('root')
 );
