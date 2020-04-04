@@ -1,5 +1,5 @@
 import React from "react";
-import "assets/css/background-gradient.css";
+import "assets/css/custom.css";
 
 import { Card, Container, Row, Col } from "reactstrap";
 
