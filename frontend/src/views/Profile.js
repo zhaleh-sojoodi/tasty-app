@@ -10,9 +10,9 @@ function Profile() {
     <div>
       <NavigationBar />
       <Container>
-      <main className="main">
-        MY PROFILE
-      </main>
+        <main className="main">
+          MY PROFILE
+        </main>
       </Container>
       <Footer />
     </div >
