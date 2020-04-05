@@ -10,8 +10,6 @@ import { Button, Container, Row, Col } from "reactstrap";
 import { mostPopular } from "../dummydata";
 
 function Recipe(props) {
-  console.log(props.location.state);
-
   let recipe = mostPopular[0];
 
   let creator = {
