@@ -37,8 +37,9 @@ app.use((error,req,res,next) => {
 });
 
 
+mongoose.set('useCreateIndex', true)
+mongoose.connect(process.env.DB_CONN, { useNewUrlParser: true, useUnifiedTopology: true })
 
-mongoose.connect(process.env.DB_CONN)
 .then(() => {
     app.listen(5000)
 })
