@@ -20,6 +20,7 @@ This app allows users to share and discover new recipes.
 ## Future Enhancements
 * Users can 'follow' other users to see their recipes on their dashboard
 * Additional 'Categories' page to browse recipes
+* Add date that recipe was created
 
 ## Nice To Have Features
 * Users can see related recipes on a recipe page
@@ -30,7 +31,7 @@ This app allows users to share and discover new recipes.
 In progress.
 
 ## Wireframes
-In progress.
+View wireframes on Figma, with this [invite link](https://www.figma.com/file/mBoGae8rnqbR7CeMHdjX3S/Recipe-App?node-id=24%3A56).
 
 ## Communication Plan
 Meet everyday for up to 30 minutes.
