@@ -23,7 +23,7 @@ import Footer from "../components/Footer";
 const BASE_URL = "http://localhost:5000/api/user";
 const AUTH_TOKEN = "auth_token";
 
-function Login() {
+function Login(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -58,9 +58,21 @@ function Login() {
       })
   }
 
+  function getPrevLocation() {
+    if (props.location.state === undefined) {
+      return '/';
+    }
+    return props.location.state.prevLocation
+  }
+  
   return (
     <>
-      {redirect ? <Redirect to='/' /> : null}
+      {redirect ? <Redirect to={{
+        pathname: getPrevLocation(),
+        state: {
+          loggedIn: true
+        }
+      }} /> : null}
       <NavigationBar />
       <main className="main">
         <section className="section section-shaped section-lg" style={{ minHeight: '100vh' }}>

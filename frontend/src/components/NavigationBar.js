@@ -35,9 +35,9 @@ function NavigationBar() {
 
   function checkUserLoggedIn() {
     if (sessionStorage.getItem(AUTH_TOKEN) != null) {
-      return {display: 'initial'};
+      return true;
     }
-    return {display: 'none'};
+    return false;
   }
 
   return (
@@ -73,7 +73,7 @@ function NavigationBar() {
                   <Input placeholder="Search" type="text" value={searchValue} onChange={(value) => setSearchValue(value.target.value)} />
                 </InputGroup>
               </FormGroup>
-              <UncontrolledDropdown nav style={checkUserLoggedIn()}>
+              <UncontrolledDropdown nav style={checkUserLoggedIn() ? {display: 'initial'} : {display: 'none'}}>
                 <DropdownToggle nav caret>
                   <i className="ni ni-collection d-lg-none mr-1" />
                   <span className="nav-link-inner--text">Jane Doe</span>
@@ -86,8 +86,8 @@ function NavigationBar() {
                   <DropdownItem onClick={() => logout()}>Logout</DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
-              <NavItem to="/login" tag={Link} className="d-none d-lg-block ml-lg-4">
-                <Button className="btn-neutral btn-icon" color="default" href="/">
+              <NavItem to="/login" className="d-none d-lg-block ml-lg-4" >
+                <Button className="btn-neutral btn-icon" color="default" href="/login" style={checkUserLoggedIn() ? {display: 'none'} : {display: 'initial'}}>
                   <span className="btn-inner--icon">
                     <i className="fa fa-cloud-download mr-2" />
                   </span>
