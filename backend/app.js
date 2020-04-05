@@ -2,6 +2,8 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const dotenv = require('dotenv');
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
 const httpError = require('./models/http-error')
 const userRoute = require('./routes/user-route')
 const recipeRoute = require('./routes/recipe-route')
@@ -9,6 +11,9 @@ const recipeRoute = require('./routes/recipe-route')
 dotenv.config()
 const app = express()
 app.use(bodyParser.json())
+app.use(cookieParser())
+// cors
+app.use(cors());
 
 //enable Cors
 app.use(function(req, res, next) {
@@ -18,6 +23,8 @@ app.use(function(req, res, next) {
     next();
 });
 
+
+//routes middleware
 app.use('/api/user', userRoute)
 app.use('/api/recipe', recipeRoute)
 

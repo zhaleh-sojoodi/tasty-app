@@ -3,9 +3,22 @@ const uniqueValidator = require('mongoose-unique-validator')
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
+    username: {
+        type: String,
+        trim: true,
+        required: true,
+        max: 32,
+        unique: true,
+        index: true,
+        lowercase: true
+    },
     name: {
         type: String,
-        required: true
+        trim: true,
+        required: true,
+        unique : true,
+       
+       
     },
     email: {
         type: String,
@@ -17,6 +30,14 @@ const userSchema = new Schema({
         required: true, 
         minlength : 6
     },
+    profile: {
+        type: String,
+        required: true
+    },
+    resetPasswordLink: {
+      data: String,
+      default: ''  
+    },
     recipes : [{
         type : mongoose.Types.ObjectId, 
         require : true, ref : 'Recipe'
@@ -26,7 +47,7 @@ const userSchema = new Schema({
         ref : 'Recipe'
     }]
     
-});
+}, {timestamp: true});
 
 //to check if the email exists already  
 userSchema.plugin(uniqueValidator)
