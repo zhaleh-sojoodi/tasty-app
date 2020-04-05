@@ -1,15 +1,25 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
+const dotenv = require('dotenv');
 const httpError = require('./models/http-error')
 const userRoute = require('./routes/user-route')
 const recipeRoute = require('./routes/recipe-route')
 
+dotenv.config()
 const app = express()
 app.use(bodyParser.json())
 
-app.use('/api/recipes', recipeRoute)
-app.use('/api/users', userRoute)
+//enable Cors
+app.use(function(req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, PATCH')
+    next();
+});
+
+app.use('/api/user', userRoute)
+app.use('/api/recipe', recipeRoute)
 
 //handle 404 error
 app.use((req,res,next) => {
@@ -25,12 +35,13 @@ app.use((error,req,res,next) => {
     res.json({message:error.message || 'An unknown message occured'})
 });
 
-// mongoose.connect("")
-// .then (() => {
-//     app.listen(5000)
-// })
-// .catch((err) => {
-//     console.log(err);
-// })
+mongoose.set('useCreateIndex', true)
+mongoose.connect(process.env.DB_CONN)
+.then(() => {
+    app.listen(5000)
+})
+.catch(err => {
+    console.log(err)
+})
 
-app.listen(5000)
+
