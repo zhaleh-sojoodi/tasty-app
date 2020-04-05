@@ -1,8 +1,8 @@
 const {validationResult} = require('express-validator')
 const mongoose = require('mongoose')
 const httpError = require('../models/http-error')
-const Recipe = require('../models/recipe')
-const User = require('../models/user')
+const Recipe = require('../models/Recipe')
+const User = require('../models/User')
 
 const getRecipesByUserId = async (req, res, next) => {
     const userId = req.params.userId
