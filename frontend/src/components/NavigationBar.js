@@ -71,7 +71,7 @@ function NavigationBar() {
                 </DropdownMenu>
               </UncontrolledDropdown>
               <NavItem to="/login" tag={Link} className="d-none d-lg-block ml-lg-4">
-                <Button className="btn-neutral btn-icon" color="default" href="/">
+                <Button className="btn-neutral btn-icon" color="default">
                   <span className="btn-inner--icon">
                     <i className="fa fa-cloud-download mr-2" />
                   </span>
