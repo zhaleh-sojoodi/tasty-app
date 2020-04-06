@@ -1,8 +1,5 @@
-const mongoose = require('mongoose')
-const uniqueValidator = require('mongoose-unique-validator')
-const Schema = mongoose.Schema;
-
-const userSchema = new Schema({
+const mongoose = require('mongoose');
+const UserSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
@@ -14,23 +11,14 @@ const userSchema = new Schema({
     },
     password: {
         type: String,
-        required: true, 
-        minlength : 6
+        required: true
     },
-    biography: {
+    avatar: {
         type: String
     },
-    recipes : [{
-        type : mongoose.Types.ObjectId, 
-        require : true, ref : 'Recipe'
-    }],
-    likes : [{
-        type: mongoose.Types.ObjectId,
-        ref : 'Recipe'
-    }]
-    
+    date: {
+        type: Date,
+        default: Date.now
+    }
 });
-
-//to check if the email exists already  
-userSchema.plugin(uniqueValidator)
-module.exports = mongoose.model('User', userSchema);
+module.exports = User = mongoose.model('user', UserSchema);
