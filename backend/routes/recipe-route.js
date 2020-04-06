@@ -21,6 +21,9 @@ router.post(
     '/', 
     [
         check("title").not().isEmpty(),
+        check("difficulty").not().isEmpty(),
+        check("cookingTime").not().isEmpty(),
+        check("preparationTime").not().isEmpty(),
         check("category").not().isEmpty(),
         check("ingredients").not().isEmpty(),
         check("directions").not().isEmpty(),
