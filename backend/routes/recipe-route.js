@@ -2,11 +2,17 @@ const express = require('express')
 const { check } = require('express-validator')
 const recipeController = require('../controller/recipe-controller')
 const checkAuth = require('../middleware/check-auth')
+const imageUpload = require('../middleware/image-upload')
 
 const router = express.Router()
 
+router.get('/', recipeController.getAllRecipes)
 router.get('/:recipeId', recipeController.getRecipeByRecipeId)
 router.get('/user/:userId' , recipeController.getRecipesByUserId )
+router.get('/all/popular' , recipeController.getPopularRecipes)
+router.get('/all/top/rated' , recipeController.getTopRatedRecipes)
+router.put('/rate', recipeController.rateRecipe)
+router.put('/:userId/:recipeId', recipeController.toggleLike)
 
 router.use(checkAuth)
 
@@ -19,7 +25,6 @@ router.post(
         check("directions").not().isEmpty(),
     ], 
     recipeController.addRecipe )
-router.put('/:userId/:recipeId', recipeController.like)
 router.patch(
     '/:recipeId',
     [

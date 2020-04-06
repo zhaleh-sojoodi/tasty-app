@@ -4,6 +4,16 @@ const httpError = require('../models/http-error')
 const Recipe = require('../models/recipe')
 const User = require('../models/user')
 
+const getAllRecipes = async (req, res, next) => {
+    let recipes
+    try {
+        recipes = await Recipe.find({})
+    } catch {
+        return next(new httpError('Fetching recipes failed', 500))
+    }
+    res.json({ recipes : recipes.map( recipe => recipe.toObject( { getters: true })) })
+}
+
 const getRecipesByUserId = async (req, res, next) => {
     const userId = req.params.userId
     let userWithRecipes;
@@ -29,29 +39,54 @@ const getRecipeByRecipeId = async (req, res, next) => {
     try {
         recipe = await Recipe.findById(recipeId)
     } catch(err) {
-        return next(new httpError('Could not the recipe', 500))
+        return next(new httpError('Could not find the recipe', 500))
     }
 
     if (!recipe) {
         return next(new httpError('Could not find the recipe by provided id' , 404))
     }
-
+    
     res.json({ recipe : recipe.toObject({ getters : true }) })
 }
+
+const getPopularRecipes = async (req, res, next) => {
+    let recipes
+    try {
+        recipes = await Recipe.find({}).sort({ "likes" : -1})
+    } catch {
+        return next(new httpError('Fetching popular recipes failed', 500))
+    }
+    res.json({ recipes :  recipes.map(recipe => recipe.toObject({ getters: true })) })
+}
+
+const getTopRatedRecipes = async (req, res, next) => {
+    let recipes
+    try {
+        recipes = await Recipe.find({}).sort({ "ratings.averageRating" : -1 })
+    } catch (err) {
+        return next(new httpError('Fetching top-rated recipes failed'), 500)
+    }
+    res.json({ recipes: recipes.map( recipe => recipe.toObject({ getters: true }) ) })
+}
+
 
 const addRecipe = async (req, res, next) => {
     const error = validationResult(req)
     if (!error.isEmpty()) {
         return next(new httpError('Invalid input passed.', 422))
     }
-    const {title, description, imageURL, difficulty, cookingTime, preparationTime, category, ingredients, directions, servings, creator } = req.body
+    const {title, description, difficulty, cookingTime, preparationTime, category, ingredients, directions, servings, creator } = req.body
+   
     const newRecipe = new Recipe ({
         title,
         description, 
-        imageURL,
         difficulty,
         cookingTime,
         preparationTime, 
+        ratings : {
+            averageRating : 0 , 
+            ratings : []
+        },
         likes : 0,
         category,
         ingredients,
@@ -83,14 +118,54 @@ const addRecipe = async (req, res, next) => {
     res.json(newRecipe)
 }
 
-const like = async (req, res, next ) => {
+const rateRecipe = async (req, res, next) => {
+    const {userId, recipeId, rate} = req.body
+
+    let user 
+    try {
+        user = await User.findById(userId)
+    } catch (err) {
+        return next(new httpError('finding user failed'), 500)
+    }
+    if (!user) {
+        return next(new httpError('could not find the user for provided id'), 404)
+    }
+
+    let recipe
+    try {
+        recipe = await Recipe.findById(recipeId)
+    } catch(err) {
+        return next(new httpError('finding recipe failed'), 500)
+    }
+    if (!recipe) {
+        return next(new httpError('could not find the recipe for provided id'), 404)
+    }
+   
+    try {
+        const sess = await mongoose.startSession()
+        sess.startTransaction({ session : sess })
+        recipe.ratings.ratings.push( {user : user, rating : rate} )
+        const ave = (recipe.ratings.averageRating + rate ) / (recipe.ratings.ratings.length)
+        recipe.ratings.averageRating = ave
+        await recipe.save({ session : sess})
+        await user.save({ session : sess })
+        await sess.commitTransaction()
+
+    } catch (err) {
+        console.log(err)
+        return next(new httpError('Rating a recipe failed'), 500)
+    }
+
+    res.json({ recipe : recipe.toObject({ getters : true }) })
+}
+
+const toggleLike = async (req, res, next) => {
     const userId = req.params.userId
     const recipeId = req.params.recipeId
     
     let user
     try {
         user = await User.findById(userId)
-        console.log(user)
     } catch(err) {
         return next(new httpError('finding user failed'), 500)
     }
@@ -149,6 +224,12 @@ const updateRecipe = async (req,res, next) => {
     } catch (err) {
         return next(new httpError('could not find the recipe by privided Id', 500))
     }
+
+    //check if the creator is the user logged in 
+    if (recipe.creator.toString() !== req.userData.userId) {
+        return next(new httpError('You are not allowed to update the recipe', 401))
+    }
+
     recipe.title = title
     recipe.ingredients = ingredients
     recipe.directions = directions
@@ -170,9 +251,14 @@ const deleteRecipe = async (req, res, next) => {
     } catch (err) {
         return next(new httpError('Deleting the recipe failed'), 500)
     }
-    console.log(recipe)
+
     if(!recipe) {
         return next(new httpError('Couldnot find the recipe by provided id', 404))
+    }
+
+    //Check if the creator is the user logged in 
+    if(recipe.creator.id !== req.userData.userId) {
+        return next(new httpError('You are not allowed to delete the recipe', 401))
     }
     
     try {
@@ -189,9 +275,15 @@ const deleteRecipe = async (req, res, next) => {
     res.json({ message : "Deleted recipe"})
 }
 
+exports.getAllRecipes = getAllRecipes
 exports.getRecipesByUserId = getRecipesByUserId
 exports.getRecipeByRecipeId = getRecipeByRecipeId
-exports.addRecipe = addRecipe;
-exports.like = like;
-exports.updateRecipe = updateRecipe;
+exports.getPopularRecipes = getPopularRecipes
+exports.getTopRatedRecipes = getTopRatedRecipes
+//exports.getRcipesByCategory = getRcipesByCategory
+//exports.getRecipesBySearch = getRecipesBySearch
+exports.addRecipe = addRecipe
+exports.rateRecipe = rateRecipe
+exports.toggleLike = toggleLike
+exports.updateRecipe = updateRecipe
 exports.deleteRecipe = deleteRecipe

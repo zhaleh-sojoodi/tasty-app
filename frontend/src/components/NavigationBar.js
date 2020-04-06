@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, style } from 'react';
+import { Link, Redirect } from 'react-router-dom';
 
 import {
   Button,
@@ -22,11 +22,27 @@ import {
   Input
 } from 'reactstrap';
 
+const AUTH_TOKEN = "auth_token";
+
 function NavigationBar() {
   const [searchValue, setSearchValue] = useState("");
+  const [redirect, setRedirect] = useState(false);
+
+  function logout() {
+    sessionStorage.removeItem(AUTH_TOKEN);
+    setRedirect(true);
+  }
+
+  function checkUserLoggedIn() {
+    if (sessionStorage.getItem(AUTH_TOKEN) != null) {
+      return true;
+    }
+    return false;
+  }
 
   return (
     <header className="header-global">
+      {redirect ? <Redirect to='/' /> : null}
       <Navbar className="navbar-dark bg-danger" expand="lg">
         <Container>
           <NavbarBrand href="/">Logo</NavbarBrand>
@@ -57,7 +73,7 @@ function NavigationBar() {
                   <Input placeholder="Search" type="text" value={searchValue} onChange={(value) => setSearchValue(value.target.value)} />
                 </InputGroup>
               </FormGroup>
-              <UncontrolledDropdown nav>
+              <UncontrolledDropdown nav style={checkUserLoggedIn() ? {display: 'initial'} : {display: 'none'}}>
                 <DropdownToggle nav caret>
                   <i className="ni ni-collection d-lg-none mr-1" />
                   <span className="nav-link-inner--text">Jane Doe</span>
@@ -67,16 +83,17 @@ function NavigationBar() {
                   <DropdownItem to="/create-recipe" tag={Link}>Create Recipe</DropdownItem>
                   <DropdownItem to="/liked" tag={Link}>Liked Recipes</DropdownItem>
                   <DropdownItem to="/my-recipes" tag={Link}>Your Recipes</DropdownItem>
-                  <DropdownItem onClick={() => alert("logout")}>Logout</DropdownItem>
+                  <DropdownItem onClick={() => logout()}>Logout</DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
-              <NavItem to="/login" tag={Link} className="d-none d-lg-block ml-lg-4">
-                <Button className="btn-neutral btn-icon" color="default">
+
+              <NavItem to="/login" className="d-none d-lg-block ml-lg-4" >
+                <Button className="btn-neutral btn-icon" color="default" href="/login" style={checkUserLoggedIn() ? {display: 'none'} : {display: 'initial'}}>
                   <span className="btn-inner--icon">
                     <i className="fa fa-cloud-download mr-2" />
                   </span>
                   <span className="nav-link-inner--text ml-1">
-                    Login/Register
+                    Login
                   </span>
                 </Button>
               </NavItem>
