@@ -17,6 +17,9 @@ const userSchema = new Schema({
         required: true, 
         minlength : 6
     },
+    biography: {
+        type: String
+    },
     recipes : [{
         type : mongoose.Types.ObjectId, 
         require : true, ref : 'Recipe'

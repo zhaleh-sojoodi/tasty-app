@@ -1,3 +1,4 @@
+const fs = require('fs')
 const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
@@ -21,7 +22,6 @@ app.use(function(req, res, next) {
 app.use('/api/user', userRoute)
 app.use('/api/recipe', recipeRoute)
 
-
 //handle 404 error
 app.use((req,res,next) => {
     const error = new httpError('Could not find the route' , 404);
@@ -29,6 +29,11 @@ app.use((req,res,next) => {
 })
 
 app.use((error,req,res,next) => {
+    if (req.file) {
+        fs.unlink (req.file.path, err => {
+            console.log(err)
+        })
+    }
     if(res.headerSent) {
         return next(error)
     }
@@ -36,8 +41,7 @@ app.use((error,req,res,next) => {
     res.json({message:error.message || 'An unknown message occured'})
 });
 
-
-
+mongoose.set('useCreateIndex', true)
 mongoose.connect(process.env.DB_CONN)
 .then(() => {
     app.listen(5000)
