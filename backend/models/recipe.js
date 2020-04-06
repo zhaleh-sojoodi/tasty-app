@@ -20,10 +20,21 @@ const recipeSchema = new Schema({
         type : Number , 
         required : true
     }, 
-    ratings : {
-        rating : [{type : Number}], 
-        averageRating : {type : Number}
-    }, 
+    ratings: {
+        averageRating: Number,
+        ratings: [
+          {
+            user: {
+              type: Schema.Types.ObjectId,
+              ref: 'users'
+            },
+            rating: {
+              type: Number,
+              required: true
+            }
+          }
+        ]
+      }, 
     likes : {type : Number},
     category : {
         type :String, 
