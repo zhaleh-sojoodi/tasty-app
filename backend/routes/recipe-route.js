@@ -10,7 +10,7 @@ const router = express.Router()
 router.get('/:recipeId', recipeController.getRecipeByRecipeId)
 router.get('/user/:userId' , recipeController.getRecipesByUserId )
 router.put('/:userId/:recipeId', recipeController.like)
-router.get('/category', recipeController.getAllRecipesByCategory)
+router.get('/:category', recipeController.getAllRecipesByCategory)
 //router.use(checkAuth)
 
 router.post(

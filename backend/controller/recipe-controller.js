@@ -42,7 +42,7 @@ const getRecipeByRecipeId = async (req, res, next) => {
 
 const getAllRecipesByCategory = async (req, res, next) => {
     const category = req.params.category
-    let category
+    //let category
     try {
         category = await Category.findByName(category)
     } catch(err) {
