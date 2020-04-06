@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 import "assets/css/custom.css";
 
 import {
@@ -20,6 +21,52 @@ import NavigationBar from "../components/NavigationBar";
 import Footer from "../components/Footer";
 
 function Register() {
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmpassword: ""
+  });
+
+  const { name, email, password, confirmpassword } = formData;
+
+  const onChange = e => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  }
+
+  const onSubmit = async e => {
+    e.preventDefault();
+
+    if(password !== confirmpassword) {
+      console.log("Passwords do not match.");
+    } else {
+      const newUser = {
+        name,
+        email,
+        password,
+        confirmpassword
+      }
+
+      try {
+        const config = {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        }
+
+        const body = JSON.stringify(newUser);
+        const res = await axios.post('http://localhost:5000/api/user/signup', body, config);
+        
+        console.log("Successful registration!");
+        console.log(res.data);
+      } catch(error) {
+        console.error(error.response);
+      }
+    }
+  }
+
   return (
     <>
       <NavigationBar />
@@ -43,7 +90,11 @@ function Register() {
                     <div className="text-center text-muted mb-4">
                       <small>Create an account</small>
                     </div>
-                    <Form role="form">
+                    <Form role="form" onSubmit={e => onSubmit(e)}>
+                      <ul>
+
+                      </ul>
+
                       {/* Name */}
                       <FormGroup>
                         <InputGroup className="input-group-alternative mb-3">
@@ -52,7 +103,14 @@ function Register() {
                               <i className="ni ni-hat-3" />
                             </InputGroupText>
                           </InputGroupAddon>
-                          <Input placeholder="Name" type="text" />
+                          <Input
+                            placeholder="Username"
+                            type="text"
+                            name="name"
+                            id="name"
+                            value={name}
+                            onChange={e => onChange(e)}
+                          />
                         </InputGroup>
                       </FormGroup>
 
@@ -64,7 +122,14 @@ function Register() {
                               <i className="ni ni-email-83" />
                             </InputGroupText>
                           </InputGroupAddon>
-                          <Input placeholder="Email" type="email" />
+                          <Input
+                            placeholder="Email"
+                            type="email"
+                            name="email"
+                            id="email"
+                            value={email}
+                            onChange={e => onChange(e)}
+                          />
                         </InputGroup>
                       </FormGroup>
 
@@ -79,14 +144,42 @@ function Register() {
                           <Input
                             placeholder="Password"
                             type="password"
+                            name="password"
+                            id="password"
                             autoComplete="off"
+                            value={password}
+                            onChange={e => onChange(e)}
                           />
                         </InputGroup>
                       </FormGroup>
 
-                      {/* Submit Form */}
+                      {/* Confirm Password */}
+                      <FormGroup>
+                        <InputGroup className="input-group-alternative">
+                          <InputGroupAddon addonType="prepend">
+                            <InputGroupText>
+                              <i className="ni ni-lock-circle-open" />
+                            </InputGroupText>
+                          </InputGroupAddon>
+                          <Input
+                            placeholder="Confirm Password"
+                            type="password"
+                            name="confirmpassword"
+                            id="confirmpassword"
+                            autoComplete="off"
+                            value={confirmpassword}
+                            onChange={e => onChange(e)}
+                          />
+                        </InputGroup>
+                      </FormGroup>
+
+                      {/* Submit */}
                       <div className="text-center">
-                        <Button className="my-4" color="danger" type="button">
+                        <Button
+                          type="submit"
+                          className="my-4"
+                          color="danger"
+                        >
                           Register
                         </Button>
                       </div>
