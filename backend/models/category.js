@@ -34,6 +34,7 @@ const categorySchema = new mongoose.Schema({
        Sides:{
          type: String
        }
+       
 
   
 })
