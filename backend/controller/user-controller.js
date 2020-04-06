@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { validationResult } = require('express-validator')
 const httpError = require('../models/http-error')
-const User = require('../models/User')
+const User = require('../models/user')
 
 const getUsers = async (req, res, next) => {
     let users;
@@ -16,17 +16,33 @@ const getUsers = async (req, res, next) => {
     })
 }
 
+const getUserById = async (req, res, next) => {
+    const userId = req.params.userId    
+    let user
+    try {
+        user = await User.findById((userId), '-password')
+    }  catch (err) {
+        return next(new httpError('Fetching user by userId failed', 500))
+    }
+
+    if(!user) {
+        return next(new httpError('Could not find any user by provided user Id'), 404)
+    }
+
+    res.json({ user : user.toObject({ getters: true }) })
+}
+
 const signup = async (req, res, next) => {
     const error = validationResult(req)
     if(!error.isEmpty()) {
         return next(new httpError('Invalid input passed.', 422))
     }
-    const { name, email, password } = req.body;
+    const { name, email, password, biography } = req.body;
+    
     let existingUser;
     try {
         existingUser = await User.findOne({ email : email })
     } catch (err) {
-        console.log(err)
         return next(new httpError('Signing up failed', 500))
     }
     if (existingUser) {
@@ -42,7 +58,8 @@ const signup = async (req, res, next) => {
     const newUser = new User({
         name,
         email,
-        password : hashedPassword, 
+        password : hashedPassword,
+        biography, 
         recipes : [],
         likes : []
     });
@@ -111,9 +128,39 @@ const login = async (req, res, next) => {
     })
 }
 
+const update = async (req, res, next) => {
+    const error = validationResult(req)
+    if(!error.isEmpty()) {
+        return next(new httpError('Invalid input passed.', 422))
+    }
+
+    const userId = req.params.userId
+    const {name, biography} = req.body
+
+    let user
+    try {
+        user = await User.findById(userId)
+    } catch(err) {
+        return next(new httpError('could not find the recipe by privided Id', 500))
+    }
+
+    user.name = name
+    user.biography = biography
+
+    try {
+        await user.save()
+    } catch (err) {
+        return next(new httpError('Updating the user failed', 500))
+    }
+    res.json({ user : user.toObject ({getters : true}) })
+}
+
 exports.getUsers = getUsers
+exports.getUserById = getUserById
 exports.signup = signup
 exports.login = login
+exports.update = update
+
 
 
  

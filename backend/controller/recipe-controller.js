@@ -1,8 +1,8 @@
 const {validationResult} = require('express-validator')
 const mongoose = require('mongoose')
 const httpError = require('../models/http-error')
-const Recipe = require('../models/Recipe')
-const User = require('../models/User')
+const Recipe = require('../models/recipe')
+const User = require('../models/user')
 
 const getRecipesByUserId = async (req, res, next) => {
     const userId = req.params.userId
@@ -44,11 +44,11 @@ const addRecipe = async (req, res, next) => {
     if (!error.isEmpty()) {
         return next(new httpError('Invalid input passed.', 422))
     }
-    const {title, description, imageURL, difficulty, cookingTime, preparationTime, category, ingredients, directions, servings, creator } = req.body
+    const {title, description, difficulty, cookingTime, preparationTime, category, ingredients, directions, servings, creator } = req.body
+    console.log(req.file)
     const newRecipe = new Recipe ({
         title,
         description, 
-        imageURL,
         difficulty,
         cookingTime,
         preparationTime, 
@@ -149,6 +149,12 @@ const updateRecipe = async (req,res, next) => {
     } catch (err) {
         return next(new httpError('could not find the recipe by privided Id', 500))
     }
+
+    //check if the creator is the user logged in 
+    if (recipe.creator.toString() !== req.userData.userId) {
+        return next(new httpError('You are not allowed to update the recipe', 401))
+    }
+
     recipe.title = title
     recipe.ingredients = ingredients
     recipe.directions = directions
@@ -170,9 +176,14 @@ const deleteRecipe = async (req, res, next) => {
     } catch (err) {
         return next(new httpError('Deleting the recipe failed'), 500)
     }
-    console.log(recipe)
+
     if(!recipe) {
         return next(new httpError('Couldnot find the recipe by provided id', 404))
+    }
+
+    //Check if the creator is the user logged in 
+    if(recipe.creator.id !== req.userData.userId) {
+        return next(new httpError('You are not allowed to delete the recipe', 401))
     }
     
     try {

@@ -1,9 +1,8 @@
+const fs = require('fs')
 const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const dotenv = require('dotenv');
-const cookieParser = require('cookie-parser');
-const cors = require('cors');
 const httpError = require('./models/http-error')
 const userRoute = require('./routes/user-route')
 const recipeRoute = require('./routes/recipe-route')
@@ -11,9 +10,6 @@ const recipeRoute = require('./routes/recipe-route')
 dotenv.config()
 const app = express()
 app.use(bodyParser.json())
-app.use(cookieParser())
-// cors
-app.use(cors());
 
 //enable Cors
 app.use(function(req, res, next) {
@@ -23,11 +19,8 @@ app.use(function(req, res, next) {
     next();
 });
 
-
-//routes middleware
 app.use('/api/user', userRoute)
 app.use('/api/recipe', recipeRoute)
-
 
 //handle 404 error
 app.use((req,res,next) => {
@@ -36,6 +29,11 @@ app.use((req,res,next) => {
 })
 
 app.use((error,req,res,next) => {
+    if (req.file) {
+        fs.unlink (req.file.path, err => {
+            console.log(err)
+        })
+    }
     if(res.headerSent) {
         return next(error)
     }
@@ -43,13 +41,12 @@ app.use((error,req,res,next) => {
     res.json({message:error.message || 'An unknown message occured'})
 });
 
-
 mongoose.set('useCreateIndex', true)
-mongoose.connect(process.env.DB_CONN , { useNewUrlParser: true, useUnifiedTopology: true })
-
+mongoose.connect(process.env.DB_CONN)
 .then(() => {
     app.listen(5000)
 })
 .catch(err => {
     console.log(err)
 })
+
