@@ -50,7 +50,7 @@ const getAllRecipesByCategory = async (req, res, next) => {
     }
 
     if (!category) {
-        return next(new httpError('Could not find the category by provided id' , 404))
+        return next(new httpError('Could not find the category ' , 404))
     }
 
     res.json({ category : category.toObject({ getters : true }) })
