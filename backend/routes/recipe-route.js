@@ -10,6 +10,7 @@ router.get('/', recipeController.getAllRecipes)
 router.get('/:recipeId', recipeController.getRecipeByRecipeId)
 router.get('/user/:userId' , recipeController.getRecipesByUserId )
 router.get('/all/popular' , recipeController.getPopularRecipes)
+router.get('/all/top/rated' , recipeController.getTopRatedRecipes)
 router.put('/rate', recipeController.rateRecipe)
 router.put('/:userId/:recipeId', recipeController.toggleLike)
 

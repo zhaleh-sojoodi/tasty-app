@@ -21,7 +21,17 @@ const getPopularRecipes = async (req, res, next) => {
     } catch {
         return next(new httpError('Fetching popular recipes failed', 500))
     }
-    res.json({ recipes :  recipes.map(recipe => recipe.toObject({ getters: true})) })
+    res.json({ recipes :  recipes.map(recipe => recipe.toObject({ getters: true })) })
+}
+
+const getTopRatedRecipes = async (req, res, next) => {
+    let recipes
+    try {
+        recipes = await Recipe.find({}).sort({ "ratings.averageRating" : -1 })
+    } catch (err) {
+        return next(new httpError('Fetching top rated recipes failed'), 500)
+    }
+    res.json({ recipes: recipes.map( recipe => recipe.toObject({ getters: true }) ) })
 }
 
 const getRecipesByUserId = async (req, res, next) => {
@@ -266,7 +276,7 @@ const deleteRecipe = async (req, res, next) => {
 
 exports.getAllRecipes = getAllRecipes
 exports.getPopularRecipes = getPopularRecipes
-//exports.getTopRatedRecipes = getTopRatedRecipes
+exports.getTopRatedRecipes = getTopRatedRecipes
 exports.getRecipesByUserId = getRecipesByUserId
 exports.getRecipeByRecipeId = getRecipeByRecipeId
 exports.addRecipe = addRecipe
