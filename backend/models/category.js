@@ -38,23 +38,5 @@ const categorySchema = new mongoose.Schema({
 
   
 })
- 
-// const Category = Category.create([
-//   {
-//     'name': 'Breakfast'
-//   }, {
-//     'name': 'Lunch'
-//   }, {
-//     'name': 'Dinner'
-//   },{
-//     'name': 'Sides'
-//   },
-//   {
-//     'name': 'Drinks'
-//   },
-//   {'name': 'Dessert'}
-  
-// ])
-
 
 module.exports = mongoose.model('Category', categorySchema)
