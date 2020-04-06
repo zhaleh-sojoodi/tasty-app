@@ -49,6 +49,20 @@ const getRecipeByRecipeId = async (req, res, next) => {
     res.json({ recipe : recipe.toObject({ getters : true }) })
 }
 
+const getRecipesBySearch = async (req, res, next) => {
+    const search = req.params.search
+
+    let recipes
+    try {
+        const regex = new RegExp(escapeRegex(search), 'gi') 
+        recipes = await Recipe.find({title : regex})
+       
+    } catch(err) {
+        return next(new httpError('Fetching recipes by search title failed', 500))
+    }
+    res.json({ recipes : recipes.map( recipe => recipe.toObject({ getters : true })) })
+}
+
 const getPopularRecipes = async (req, res, next) => {
     let recipes
     try {
@@ -275,13 +289,17 @@ const deleteRecipe = async (req, res, next) => {
     res.json({ message : "Deleted recipe"})
 }
 
+//For search by title
+function escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+};
+
 exports.getAllRecipes = getAllRecipes
 exports.getRecipesByUserId = getRecipesByUserId
 exports.getRecipeByRecipeId = getRecipeByRecipeId
 exports.getPopularRecipes = getPopularRecipes
 exports.getTopRatedRecipes = getTopRatedRecipes
-//exports.getRcipesByCategory = getRcipesByCategory
-//exports.getRecipesBySearch = getRecipesBySearch
+exports.getRecipesBySearch = getRecipesBySearch
 exports.addRecipe = addRecipe
 exports.rateRecipe = rateRecipe
 exports.toggleLike = toggleLike
