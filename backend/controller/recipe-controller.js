@@ -4,6 +4,16 @@ const httpError = require('../models/http-error')
 const Recipe = require('../models/recipe')
 const User = require('../models/user')
 
+const getAllRecipes = async (req, res, next) => {
+    let recipes
+    try {
+        recipes = await Recipe.find({})
+    } catch {
+        return next(new httpError('Fetching users failed', 500))
+    }
+    res.json({ recipes : recipes.map( recipe => recipe.toObject( { getters: true })) })
+}
+
 const getRecipesByUserId = async (req, res, next) => {
     const userId = req.params.userId
     let userWithRecipes;
@@ -200,6 +210,7 @@ const deleteRecipe = async (req, res, next) => {
     res.json({ message : "Deleted recipe"})
 }
 
+exports.getAllRecipes = getAllRecipes
 exports.getRecipesByUserId = getRecipesByUserId
 exports.getRecipeByRecipeId = getRecipeByRecipeId
 exports.addRecipe = addRecipe;

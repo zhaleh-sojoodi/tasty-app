@@ -6,6 +6,7 @@ const imageUpload = require('../middleware/image-upload')
 
 const router = express.Router()
 
+router.get('/', recipeController.getAllRecipes)
 router.get('/:recipeId', recipeController.getRecipeByRecipeId)
 router.get('/user/:userId' , recipeController.getRecipesByUserId )
 router.put('/:userId/:recipeId', recipeController.like)
