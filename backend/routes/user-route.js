@@ -5,14 +5,17 @@ const userController = require('../controller/user-controller')
 const router = express.Router()
 
 router.get('/', userController.getUsers)
+router.get('/:userId' , userController.getUserById)
 router.post(
     '/signup',
     [
         check('name').not().isEmpty(),
         check('email').normalizeEmail().isEmail(),
-        check('password').isLength({ min : 6 })
+        check('password').isLength({ min : 6 }),
+        check('biography').isLength({ max : 50})
     ],
     userController.signup)
 router.post('/login', userController.login)
+router.patch('/:userId', userController.update)
 
 module.exports = router 
