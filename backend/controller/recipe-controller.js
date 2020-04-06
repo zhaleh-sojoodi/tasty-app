@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const httpError = require('../models/http-error')
 const Recipe = require('../models/recipe')
 const User = require('../models/user')
+const Category = require('../models/category')
 
 const getRecipesByUserId = async (req, res, next) => {
     const userId = req.params.userId
@@ -38,6 +39,24 @@ const getRecipeByRecipeId = async (req, res, next) => {
 
     res.json({ recipe : recipe.toObject({ getters : true }) })
 }
+
+const getAllRecipesByCategory = async (req, res, next) => {
+    const category = req.params.category
+    let category
+    try {
+        category = await Category.findByName(category)
+    } catch(err) {
+        return next(new httpError('Could not find the category', 500))
+    }
+
+    if (!category) {
+        return next(new httpError('Could not find the category by provided id' , 404))
+    }
+
+    res.json({ category : category.toObject({ getters : true }) })
+}
+
+
 
 const addRecipe = async (req, res, next) => {
     const error = validationResult(req)
@@ -202,6 +221,7 @@ const deleteRecipe = async (req, res, next) => {
 
 exports.getRecipesByUserId = getRecipesByUserId
 exports.getRecipeByRecipeId = getRecipeByRecipeId
+exports.getAllRecipesByCategory= getAllRecipesByCategory
 exports.addRecipe = addRecipe;
 exports.like = like;
 exports.updateRecipe = updateRecipe;

@@ -3,13 +3,14 @@ const { check } = require('express-validator')
 const recipeController = require('../controller/recipe-controller')
 const checkAuth = require('../middleware/check-auth')
 const imageUpload = require('../middleware/image-upload')
+const Category = require('../models/category')
 
 const router = express.Router()
 
 router.get('/:recipeId', recipeController.getRecipeByRecipeId)
 router.get('/user/:userId' , recipeController.getRecipesByUserId )
 router.put('/:userId/:recipeId', recipeController.like)
-
+router.get('/category', recipeController.getAllRecipesByCategory)
 //router.use(checkAuth)
 
 router.post(
