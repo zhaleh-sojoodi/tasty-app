@@ -14,26 +14,6 @@ const getAllRecipes = async (req, res, next) => {
     res.json({ recipes : recipes.map( recipe => recipe.toObject( { getters: true })) })
 }
 
-const getPopularRecipes = async (req, res, next) => {
-    let recipes
-    try {
-        recipes = await Recipe.find({}).sort({ "likes" : -1})
-    } catch {
-        return next(new httpError('Fetching popular recipes failed', 500))
-    }
-    res.json({ recipes :  recipes.map(recipe => recipe.toObject({ getters: true })) })
-}
-
-const getTopRatedRecipes = async (req, res, next) => {
-    let recipes
-    try {
-        recipes = await Recipe.find({}).sort({ "ratings.averageRating" : -1 })
-    } catch (err) {
-        return next(new httpError('Fetching top rated recipes failed'), 500)
-    }
-    res.json({ recipes: recipes.map( recipe => recipe.toObject({ getters: true }) ) })
-}
-
 const getRecipesByUserId = async (req, res, next) => {
     const userId = req.params.userId
     let userWithRecipes;
@@ -68,6 +48,27 @@ const getRecipeByRecipeId = async (req, res, next) => {
     
     res.json({ recipe : recipe.toObject({ getters : true }) })
 }
+
+const getPopularRecipes = async (req, res, next) => {
+    let recipes
+    try {
+        recipes = await Recipe.find({}).sort({ "likes" : -1})
+    } catch {
+        return next(new httpError('Fetching popular recipes failed', 500))
+    }
+    res.json({ recipes :  recipes.map(recipe => recipe.toObject({ getters: true })) })
+}
+
+const getTopRatedRecipes = async (req, res, next) => {
+    let recipes
+    try {
+        recipes = await Recipe.find({}).sort({ "ratings.averageRating" : -1 })
+    } catch (err) {
+        return next(new httpError('Fetching top-rated recipes failed'), 500)
+    }
+    res.json({ recipes: recipes.map( recipe => recipe.toObject({ getters: true }) ) })
+}
+
 
 const addRecipe = async (req, res, next) => {
     const error = validationResult(req)
@@ -275,10 +276,12 @@ const deleteRecipe = async (req, res, next) => {
 }
 
 exports.getAllRecipes = getAllRecipes
-exports.getPopularRecipes = getPopularRecipes
-exports.getTopRatedRecipes = getTopRatedRecipes
 exports.getRecipesByUserId = getRecipesByUserId
 exports.getRecipeByRecipeId = getRecipeByRecipeId
+exports.getPopularRecipes = getPopularRecipes
+exports.getTopRatedRecipes = getTopRatedRecipes
+//exports.getRcipesByCategory = getRcipesByCategory
+//exports.getRecipesBySearch = getRecipesBySearch
 exports.addRecipe = addRecipe
 exports.rateRecipe = rateRecipe
 exports.toggleLike = toggleLike

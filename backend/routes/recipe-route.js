@@ -14,7 +14,7 @@ router.get('/all/top/rated' , recipeController.getTopRatedRecipes)
 router.put('/rate', recipeController.rateRecipe)
 router.put('/:userId/:recipeId', recipeController.toggleLike)
 
-//router.use(checkAuth)
+router.use(checkAuth)
 
 router.post(
     '/', 
