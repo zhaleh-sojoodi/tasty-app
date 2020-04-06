@@ -9,9 +9,19 @@ const getAllRecipes = async (req, res, next) => {
     try {
         recipes = await Recipe.find({})
     } catch {
-        return next(new httpError('Fetching users failed', 500))
+        return next(new httpError('Fetching recipes failed', 500))
     }
     res.json({ recipes : recipes.map( recipe => recipe.toObject( { getters: true })) })
+}
+
+const getPopularRecipes = async (req, res, next) => {
+    let recipes
+    try {
+        recipes = await Recipe.find({}).sort({ "likes" : -1})
+    } catch {
+        return next(new httpError('Fetching popular recipes failed', 500))
+    }
+    res.json({ recipes :  recipes.map(recipe => recipe.toObject({ getters: true})) })
 }
 
 const getRecipesByUserId = async (req, res, next) => {
@@ -39,7 +49,7 @@ const getRecipeByRecipeId = async (req, res, next) => {
     try {
         recipe = await Recipe.findById(recipeId)
     } catch(err) {
-        return next(new httpError('Could not the recipe', 500))
+        return next(new httpError('Could not find the recipe', 500))
     }
 
     if (!recipe) {
@@ -211,6 +221,7 @@ const deleteRecipe = async (req, res, next) => {
 }
 
 exports.getAllRecipes = getAllRecipes
+exports.getPopularRecipes = getPopularRecipes
 exports.getRecipesByUserId = getRecipesByUserId
 exports.getRecipeByRecipeId = getRecipeByRecipeId
 exports.addRecipe = addRecipe;

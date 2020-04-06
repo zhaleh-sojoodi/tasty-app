@@ -9,6 +9,7 @@ const router = express.Router()
 router.get('/', recipeController.getAllRecipes)
 router.get('/:recipeId', recipeController.getRecipeByRecipeId)
 router.get('/user/:userId' , recipeController.getRecipesByUserId )
+router.get('/all/popular' , recipeController.getPopularRecipes)
 router.put('/:userId/:recipeId', recipeController.like)
 
 router.use(checkAuth)
