@@ -10,7 +10,7 @@ router.get('/:recipeId', recipeController.getRecipeByRecipeId)
 router.get('/user/:userId' , recipeController.getRecipesByUserId )
 router.put('/:userId/:recipeId', recipeController.like)
 
-//router.use(checkAuth)
+router.use(checkAuth)
 
 router.post(
     '/', 
