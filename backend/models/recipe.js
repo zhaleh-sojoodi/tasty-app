@@ -50,5 +50,8 @@ const recipeSchema = new Schema({
 })
 
 module.exports = mongoose.model('Recipe', recipeSchema);
+<<<<<<< HEAD
+=======
 
 
+>>>>>>> 43e44e39a7963bb3c6cd1ed8bcf574b2ab7f837e
