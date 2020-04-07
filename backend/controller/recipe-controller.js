@@ -63,6 +63,22 @@ const getRecipesBySearch = async (req, res, next) => {
     res.json({ recipes : recipes.map( recipe => recipe.toObject({ getters : true })) })
 }
 
+const getRecipesByCategory = async(req, res, next) => {
+    const category = req.params.category
+    let recipes
+    try{
+        recipe = await Recipe.find(category)
+    }
+    catch(err){
+        return next (new httpError('Could not find the recipe', 500))
+
+    }
+    if(!category){
+        return next(new httpError('Could not find the recipe by provided category' , 404))
+    }
+    res.json({ recipes: recipes.map( recipe => recipe.toObject({ getters: true }) ) })
+}
+
 const getPopularRecipes = async (req, res, next) => {
     let recipes
     try {
@@ -300,6 +316,7 @@ exports.getRecipeByRecipeId = getRecipeByRecipeId
 exports.getPopularRecipes = getPopularRecipes
 exports.getTopRatedRecipes = getTopRatedRecipes
 exports.getRecipesBySearch = getRecipesBySearch
+exports.getRecipesByCategory = getRecipesByCategory
 exports.addRecipe = addRecipe
 exports.rateRecipe = rateRecipe
 exports.toggleLike = toggleLike

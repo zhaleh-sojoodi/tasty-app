@@ -1,28 +1,27 @@
-const aws = require('aws-sdk')
 const multer = require('multer')
-const multerS3 = require('multer-s3')
-const dotenv = require('dotenv');
+const uuid = require('uuid/v1')
 
-dotenv.config();
+const MIME_TYPE_MAP = {
+    'image/png'     : 'png',
+    'image/jpeg'    : 'jpeg',
+    'image/jpg'     : 'jpg'
+}
 
-aws.config.update( {
-    secretAccessKey : process.env.SECERET_ACCESS_KEY,
-    accessKeyId : process.env.ACCESS_KEY_ID,
-    region : 'us-east-1'
-})
-const s3 = new aws.S3({  })
- 
-const upload = multer({
-  storage: multerS3({
-    s3: s3,
-    bucket: 'recipe-final-project',
-    metadata: function (req, file, cb) {
-      cb(null, {fieldName: 'Testing'});
-    },
-    key: function (req, file, cb) {
-      cb(null, Date.now().toString())
+const imageUpload = multer({
+    storage : multer.diskStorage({
+        destination : (req, file, cb) => {
+            cb(null, 'upload/images')
+        },
+        filename : (req, file, cb) => {
+            const ext = MIME_TYPE_MAP[file.mimetype]
+            cb(null, uuid() + '.' + ext)
+        }
+    }),
+    fileFilter : (req, file, cb) => {
+        const isValid = !! MIME_TYPE_MAP.file[mimetype]
+        const error = isValid ? null : new Error('Invalid mime type!')
+        cb(error, isValid)
     }
-  })
 })
 
-module.exports = upload
+module.exports = imageUpload
