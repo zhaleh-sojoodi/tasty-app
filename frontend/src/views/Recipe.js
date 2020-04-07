@@ -23,7 +23,10 @@ function Recipe(props) {
   const [averageRating, changeAverageRating] = useState();
 
   useEffect(() => {
-    if (recipe.ratings.averageRating) {
+    //Call getRecipeByRecipeId
+    //Find creator
+    //Call getUserById
+    if (recipe.ratings.averageRating !== undefined) {
       changeAverageRating(recipe.ratings.averageRating);
     } else {
       changeAverageRating(0);

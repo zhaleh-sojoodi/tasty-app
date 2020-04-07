@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Redirect } from 'react-router-dom';
 import "assets/css/custom.css";
 
@@ -22,12 +22,22 @@ import Footer from "../components/Footer";
 
 const BASE_URL = "http://localhost:5000/api/user";
 const AUTH_TOKEN = "auth_token";
+const USER_ID = "user_id";
 
 function Login(props) {
+
+  useEffect(() => {
+    // Redirect to dashboard if user is already logged in
+    if(sessionStorage.getItem(AUTH_TOKEN)) {
+      setRedirect(true);
+    }
+  }, [])
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+  // const [message, setMessage] = useState("");
   const [redirect, setRedirect] = useState(false);
+
   function login() {
     fetch(BASE_URL + "/login", {
       method: 'POST',
@@ -46,10 +56,12 @@ function Login(props) {
       .then(json => {
         if (json.token !== "" && json.token != null) {
           sessionStorage.setItem(AUTH_TOKEN, json["token"]);
+          sessionStorage.setItem("AUTH_EMAIL", json.email);
+          sessionStorage.setItem(USER_ID, json["userId"]);
           setRedirect(true);
         }
         if (json.message === "Invalid Credentials") {
-          setMessage(json.message);
+          //setMessage(json.message);
         }
       })
       // Data not retrieved.
@@ -67,12 +79,14 @@ function Login(props) {
   
   return (
     <>
+      {/* Redirect to page where user was before logging in. */}
       {redirect ? <Redirect to={{
         pathname: getPrevLocation(),
         state: {
           loggedIn: true
         }
       }} /> : null}
+
       <NavigationBar />
       <main className="main">
         <section className="section section-shaped section-lg" style={{ minHeight: '100vh' }}>

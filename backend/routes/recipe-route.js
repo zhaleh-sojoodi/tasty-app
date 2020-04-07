@@ -13,6 +13,7 @@ router.get('/user/:userId' , recipeController.getRecipesByUserId )
 router.get('/all/popular' , recipeController.getPopularRecipes)
 router.get('/all/recipes/categories/:category', recipeController.getRecipesByCategory)
 router.get('/all/top/rated' , recipeController.getTopRatedRecipes)
+router.get('/all/recipes/search/title/:search', recipeController.getRecipesBySearch)
 router.put('/rate', recipeController.rateRecipe)
 router.put('/:userId/:recipeId', recipeController.toggleLike)
 
@@ -22,6 +23,9 @@ router.post(
     '/', 
     [
         check("title").not().isEmpty(),
+        check("difficulty").not().isEmpty(),
+        check("cookingTime").not().isEmpty(),
+        check("preparationTime").not().isEmpty(),
         check("category").not().isEmpty(),
         check("ingredients").not().isEmpty(),
         check("directions").not().isEmpty(),
