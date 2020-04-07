@@ -23,15 +23,19 @@ import {
 } from 'reactstrap';
 
 const AUTH_TOKEN = "auth_token";
+const USER_EMAIL = "user_email";
+const USER_ID = "user_id";
 
 function NavigationBar() {
   const [searchValue, setSearchValue] = useState("");
   const [redirect, setRedirect] = useState(false);
-  const [username, setUsername] = useState(null);
+  const [username, setUsername] = useState();
+  const [userID, setUserID] = useState(null);
 
   function logout() {
     sessionStorage.removeItem(AUTH_TOKEN);
-    sessionStorage.removeItem("AUTH_EMAIL");
+    sessionStorage.removeItem(USER_EMAIL);
+    sessionStorage.removeItem(USER_ID);
     setRedirect(true);
   }
 
@@ -43,10 +47,13 @@ function NavigationBar() {
   }
 
   useEffect(() => {
-    if(sessionStorage.getItem("AUTH_EMAIL")) {
-      setUsername(sessionStorage.getItem("AUTH_EMAIL"));
+    if(sessionStorage.getItem(USER_EMAIL)) {
+      setUsername(sessionStorage.getItem(USER_EMAIL));
     }
-  }, [username])
+    if(sessionStorage.getItem(USER_ID)) {
+      setUserID(sessionStorage.getItem(USER_ID));
+    }
+  }, [])
 
   return (
     <header className="header-global">
@@ -87,7 +94,7 @@ function NavigationBar() {
                   <span className="nav-link-inner--text">{ username && username }</span>
                 </DropdownToggle>
                 <DropdownMenu>
-                  <DropdownItem to="/profile" tag={Link}>My Profile</DropdownItem>
+                  <DropdownItem to={`/profile/${userID}`} tag={Link}>My Profile</DropdownItem>
                   <DropdownItem to="/create-recipe" tag={Link}>Create Recipe</DropdownItem>
                   <DropdownItem to="/liked" tag={Link}>Liked Recipes</DropdownItem>
                   <DropdownItem to="/my-recipes" tag={Link}>Your Recipes</DropdownItem>
