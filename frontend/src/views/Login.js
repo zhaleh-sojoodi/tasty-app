@@ -46,6 +46,8 @@ function Login(props) {
       .then(json => {
         if (json.token !== "" && json.token != null) {
           sessionStorage.setItem(AUTH_TOKEN, json["token"]);
+          sessionStorage.setItem("AUTH_EMAIL", json.email);
+
           setRedirect(true);
         }
         if (json.message === "Invalid Credentials") {
@@ -67,12 +69,17 @@ function Login(props) {
   
   return (
     <>
+      {/* Redirect to dashboard if user is already logged in. */}
+      { sessionStorage.getItem(AUTH_TOKEN) != null && props.history.push("/") }
+
+      {/* Redirect to page where user was before logging in. */}
       {redirect ? <Redirect to={{
         pathname: getPrevLocation(),
         state: {
           loggedIn: true
         }
       }} /> : null}
+
       <NavigationBar />
       <main className="main">
         <section className="section section-shaped section-lg" style={{ minHeight: '100vh' }}>

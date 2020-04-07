@@ -20,7 +20,9 @@ import {
 import NavigationBar from "../components/NavigationBar";
 import Footer from "../components/Footer";
 
-function Register() {
+const AUTH_TOKEN = "auth_token";
+
+function Register(props) {
 
   const [formData, setFormData] = useState({
     name: "",
@@ -69,6 +71,9 @@ function Register() {
 
   return (
     <>
+      {/* Redirect to dashboard if user is already logged in. */}
+      { sessionStorage.getItem(AUTH_TOKEN) != null && props.history.push("/") }
+
       <NavigationBar />
       <main className="main">
         <section className="section section-shaped section-lg" style={{minHeight:'95vh'}}>
