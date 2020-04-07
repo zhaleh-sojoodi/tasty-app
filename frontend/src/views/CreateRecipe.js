@@ -31,13 +31,12 @@ function CreateRecipe() {
   const [ingredients, setIngredients] = useState([]);
   const [directions, setDirections] = useState([]);
   const [errorMessage, setErrorMessage] = useState([]);
-  const [recipe, setRecipe] = useState();
-  const [redirect, setRedirect] = useState(false);
+  const [recipeId, setRecipeId] = useState("");
 
   function sortStringToArray(string) {
     if (string !== "") {
     var array = [];
-    string.split('\n').map((item) => {
+    string.split('\n').forEach((item) => {
       if (item.length > 0)
         array.push(item)
     });
@@ -64,7 +63,7 @@ function CreateRecipe() {
         setErrorMessage(errorMessage.push("Ingredients section is missing."));
       }
       if (directions !== "") {
-        var directionsArray = sortStringToArray(ingredients);
+        var directionsArray = sortStringToArray(directions);
       } else {
         setErrorMessage(errorMessage.push("Directions section is missing."));
       }
@@ -75,6 +74,7 @@ function CreateRecipe() {
       submitForm(ingredientsArray, directionsArray);
     } else {
       console.log("display errors");
+      console.log(errorMessage);
     }
     setErrorMessage([]);
   }
@@ -111,8 +111,7 @@ function CreateRecipe() {
         console.log(json);
         if (json !== null) {
           console.log("ADDED SUCCESSFUL");
-          setRecipe(recipe);
-          setRedirect(true);
+          setRecipeId(json._id);
         }
       })
       // Data not retrieved.
@@ -123,19 +122,10 @@ function CreateRecipe() {
 
   return (
     <div>
-      {redirect ? <Redirect to={{
+      {recipeId !== "" ? <Redirect to={{
         pathname: "/recipe",
         state: {
-          title: title,
-          description: description,
-          preparationTime: preparationTime,
-          cookingTime: cookingTime,
-          servings: servings,
-          difficulty: difficulty,
-          category: category,
-          ingredients: sortStringToArray(ingredients),
-          directions: sortStringToArray(directions),
-          creator: sessionStorage.getItem(USER_ID)
+          recipeId: recipeId
         }
       }} /> : null}
       <NavigationBar />
