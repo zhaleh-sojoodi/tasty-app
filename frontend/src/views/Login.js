@@ -22,6 +22,7 @@ import Footer from "../components/Footer";
 
 const BASE_URL = "http://localhost:5000/api/user";
 const AUTH_TOKEN = "auth_token";
+const USER_EMAIL = "user_email";
 const USER_ID = "user_id";
 
 function Login(props) {
@@ -56,7 +57,7 @@ function Login(props) {
       .then(json => {
         if (json.token !== "" && json.token != null) {
           sessionStorage.setItem(AUTH_TOKEN, json["token"]);
-          sessionStorage.setItem("AUTH_EMAIL", json.email);
+          sessionStorage.setItem(USER_EMAIL, json.email);
           sessionStorage.setItem(USER_ID, json["userId"]);
           setRedirect(true);
         }
@@ -138,9 +139,14 @@ function Login(props) {
                       </FormGroup>
                       {/* Submit Form */}
                       <div className="text-center">
-                        <Button className="my-4" color="danger" type="button" onClick={() => login()}>
-                          Sign in
-                      </Button>
+                        <Button
+                          className="my-4"
+                          color="danger"
+                          type="button"
+                          onClick={() => login()}
+                        >
+                          Sign In
+                        </Button>
                       </div>
                     </Form>
                   </CardBody>

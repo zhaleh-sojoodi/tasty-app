@@ -22,6 +22,8 @@ import Footer from "../components/Footer";
 
 const BASE_URL = "http://localhost:5000/api/user";
 const AUTH_TOKEN = "auth_token";
+const USER_EMAIL = "user_email";
+const USER_ID = "user_id";
 
 function Register(props) {
 
@@ -72,8 +74,8 @@ function Register(props) {
         // Check if token was received
         if (json.token !== "" && json.token != null) {
           sessionStorage.setItem(AUTH_TOKEN, json["token"]);
-          sessionStorage.setItem("AUTH_EMAIL", json.email);
-
+          sessionStorage.setItem(USER_EMAIL, json.email);
+          sessionStorage.setItem(USER_ID, json["userId"]);
           setRedirect(true);
         }
         if (json.message === "Signing up failed") {
