@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { Redirect } from 'react-router-dom';
 import "assets/css/custom.css";
 
 import {
@@ -20,24 +20,32 @@ import {
 import NavigationBar from "../components/NavigationBar";
 import Footer from "../components/Footer";
 
+const BASE_URL = "http://localhost:5000/api/user";
 const AUTH_TOKEN = "auth_token";
 
 function Register(props) {
 
+  useEffect(() => {
+    // Redirect to dashboard if user is already logged in
+    if(sessionStorage.getItem(AUTH_TOKEN)) {
+      setRedirect(true);
+    }
+  }, [])
+
+  const [redirect, setRedirect] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     confirmpassword: ""
   });
-
   const { name, email, password, confirmpassword } = formData;
 
   const onChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   }
 
-  const onSubmit = async e => {
+  const onSubmit = e => {
     e.preventDefault();
 
     if(password !== confirmpassword) {
@@ -50,29 +58,50 @@ function Register(props) {
         confirmpassword
       }
 
-      try {
-        const config = {
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          }
-        }
+      // Fetch
+      fetch(BASE_URL + "/signup", {
+        method: "POST",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newUser)
+      })
+      .then(response => response.json())
+      .then(json => {
+        // Check if token was received
+        if (json.token !== "" && json.token != null) {
+          sessionStorage.setItem(AUTH_TOKEN, json["token"]);
+          sessionStorage.setItem("AUTH_EMAIL", json.email);
 
-        const body = JSON.stringify(newUser);
-        const res = await axios.post('http://localhost:5000/api/user/signup', body, config);
-        
-        console.log("Successful registration!");
-        console.log(res.data);
-      } catch(error) {
-        console.error(error.response);
-      }
+          setRedirect(true);
+        }
+        if (json.message === "Signing up failed") {
+          console.log(json.message);
+        }
+      })
+      .catch(function (error) {
+        console.log("Server error. Please try again later.");
+      })
     }
+  }
+
+  function getPrevLocation() {
+    if (props.location.state === undefined) {
+      return '/';
+    }
+    return props.location.state.prevLocation
   }
 
   return (
     <>
-      {/* Redirect to dashboard if user is already logged in. */}
-      { sessionStorage.getItem(AUTH_TOKEN) != null && props.history.push("/") }
+      {/* Redirect to page where user was before logging in. */}
+      {redirect ? <Redirect to={{
+        pathname: getPrevLocation(),
+        state: {
+          loggedIn: true
+        }
+      }} /> : null}
 
       <NavigationBar />
       <main className="main">

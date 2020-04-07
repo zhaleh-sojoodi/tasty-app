@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Redirect } from 'react-router-dom';
 import "assets/css/custom.css";
 
@@ -24,10 +24,19 @@ const BASE_URL = "http://localhost:5000/api/user";
 const AUTH_TOKEN = "auth_token";
 
 function Login(props) {
+
+  useEffect(() => {
+    // Redirect to dashboard if user is already logged in
+    if(sessionStorage.getItem(AUTH_TOKEN)) {
+      setRedirect(true);
+    }
+  }, [])
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [redirect, setRedirect] = useState(false);
+
   function login() {
     fetch(BASE_URL + "/login", {
       method: 'POST',
@@ -69,9 +78,6 @@ function Login(props) {
   
   return (
     <>
-      {/* Redirect to dashboard if user is already logged in. */}
-      { sessionStorage.getItem(AUTH_TOKEN) != null && props.history.push("/") }
-
       {/* Redirect to page where user was before logging in. */}
       {redirect ? <Redirect to={{
         pathname: getPrevLocation(),
