@@ -105,7 +105,6 @@ const getTopRatedRecipes = async (req, res, next) => {
     res.json({ recipes: recipes.map( recipe => recipe.toObject({ getters: true }) ) })
 }
 
-
 const addRecipe = async (req, res, next) => {
     const error = validationResult(req)
     if (!error.isEmpty()) {
@@ -123,7 +122,6 @@ const addRecipe = async (req, res, next) => {
             averageRating : 0 , 
             ratings : []
         },
-        likes : 0,
         category,
         ingredients,
         directions, 

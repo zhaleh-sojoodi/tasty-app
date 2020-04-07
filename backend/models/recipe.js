@@ -34,8 +34,14 @@ const recipeSchema = new Schema({
             }
           }
         ]
-      }, 
-    likes : {type : Number},
+    },
+    likes : {
+        likesNumber : Number,
+        likes : [{
+            type: mongoose.Types.ObjectId,
+            ref : 'User'
+        }]
+    },
     category : {
         type :String, 
         required: true
