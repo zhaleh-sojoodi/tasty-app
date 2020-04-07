@@ -23,7 +23,6 @@ function Recipe(props) {
   const [averageRating, changeAverageRating] = useState();
 
   useEffect(() => {
-    console.log(props.location.state.recipeId);
     //Call getRecipeByRecipeId
     //Find creator
     //Call getUserById
