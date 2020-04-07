@@ -2,7 +2,7 @@ const express = require('express')
 const { check } = require('express-validator')
 const recipeController = require('../controller/recipe-controller')
 const checkAuth = require('../middleware/check-auth')
-const imageUpload = require('../middleware/image-upload')
+//const imageUpload = require('../middleware/image-upload')
 const Category = require('../models/category')
 
 const router = express.Router()
