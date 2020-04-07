@@ -22,6 +22,7 @@ import Footer from "../components/Footer";
 
 const BASE_URL = "http://localhost:5000/api/user";
 const AUTH_TOKEN = "auth_token";
+const USER_ID = "user_id";
 
 function Login(props) {
   const [email, setEmail] = useState("");
@@ -46,6 +47,7 @@ function Login(props) {
       .then(json => {
         if (json.token !== "" && json.token != null) {
           sessionStorage.setItem(AUTH_TOKEN, json["token"]);
+          sessionStorage.setItem(USER_ID, json["userId"]);
           setRedirect(true);
         }
         if (json.message === "Invalid Credentials") {
