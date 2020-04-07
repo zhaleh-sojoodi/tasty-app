@@ -12,7 +12,6 @@ This app allows users to share and discover new recipes.
 * Users can create new recipes
 * Users can 'like' a recipe
 * Users can give a rating to a recipe (stars)
-* Users can print out recipes
 * Users can delete their own recipes
 * Users can search for recipes with keywords
 * Users have profiles displaying their own recipes and recipes they've liked
@@ -26,6 +25,7 @@ This app allows users to share and discover new recipes.
 * Users can see related recipes on a recipe page
 * Users can add nutritional information to their recipes
 * Users can search for other users
+* Users can print out recipes
 
 ## Database Schema (ERD)
 In progress.
