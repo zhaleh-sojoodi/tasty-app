@@ -5,6 +5,7 @@ import Login from './views/Login';
 import Register from './views/Register';
 import Liked from './views/Liked';
 import Profile from './views/Profile';
+import EditProfile from './views/EditProfile';
 import Recipe from './views/Recipe';
 import MyRecipes from './views/MyRecipes';
 import CreateRecipe from './views/CreateRecipe';
@@ -59,6 +60,8 @@ class App extends Component {
         <Route path="/register" exact render={props => <Register {...props} />} />
         <Route path="/recipe" exact render={props => <Recipe {...props} />} />
         <ProtectedRoute path="/profile" exact component={Profile} />
+        <ProtectedRoute path="/profile/:id" exact component={Profile} />
+        <ProtectedRoute path="/edit-profile" exact component={EditProfile} />
         <ProtectedRoute path="/liked" exact component={Liked} />} />
         <ProtectedRoute path="/my-recipes" exact component={MyRecipes} />} />
         <ProtectedRoute path="/create-recipe" exact component={CreateRecipe} />} />
