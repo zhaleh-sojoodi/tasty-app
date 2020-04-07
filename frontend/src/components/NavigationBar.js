@@ -1,4 +1,4 @@
-import React, { useState, style } from 'react';
+import React, { useState, useEffect, style } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 
 import {
@@ -27,9 +27,11 @@ const AUTH_TOKEN = "auth_token";
 function NavigationBar() {
   const [searchValue, setSearchValue] = useState("");
   const [redirect, setRedirect] = useState(false);
+  const [username, setUsername] = useState(null);
 
   function logout() {
     sessionStorage.removeItem(AUTH_TOKEN);
+    sessionStorage.removeItem("AUTH_EMAIL");
     setRedirect(true);
   }
 
@@ -39,6 +41,12 @@ function NavigationBar() {
     }
     return false;
   }
+
+  useEffect(() => {
+    if(sessionStorage.getItem("AUTH_EMAIL")) {
+      setUsername(sessionStorage.getItem("AUTH_EMAIL"));
+    }
+  }, [username])
 
   return (
     <header className="header-global">
@@ -76,7 +84,7 @@ function NavigationBar() {
               <UncontrolledDropdown nav style={checkUserLoggedIn() ? {display: 'initial'} : {display: 'none'}}>
                 <DropdownToggle nav caret>
                   <i className="ni ni-collection d-lg-none mr-1" />
-                  <span className="nav-link-inner--text">Jane Doe</span>
+                  <span className="nav-link-inner--text">{ username && username }</span>
                 </DropdownToggle>
                 <DropdownMenu>
                   <DropdownItem to="/profile" tag={Link}>My Profile</DropdownItem>
