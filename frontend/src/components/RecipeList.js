@@ -51,7 +51,7 @@ function RecipeList(props) {
         //console.log(recipe);
         return (
           // {/* State to be changed to ObjectID */ }
-          <Link to={{ pathname: "/recipe", state: recipe.creator }} key={index}>
+          <Link to={{ pathname: "/recipe", state: recipe }} key={index}>
             <ListGroupItem className="mb-3" tag="button" action >
               <Row>
                 <Col sm="12" md="4" lg="3">

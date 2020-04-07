@@ -12,12 +12,13 @@ import {
 } from 'reactstrap';
 
 function RecipeDisplay(props) {
+  
   return (
     <Row>
       {props.props.map(function (recipe, index) {
         return (
           <Col key={index} lg="4" md="6" className="pb-4">
-            <Link to={{ pathname: "/recipe", state: recipe.creator }}>
+            <Link to={{ pathname: "/recipe", state: recipe }}>
               <Card>
                 <CardImg top width="100%" src={recipe.image} alt={recipe.title} />
                 <CardBody>

@@ -28,7 +28,6 @@ function Dashboard() {
         const response = await fetch(uri, settings);
         let data = await response.json();
         setMostPopular(data.recipes);
-        console.log(data.recipes);
       } catch(e) {
         console.error(e);
       }
@@ -40,7 +39,6 @@ function Dashboard() {
         const response = await fetch(uri, settings);
         let data = await response.json();
         setHighestRated(data.recipes);
-        console.log(data.recipes);
       } catch(e) {
         console.error(e);
       }
