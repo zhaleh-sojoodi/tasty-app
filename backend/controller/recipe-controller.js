@@ -122,6 +122,10 @@ const addRecipe = async (req, res, next) => {
             averageRating : 0 , 
             ratings : []
         },
+        likes : {
+            likesNumber : 0 ,
+            likes : []
+        },
         category,
         ingredients,
         directions, 
