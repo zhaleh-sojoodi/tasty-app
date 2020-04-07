@@ -49,6 +49,28 @@ const getRecipeByRecipeId = async (req, res, next) => {
     res.json({ recipe : recipe.toObject({ getters : true }) })
 }
 
+const getLikedRecipesByUserId = async (req, res, next) => {
+    const userId = req.params.userId
+    
+    let user
+    try {
+        user = await User.findById(userId).populate('likes')
+    } catch(err) {
+        return next(new httpError('Could not find the user'), 500)
+    }
+    if(!user) {
+        return next(new httpError('Could not find the recipe by provided id' , 404))
+    }
+
+    let likedRecipes
+    try {
+        likedRecipes = user.likes
+    } catch(err) {
+        return next(new httpError('Feting liked recipes failed'), 500)
+    }
+
+    res.json({likedRecipes : likedRecipes.map(recipe => recipe.toObject({ getters: true })) })
+}
 const getRecipesBySearch = async (req, res, next) => {
     const search = req.params.search
 
@@ -297,6 +319,7 @@ function escapeRegex(text) {
 exports.getAllRecipes = getAllRecipes
 exports.getRecipesByUserId = getRecipesByUserId
 exports.getRecipeByRecipeId = getRecipeByRecipeId
+exports.getLikedRecipesByUserId = getLikedRecipesByUserId
 exports.getPopularRecipes = getPopularRecipes
 exports.getTopRatedRecipes = getTopRatedRecipes
 exports.getRecipesBySearch = getRecipesBySearch
