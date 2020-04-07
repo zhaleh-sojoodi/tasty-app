@@ -303,7 +303,7 @@ const deleteRecipe = async (req, res, next) => {
         sess.startTransaction();
         await recipe.remove({ session : sess })
         recipe.creator.recipes.pull(recipe)
-        await recipe.creator.save({ session: sess})
+        await recipe.creator.save({ session: sess })
         sess.commitTransaction()
     } catch (err) {
         console.log(err)
