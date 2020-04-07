@@ -20,6 +20,7 @@ const userSchema = new Schema({
     biography: {
         type: String
     },
+    imageURL : String , 
     recipes : [{
         type : mongoose.Types.ObjectId, 
         require : true, ref : 'Recipe'
