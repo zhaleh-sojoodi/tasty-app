@@ -8,7 +8,6 @@ import Footer from "components/Footer";
 import RecipeDisplay from "components/RecipeDisplay";
 
 const BASE_URL = "http://localhost:5000/api/recipe/all";
-const USER_ID = 'user_id';
 
 function Dashboard() {
   const [mostPopular, setMostPopular] = useState();

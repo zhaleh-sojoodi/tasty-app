@@ -35,7 +35,7 @@ function Login(props) {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+  // const [message, setMessage] = useState("");
   const [redirect, setRedirect] = useState(false);
 
   function login() {
@@ -61,7 +61,7 @@ function Login(props) {
           setRedirect(true);
         }
         if (json.message === "Invalid Credentials") {
-          setMessage(json.message);
+          //setMessage(json.message);
         }
       })
       // Data not retrieved.
