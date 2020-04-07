@@ -60,9 +60,8 @@ const signup = async (req, res, next) => {
         name,
         email,
         password : hashedPassword,
-        biography, 
-        recipes : [],
-        likes : []
+        biography,
+        recipes : []
     });
     
     try {
@@ -83,8 +82,13 @@ const signup = async (req, res, next) => {
         return next(new httpError('Signing up failed'), 500)
     }
 
-    res.json({ userId : newUser.id, email : newUser.email, token : token })
-}
+    res.json({ userId : newUser.id, 
+                email : newUser.email,  
+                token : token, 
+                biography : newUser.biography, 
+                name : newUser.name
+            })
+    }
 
 const login = async (req, res, next) => {
     const { email, password } = req.body
@@ -123,6 +127,7 @@ const login = async (req, res, next) => {
     }
 
     res.json({
+       name  : existingUser.name, 
        userId : existingUser.id ,
        email : existingUser.email,
        token : token
@@ -151,9 +156,14 @@ const update = async (req, res, next) => {
     try {
         await user.save()
     } catch (err) {
+        console.log(err)
         return next(new httpError('Updating the user failed', 500))
     }
-    res.json({ user : user.toObject ({getters : true}) })
+    res.json({ userId : user.id, 
+        email : user.email,  
+        biography : user.biography, 
+        name : user.name
+    })
 }
 
 exports.getUsers = getUsers

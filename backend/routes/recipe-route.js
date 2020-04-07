@@ -7,9 +7,11 @@ const Category = require('../models/category')
 
 const router = express.Router()
 
+
 router.get('/', recipeController.getAllRecipes)
 router.get('/:recipeId', recipeController.getRecipeByRecipeId)
 router.get('/user/:userId' , recipeController.getRecipesByUserId )
+router.get('/user/list/likes/:userId', recipeController.getLikedRecipesByUserId)
 router.get('/all/popular' , recipeController.getPopularRecipes)
 router.get('/all/recipes/categories/:category', recipeController.getRecipesByCategory)
 router.get('/all/top/rated' , recipeController.getTopRatedRecipes)
@@ -21,6 +23,7 @@ router.use(checkAuth)
 
 router.post(
     '/', 
+    imageUpload.single('image') ,
     [
         check("title").not().isEmpty(),
         check("difficulty").not().isEmpty(),

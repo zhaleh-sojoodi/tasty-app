@@ -49,6 +49,7 @@ const getRecipeByRecipeId = async (req, res, next) => {
     res.json({ recipe : recipe.toObject({ getters : true }) })
 }
 
+<<<<<<< HEAD
 const getRecipesByCategory = async(req, res, next) => {
     const category = req.params.category
     let recipes
@@ -65,6 +66,30 @@ const getRecipesByCategory = async(req, res, next) => {
     res.json({ recipes: recipes.map( recipe => recipe.toObject({ getters: true }) ) })
 }
 
+=======
+const getLikedRecipesByUserId = async (req, res, next) => {
+    const userId = req.params.userId
+    
+    let user
+    try {
+        user = await User.findById(userId).populate('likes')
+    } catch(err) {
+        return next(new httpError('Could not find the user'), 500)
+    }
+    if(!user) {
+        return next(new httpError('Could not find the recipe by provided id' , 404))
+    }
+
+    let likedRecipes
+    try {
+        likedRecipes = user.likes
+    } catch(err) {
+        return next(new httpError('Feting liked recipes failed'), 500)
+    }
+
+    res.json({likedRecipes : likedRecipes.map(recipe => recipe.toObject({ getters: true })) })
+}
+>>>>>>> master
 const getRecipesBySearch = async (req, res, next) => {
     const search = req.params.search
 
@@ -99,9 +124,12 @@ const getTopRatedRecipes = async (req, res, next) => {
     res.json({ recipes: recipes.map( recipe => recipe.toObject({ getters: true }) ) })
 }
 
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> master
 const addRecipe = async (req, res, next) => {
     const error = validationResult(req)
     if (!error.isEmpty()) {
@@ -119,7 +147,10 @@ const addRecipe = async (req, res, next) => {
             averageRating : 0 , 
             ratings : []
         },
-        likes : 0,
+        likes : {
+            likesNumber : 0 ,
+            likes : []
+        },
         category,
         ingredients,
         directions, 
@@ -204,7 +235,7 @@ const toggleLike = async (req, res, next) => {
     if (!user) {
         return next(new httpError('could not find the user for provided id'), 404)
     }
-
+   
     let recipe 
     try {
         recipe = await Recipe.findById(recipeId)
@@ -214,26 +245,25 @@ const toggleLike = async (req, res, next) => {
     if (!recipe) {
         return next(new httpError('could not find the recipe for provided id'), 404)
     }
-
+   
     //check if the recipe is already in likes array 
-    const isInArray = user.likes.some(function (like) {
-        return like.equals(recipeId);
+    const isInArray = recipe.likes.likes.some(function (like) {
+        return like.equals(userId);
     });
-    try {    
+   
+    try {
         const sess = await mongoose.startSession()
         sess.startTransaction()
         if (isInArray) {
-            recipe.likes --
-            user.likes.pull(recipe)
+            recipe.likes.likesNumber --
+            recipe.likes.likes.pull(user)
         } else {
-            recipe.likes ++
-            user.likes.push(recipe)
+            recipe.likes.likesNumber ++
+            recipe.likes.likes.push(user)
         }
-        await recipe.save({ session: sess })
-        await user.save({ session : sess })
+        await recipe.save({ session : sess})
         await sess.commitTransaction()
-    } catch (err) {
-        console.log(err)
+    } catch(err) {
         return next(new httpError('Adding a recipe in favourite list failed'), 500)
     }
 
@@ -298,7 +328,7 @@ const deleteRecipe = async (req, res, next) => {
         sess.startTransaction();
         await recipe.remove({ session : sess })
         recipe.creator.recipes.pull(recipe)
-        await recipe.creator.save({ session: sess})
+        await recipe.creator.save({ session: sess })
         sess.commitTransaction()
     } catch (err) {
         console.log(err)
@@ -316,6 +346,7 @@ exports.getAllRecipes = getAllRecipes
 exports.getRecipesByUserId = getRecipesByUserId
 exports.getRecipesByCategory = getRecipesByCategory
 exports.getRecipeByRecipeId = getRecipeByRecipeId
+exports.getLikedRecipesByUserId = getLikedRecipesByUserId
 exports.getPopularRecipes = getPopularRecipes
 exports.getTopRatedRecipes = getTopRatedRecipes
 exports.getRecipesBySearch = getRecipesBySearch
