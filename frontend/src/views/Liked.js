@@ -59,7 +59,7 @@ function Liked() {
         <main className="main">
         <Container className="mt-4 mb-4">
           <h2 className="display-3 mb-3">Liked Recipes</h2>
-          <RecipeList props = {recipes} />
+          <RecipeList props = {likedRecipes} />
           <hr />
         </Container>
         </main>
