@@ -42,9 +42,9 @@ const getRecipeByRecipeId = async (req, res, next) => {
         return next(new httpError('Could not find the recipe', 500))
     }
 
-    if (!recipe) {
-        return next(new httpError('Could not find the recipe by provided id' , 404))
-    }
+     if (!recipe) {
+         return next(new httpError('Could not find the recipe by provided id' , 404))
+     }
     
     res.json({ recipe : recipe.toObject({ getters : true }) })
 }
@@ -53,15 +53,15 @@ const getRecipesByCategory = async(req, res, next) => {
     const category = req.params.category
     let recipes
     try{
-        recipe = await Recipe.find(category)
+        recipes = await Recipe.find({category})
     }
     catch(err){
         return next (new httpError('Could not find the recipe', 500))
 
     }
-    if(!category){
+     if(!category){
         return next(new httpError('Could not find the recipe by provided category' , 404))
-    }
+     }
     res.json({ recipes: recipes.map( recipe => recipe.toObject({ getters: true }) ) })
 }
 
