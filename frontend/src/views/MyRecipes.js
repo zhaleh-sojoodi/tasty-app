@@ -42,7 +42,7 @@ function MyRecipes() {
       <NavigationBar />
       <main className="main">
         <Container className="mt-4 d-flex justify-content-between">
-          <h2 className="display-3 mb-3">Your Recipes</h2>
+          <h2 className="display-3 mb-3">My Recipes</h2>
           <Button
             className="mb-4"
             color="default"
