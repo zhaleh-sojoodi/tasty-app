@@ -49,6 +49,18 @@ const getRecipeByRecipeId = async (req, res, next) => {
     res.json({ recipe : recipe.toObject({ getters : true }) })
 }
 
+const getLikedRecipesByUserId = async (req, res, next) => {
+    const userId = req.params.userId
+    let recipes
+    try {
+        recipes = await Recipe.find({})
+    } catch {
+        return next(new httpError('Fetching recipes failed', 500))
+    }
+    res.json({ recipes : recipes[0] })
+    
+}
+
 const getRecipesByCategory = async(req, res, next) => {
     const category = req.params.category
     let recipes
@@ -181,18 +193,25 @@ const rateRecipe = async (req, res, next) => {
     try {
         const sess = await mongoose.startSession()
         sess.startTransaction({ session : sess })
-        recipe.ratings.ratings.push( {user : user, rating : rate} )
-        const ave = (recipe.ratings.averageRating + rate ) / (recipe.ratings.ratings.length)
-        recipe.ratings.averageRating = ave
+        if (!isInArray) {
+            recipe.ratings.ratings.push( {user : user, rating : rate} )
+            //recipe.ratings.averageRating = (recipe.ratings.averageRating + rate)/recipe.ratings.ratings.length
+        }
+        else {
+            recipe.ratings.ratings.some(function (recipe) { if (recipe.user == userId) { recipe.rating = rate} })
+        }
         await recipe.save({ session : sess})
-        await user.save({ session : sess })
         await sess.commitTransaction()
-
     } catch (err) {
         console.log(err)
         return next(new httpError('Rating a recipe failed'), 500)
     }
-
+    let total = 0;
+   recipe.ratings.ratings.map((recipe) =>{
+        total = total + recipe.rating
+    } )
+    recipe.ratings.averageRating = total / recipe.ratings.ratings.length
+    console.log(recipe.ratings.averageRating)
     res.json({ recipe : recipe.toObject({ getters : true }) })
 }
 
@@ -319,6 +338,7 @@ function escapeRegex(text) {
 exports.getAllRecipes = getAllRecipes
 exports.getRecipesByUserId = getRecipesByUserId
 exports.getRecipeByRecipeId = getRecipeByRecipeId
+exports.getLikedRecipesByUserId = getLikedRecipesByUserId
 exports.getPopularRecipes = getPopularRecipes
 exports.getTopRatedRecipes = getTopRatedRecipes
 exports.getRecipesBySearch = getRecipesBySearch
