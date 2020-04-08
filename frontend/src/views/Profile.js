@@ -1,28 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import "assets/css/custom.css";
+import profilePlaceholder from "../assets/img/placeholders/profile.jpg";
 
 import { Card, Container, Row, Col } from "reactstrap";
 
 import NavigationBar from "../components/NavigationBar";
 import Footer from "../components/Footer";
-import RecipeDisplay from "../components/RecipeDisplay";
-
-import { mostPopular, user } from "../dummydata";
-let recipes = mostPopular;
+import RecipeGrid from "../components/RecipeGrid";
 
 const BASE_URL = "http://localhost:5000/api";
-const AUTH_TOKEN = "auth_token";
 const USER_ID = "user_id";
 
 function Profile(props) {
 
   const [userData, setUserData] = useState();
+  const [userRecipes, setUserRecipes] = useState([]);
+  const [userLikedRecipes, setUserLikedRecipes] = useState([]);
   const [profileExists, setProfileExists] = useState(true);
   const [profileBelongsToUser, setProfileBelongsToUser] = useState(false);
 
   const fetchUserData = async(id) => {
-    const uri = BASE_URL + "/user/" + id;
     const settings = {
       method: 'GET',
       headers: {
@@ -31,7 +29,9 @@ function Profile(props) {
       }
     }
 
+    // Get user data
     try {
+      const uri = BASE_URL + "/user/" + id;
       const response = await fetch(uri, settings);
 
       // Unable to fetch data, profile does not exist
@@ -44,10 +44,45 @@ function Profile(props) {
       // Successful fetch, get user data
       let data = await response.json();
       setUserData(data.user);
-      console.log(data.user);
     } catch(err) {
       console.error(err);
       setProfileExists(false);
+    }
+
+    // Get user's recipes
+    try {
+      const uri = BASE_URL + "/recipe/user/" + id;
+      const response = await fetch(uri, settings);
+
+      // Unable to fetch data
+      if(!response.ok) {
+        console.error("Unable to get user's recipes.");
+        return;
+      }
+
+      // Successful fetch, get user's recipes
+      let data = await response.json();
+      setUserRecipes(data.recipes);
+    } catch(err) {
+      console.error(err);
+    }
+
+    // Get user's liked recipes
+    try {
+      const uri = BASE_URL + "/recipe/user/all/list/like/recipes/" + id;
+      const response = await fetch(uri, settings);
+
+      // Unable to fetch data
+      if(!response.ok) {
+        console.error("Unable to get user's liked recipes.");
+        return;
+      }
+
+      // Successful fetch, get user's liked recipes
+      let data = await response.json();
+      setUserLikedRecipes(data.likedRecipes);
+    } catch(err) {
+      console.error(err);
     }
   }
 
@@ -68,8 +103,8 @@ function Profile(props) {
   }, [])
 
   return (
-    <div>
-      <NavigationBar />
+    <>
+      <NavigationBar {...props} />
       <main className="main profile-page">
 
         {/* Background */}
@@ -109,20 +144,20 @@ function Profile(props) {
               { profileExists ?
               <div className="px-4">
                 <Row className="justify-content-center">
+
                   {/* Profile Image */}
                   <Col className="order-lg-2 mb-5" lg="3">
                     <div className="card-profile-image mb-5">
                       <a href="/profile" onClick={(e) => e.preventDefault()}>
                         <img
-                          alt={user.name}
+                          alt={ userData && userData.name }
                           style={{
                             width: "150px",
                             height: "150px",
-                            objectFit: "cover",
-                            objectPosition: "35% 100%",
+                            objectFit: "cover"
                           }}
                           className="rounded-circle"
-                          src={user.image}
+                          src={ userData && userData.imageURL ? userData.imageURL : profilePlaceholder }
                         />
                       </a>
                     </div>
@@ -148,12 +183,21 @@ function Profile(props) {
 
                 {/* User Recipes */}
                 <h3 className="my-3 display-4">Recipes Created</h3>
-                <RecipeDisplay props={recipes} />
+                { !userRecipes.length ?
+                <p>This user hasn't created any recipes yet <span role="img" aria-label="Sad Emoji">😔</span></p>
+                :
+                <RecipeGrid props={ userRecipes && userRecipes } />
+                }
+                
                 <hr className="my-4" />
 
                 {/* User Liked Recipes */}
                 <h3 className="my-3 display-4">Liked Recipes</h3>
-                <RecipeDisplay props={recipes} />
+                { !userLikedRecipes.length ?
+                <p>This user hasn't liked any recipes yet <span role="img" aria-label="Sad Emoji">😔</span></p>
+                :
+                <RecipeGrid props={ userLikedRecipes && userLikedRecipes } />
+                }
               </div>
 
               // Profile Doesn't Exist
@@ -171,7 +215,7 @@ function Profile(props) {
         </section>
       </main>
       <Footer />
-    </div>
+    </>
   );
 }
 
