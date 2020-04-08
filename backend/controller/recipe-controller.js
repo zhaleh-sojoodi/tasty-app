@@ -42,13 +42,31 @@ const getRecipeByRecipeId = async (req, res, next) => {
         return next(new httpError('Could not find the recipe', 500))
     }
 
-    if (!recipe) {
-        return next(new httpError('Could not find the recipe by provided id' , 404))
-    }
+     if (!recipe) {
+         return next(new httpError('Could not find the recipe by provided id' , 404))
+     }
     
     res.json({ recipe : recipe.toObject({ getters : true }) })
 }
 
+<<<<<<< HEAD
+const getRecipesByCategory = async(req, res, next) => {
+    const category = req.params.category
+    let recipes
+    try{
+        recipes = await Recipe.find({category})
+    }
+    catch(err){
+        return next (new httpError('Could not find the recipe', 500))
+
+    }
+     if(!category){
+        return next(new httpError('Could not find the recipe by provided category' , 404))
+     }
+    res.json({ recipes: recipes.map( recipe => recipe.toObject({ getters: true }) ) })
+}
+
+=======
 const getLikedRecipesByUserId = async (req, res, next) => {
     const userId = req.params.userId
     
@@ -71,6 +89,7 @@ const getLikedRecipesByUserId = async (req, res, next) => {
 
     res.json({likedRecipes : likedRecipes.map(recipe => recipe.toObject({ getters: true })) })
 }
+>>>>>>> master
 const getRecipesBySearch = async (req, res, next) => {
     const search = req.params.search
 
@@ -105,6 +124,12 @@ const getTopRatedRecipes = async (req, res, next) => {
     res.json({ recipes: recipes.map( recipe => recipe.toObject({ getters: true }) ) })
 }
 
+<<<<<<< HEAD
+
+
+
+=======
+>>>>>>> master
 const addRecipe = async (req, res, next) => {
     const error = validationResult(req)
     if (!error.isEmpty()) {
@@ -319,6 +344,7 @@ function escapeRegex(text) {
 
 exports.getAllRecipes = getAllRecipes
 exports.getRecipesByUserId = getRecipesByUserId
+exports.getRecipesByCategory = getRecipesByCategory
 exports.getRecipeByRecipeId = getRecipeByRecipeId
 exports.getLikedRecipesByUserId = getLikedRecipesByUserId
 exports.getPopularRecipes = getPopularRecipes
