@@ -4,8 +4,8 @@ import { Container } from 'reactstrap';
 
 import NavigationBar from 'components/NavigationBar';
 import Footer from 'components/Footer';
+import RecipeGrid from 'components/RecipeGrid';
 import RecipeList from 'components/RecipeList';
-import { mostPopular } from '../dummydata';
 
 const BASE_URL = "http://localhost:5000/api/";
 
@@ -36,8 +36,6 @@ function SearchResults(props) {
 
       // Successful fetch, get user data
       let data = await response.json();
-      console.log(`${data.recipes.length} recipes found for ${query}`);
-      console.log(data.recipes);
       setRecipes(data.recipes);
     } catch(err) {
       console.error(err);
@@ -45,7 +43,6 @@ function SearchResults(props) {
   }
 
   useEffect(() => {
-    console.log(`Received: "${props.location.state.query}"`)
     setQuery(props.location.state.query);
     fetchRecipes(encodeURIComponent(props.location.state.query));
   }, [])
@@ -56,7 +53,7 @@ function SearchResults(props) {
     <main className="main">
     <Container className="mt-4 mb-4">
     <h2 className="display-3 mb-3">Search Results for '{query && query}'</h2>
-      <RecipeList props={ recipes && recipes } />
+      <RecipeGrid props={ recipes && recipes } />
     </Container>
     </main>
     <Footer />
