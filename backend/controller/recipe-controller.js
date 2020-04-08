@@ -5,7 +5,7 @@ const Recipe = require('../models/recipe')
 const User = require('../models/user')
 
 const getAllRecipes = async (req, res, next) => {
-    let recipes
+    let recipes 
     try {
         recipes = await Recipe.find({})
     } catch {
@@ -51,13 +51,17 @@ const getRecipeByRecipeId = async (req, res, next) => {
 
 const getLikedRecipesByUserId = async (req, res, next) => {
     const userId = req.params.userId
-    let recipes
+   
+    let likedRecipes 
     try {
-        recipes = await Recipe.find({})
-    } catch {
+         likedRecipes = await Recipe.find({ 'likes.likes' : userId})
+
+    } catch (err) {
+        console.log(err)
         return next(new httpError('Fetching recipes failed', 500))
     }
-    res.json({ recipes : recipes[0] })
+    
+     res.json({ likedRecipes : likedRecipes.map(recipe => recipe.toObject({ getters: true })) })
     
 }
 
@@ -195,7 +199,7 @@ const rateRecipe = async (req, res, next) => {
         sess.startTransaction({ session : sess })
         if (!isInArray) {
             recipe.ratings.ratings.push( {user : user, rating : rate} )
-            //recipe.ratings.averageRating = (recipe.ratings.averageRating + rate)/recipe.ratings.ratings.length
+            
         }
         else {
             recipe.ratings.ratings.some(function (recipe) { if (recipe.user == userId) { recipe.rating = rate} })
