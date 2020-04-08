@@ -32,6 +32,7 @@ function NavigationBar() {
   function logout() {
     sessionStorage.removeItem(AUTH_TOKEN);
     sessionStorage.removeItem("AUTH_EMAIL");
+    sessionStorage.removeItem("user_id");
     setRedirect(true);
   }
 
