@@ -7,11 +7,10 @@ import Footer from "../components/Footer";
 
 import { Button, Container, Row, Col } from "reactstrap";
 
-import { mostPopular } from "../dummydata";
+const BASE_URL = "http://localhost:5000/api/recipe";
+const AUTH_TOKEN = 'auth_token';
 
 function Recipe(props) {
-  let recipe = mostPopular[0];
-
   let creator = {
     name: "Jane Doe",
     image:
@@ -21,14 +20,39 @@ function Recipe(props) {
   };
 
   const [averageRating, changeAverageRating] = useState();
+  const [recipe, setRecipe] = useState({});
+
+  const settings = {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    }
+  }
 
   useEffect(() => {
-    if (recipe.ratings.averageRating) {
-      changeAverageRating(recipe.ratings.averageRating);
-    } else {
-      changeAverageRating(0);
+    const getRecipe = async () => {
+      const uri = BASE_URL + "/" + props.location.state.recipeId;
+      try {
+        const response = await fetch(uri, settings);
+        let data = await response.json();
+        setRecipe(data.recipe);
+        console.log(data.recipe);
+      } catch(e) {
+        console.error(e);
+      }
+      
     }
-  }, [recipe.ratings.averageRating]);
+    getRecipe();
+    //Find creator
+    //Call getUserById
+  //   if (props.location.state.ratings.averageRating !== undefined) {
+  //     changeAverageRating(props.location.state.ratings.averageRating);
+  //   } else {
+  //     changeAverageRating(0);
+  //   }
+  // }, [props.location.state.ratings.averageRating]);
+  },[]);
   // Note: Add [averageRating] to the dependency array of useEffect once the POST to submit the user's rating is completed.
 
   return (
@@ -42,8 +66,8 @@ function Recipe(props) {
               {/* Image */}
               <img
                 className="img-fluid"
-                src={recipe.image}
-                alt={recipe.title}
+                src={props.location.state.image}
+                alt={props.location.state.title}
               />
 
               {/* Title & Like Recipe*/}
@@ -60,7 +84,7 @@ function Recipe(props) {
                   <span className="btn-inner--icon">
                     <i className="ni ni-favourite-28" />
                   </span>
-                  <span className="btn-inner--text">{recipe.likes.length}</span>
+                  <span className="btn-inner--text">{recipe.likes && recipe.likes.likesNumber}</span>
                 </Button>
               </div>
               <hr className="mt-2 mb-3" />
@@ -138,22 +162,22 @@ function Recipe(props) {
               <hr className="mt-3 mb-3" />
 
               {/* Description */}
-              <p>{recipe.description}</p>
+              <p>{recipe.description === "" ? recipe.description : "No description available."}</p>
               <hr className="mt-3 mb-3" />
 
               {/* Ingredients */}
               <h4>Ingredients</h4>
               <ul>
-                {recipe.ingredients.map(function (ingredient, i) {
+                {recipe.ingredients && recipe.ingredients.map(function (ingredient, i) {
                   return <li key={i}>{ingredient}</li>;
                 })}
               </ul>
               <hr className="mt-3 mb-3" />
 
               {/* Steps */}
-              <h4>Steps</h4>
+              <h4>Directions</h4>
               <ol className="mb-5">
-                {recipe.steps.map(function (step, i) {
+                {recipe.directions && recipe.directions.map(function (step, i) {
                   return <li key={i}>{step}</li>;
                 })}
               </ol>
@@ -203,8 +227,8 @@ function Recipe(props) {
                   <Ratings.Widget widgetDimension="25px" />
                 </Ratings>
                 <p className="mt-3">
-                  {recipe.ratings.averageRating} average from{" "}
-                  {recipe.ratings.ratings.length} votes
+                  {recipe.ratings && recipe.ratings.averageRating} average from{" "}
+                  {recipe.ratings && recipe.ratings.ratings.length} votes
                 </p>
               </div>
 
@@ -221,7 +245,7 @@ function Recipe(props) {
                   to="/"
                   className="text-danger"
                   onClick={() =>
-                    alert(`Are you sure you want to delete ${recipe.title}?`)
+                    alert(`Are you sure you want to delete ${props.location.state.title}?`)
                   }
                 >
                   Delete recipe

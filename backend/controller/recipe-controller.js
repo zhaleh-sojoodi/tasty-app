@@ -31,21 +31,6 @@ const getRecipesByUserId = async (req, res, next) => {
     })
 
 }
-const getRecipesByCategory = async(req, res, next) => {
-    const category = req.params.category
-    let recipes
-    try{
-        recipes = await Recipe.find({category})
-    }
-    catch(err){
-        return next (new httpError('Could not find the recipe', 500))
-
-    }
-    if(!category){
-        return next(new httpError('Could not find the recipe by provided category' , 404))
-    }
-    res.json({ recipes: recipes.map( recipe => recipe.toObject({ getters: true }) ) })
-}
 
 const getRecipeByRecipeId = async (req, res, next) => {
     const recipeId = req.params.recipeId
@@ -57,12 +42,29 @@ const getRecipeByRecipeId = async (req, res, next) => {
         return next(new httpError('Could not find the recipe', 500))
     }
 
-    if (!recipe) {
-        return next(new httpError('Could not find the recipe by provided id' , 404))
-    }
+     if (!recipe) {
+         return next(new httpError('Could not find the recipe by provided id' , 404))
+     }
     
     res.json({ recipe : recipe.toObject({ getters : true }) })
 }
+
+const getRecipesByCategory = async(req, res, next) => {
+    const category = req.params.category
+    let recipes
+    try{
+        recipes = await Recipe.find({category})
+    }
+    catch(err){
+        return next (new httpError('Could not find the recipe', 500))
+
+    }
+     if(!category){
+        return next(new httpError('Could not find the recipe by provided category' , 404))
+     }
+    res.json({ recipes: recipes.map( recipe => recipe.toObject({ getters: true }) ) })
+}
+
 
 const getRecipesBySearch = async (req, res, next) => {
     const search = req.params.search
@@ -116,8 +118,8 @@ const addRecipe = async (req, res, next) => {
             ratings : []
         },
         likes : {
-            likesNumber : 0 ,
-            likes : []
+          likesNumber: 0,
+          likes: []
         },
         category,
         ingredients,
@@ -171,7 +173,11 @@ const rateRecipe = async (req, res, next) => {
     if (!recipe) {
         return next(new httpError('could not find the recipe for provided id'), 404)
     }
-   
+    
+    const isInArray = recipe.ratings.ratings.some(function (rating) {
+        return rating.user.equals(userId);
+    }); 
+    
     try {
         const sess = await mongoose.startSession()
         sess.startTransaction({ session : sess })

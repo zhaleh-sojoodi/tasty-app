@@ -1,4 +1,4 @@
-import React, { useState, style } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 
 import {
@@ -27,9 +27,12 @@ const AUTH_TOKEN = "auth_token";
 function NavigationBar() {
   const [searchValue, setSearchValue] = useState("");
   const [redirect, setRedirect] = useState(false);
+  const [username, setUsername] = useState(null);
 
   function logout() {
     sessionStorage.removeItem(AUTH_TOKEN);
+    sessionStorage.removeItem("AUTH_EMAIL");
+    sessionStorage.removeItem("user_id");
     setRedirect(true);
   }
 
@@ -39,6 +42,12 @@ function NavigationBar() {
     }
     return false;
   }
+
+  useEffect(() => {
+    if(sessionStorage.getItem("AUTH_EMAIL")) {
+      setUsername(sessionStorage.getItem("AUTH_EMAIL"));
+    }
+  }, [username])
 
   return (
     <header className="header-global">
@@ -76,16 +85,17 @@ function NavigationBar() {
               <UncontrolledDropdown nav style={checkUserLoggedIn() ? {display: 'initial'} : {display: 'none'}}>
                 <DropdownToggle nav caret>
                   <i className="ni ni-collection d-lg-none mr-1" />
-                  <span className="nav-link-inner--text">Jane Doe</span>
+                  <span className="nav-link-inner--text">{ username && username }</span>
                 </DropdownToggle>
                 <DropdownMenu>
                   <DropdownItem to="/profile" tag={Link}>My Profile</DropdownItem>
                   <DropdownItem to="/create-recipe" tag={Link}>Create Recipe</DropdownItem>
                   <DropdownItem to="/liked" tag={Link}>Liked Recipes</DropdownItem>
-                  <DropdownItem to="/my-recipes" tag={Link}>Your Recipes</DropdownItem>
+                  <DropdownItem to="/my-recipes" tag={Link}>My Recipes</DropdownItem>
                   <DropdownItem onClick={() => logout()}>Logout</DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
+
               <NavItem to="/login" className="d-none d-lg-block ml-lg-4" >
                 <Button className="btn-neutral btn-icon" color="default" href="/login" style={checkUserLoggedIn() ? {display: 'none'} : {display: 'initial'}}>
                   <span className="btn-inner--icon">
