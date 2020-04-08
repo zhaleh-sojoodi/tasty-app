@@ -42,35 +42,30 @@ const getRecipeByRecipeId = async (req, res, next) => {
         return next(new httpError('Could not find the recipe', 500))
     }
 
-    if (!recipe) {
-        return next(new httpError('Could not find the recipe by provided id' , 404))
-    }
+     if (!recipe) {
+         return next(new httpError('Could not find the recipe by provided id' , 404))
+     }
     
     res.json({ recipe : recipe.toObject({ getters : true }) })
 }
 
-const getLikedRecipesByUserId = async (req, res, next) => {
-    const userId = req.params.userId
-    
-    let user
-    try {
-        user = await User.findById(userId).populate('likes')
-    } catch(err) {
-        return next(new httpError('Could not find the user'), 500)
+const getRecipesByCategory = async(req, res, next) => {
+    const category = req.params.category
+    let recipes
+    try{
+        recipes = await Recipe.find({category})
     }
-    if(!user) {
-        return next(new httpError('Could not find the recipe by provided id' , 404))
-    }
+    catch(err){
+        return next (new httpError('Could not find the recipe', 500))
 
-    let likedRecipes
-    try {
-        likedRecipes = user.likes
-    } catch(err) {
-        return next(new httpError('Feting liked recipes failed'), 500)
     }
-
-    res.json({likedRecipes : likedRecipes.map(recipe => recipe.toObject({ getters: true })) })
+     if(!category){
+        return next(new httpError('Could not find the recipe by provided category' , 404))
+     }
+    res.json({ recipes: recipes.map( recipe => recipe.toObject({ getters: true }) ) })
 }
+
+
 const getRecipesBySearch = async (req, res, next) => {
     const search = req.params.search
 
@@ -178,7 +173,11 @@ const rateRecipe = async (req, res, next) => {
     if (!recipe) {
         return next(new httpError('could not find the recipe for provided id'), 404)
     }
-   
+    
+    const isInArray = recipe.ratings.ratings.some(function (rating) {
+        return rating.user.equals(userId);
+    }); 
+    
     try {
         const sess = await mongoose.startSession()
         sess.startTransaction({ session : sess })
@@ -320,10 +319,10 @@ function escapeRegex(text) {
 exports.getAllRecipes = getAllRecipes
 exports.getRecipesByUserId = getRecipesByUserId
 exports.getRecipeByRecipeId = getRecipeByRecipeId
-exports.getLikedRecipesByUserId = getLikedRecipesByUserId
 exports.getPopularRecipes = getPopularRecipes
 exports.getTopRatedRecipes = getTopRatedRecipes
 exports.getRecipesBySearch = getRecipesBySearch
+exports.getRecipesByCategory = getRecipesByCategory
 exports.addRecipe = addRecipe
 exports.rateRecipe = rateRecipe
 exports.toggleLike = toggleLike

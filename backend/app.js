@@ -53,4 +53,3 @@ mongoose.connect(process.env.DB_CONN)
 .catch(err => {
     console.log(err)
 })
-
