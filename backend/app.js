@@ -8,15 +8,46 @@ const httpError = require('./models/http-error')
 const userRoute = require('./routes/user-route')
 const recipeRoute = require('./routes/recipe-route')
 const {Storage} = require('@google-cloud/storage')
+//const server = new CompactCitizen({ typeDefs, resolvers });
 
 dotenv.config()
 const app = express()
 app.use(bodyParser.json())
 
+//google clouds
 const gc = new Storage({
-    keyFilename: path.join(__dirname, '../compact-citizen-273600-1bca00eb71ea.json'),
+    keyFilename: path.join(__dirname, './compact-citizen-273600-1bca00eb71ea.json'),
     projectId: 'compact-citizen-273600'
 })
+const RecipeFilesBucket = gc.bucket('recipe-files')
+//print bucket info in console
+gc.getBuckets().then(x => console.log(x))
+
+const resolvers = {
+    Query: {
+      files: () => files
+    },
+    Mutation: {
+      uploadFile: async (_, { file }) => {
+        const { createReadStream, filename } = await file;
+  
+        await new Promise(res =>
+          createReadStream()
+            .pipe(
+              coolFilesBucket.file(filename).createWriteStream({
+                resumable: false,
+                gzip: true
+              })
+            )
+            .on("finish", res)
+        );
+  
+        files.push(filename);
+  
+        return true;
+      }
+    }
+  };
 
 //return the file 
 app.use('uploads/images', express.static(path.join('uploads', 'images')))

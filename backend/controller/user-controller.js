@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken')
 const { validationResult } = require('express-validator')
 const httpError = require('../models/http-error')
 const User = require('../models/user')
-const category = require('../models/category')
+const {Storage} = require('@google-cloud/storage')
 
 const getUsers = async (req, res, next) => {
     let users;

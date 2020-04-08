@@ -3,7 +3,7 @@ const { check } = require('express-validator')
 const recipeController = require('../controller/recipe-controller')
 const checkAuth = require('../middleware/check-auth')
 //const imageUpload = require('../middleware/image-upload')
-const Category = require('../models/category')
+//const {Storage} = require('@google-cloud/storage')
 
 const router = express.Router()
 
@@ -23,7 +23,7 @@ router.use(checkAuth)
 
 router.post(
     '/', 
-    imageUpload.single('image') ,
+    //imageUpload.single('image') ,
     [
         check("title").not().isEmpty(),
         check("difficulty").not().isEmpty(),
