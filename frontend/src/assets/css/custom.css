@@ -18,6 +18,10 @@ body {
     min-height: 90vh;
 }
 
+.section-auth {
+    min-height: 100vh;
+}
+
 .carousel {
     height: 65vh;
     width: 100vw;
