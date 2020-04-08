@@ -19,7 +19,10 @@ function RecipeGrid(props) {
       {props.props.map(function (recipe, index) {
         return (
           <Col key={index} lg="4" md="6" className="pb-4">
-            <Link to={{ pathname: "/recipe", state: {recipeId: recipe.id} }}>
+            <Link
+            // to={{ pathname: "/recipe", state: {recipeId: recipe.id} }}
+            to={`/recipe/${recipe.id}`}
+            >
               <Card>
                 <CardImg top width="100%" src={ recipePlaceholder } alt={recipe.title} />
                 <CardBody>
