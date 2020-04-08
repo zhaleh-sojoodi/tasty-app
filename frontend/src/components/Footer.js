@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 
 import {
   NavItem,
@@ -26,7 +27,7 @@ function Footer() {
                 <NavLink href="https://github.com/nicole-ling/recipe-app/" target="_blank">GitHub</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href="/">About Us</NavLink>
+                <NavLink tag={Link} to="/about">About Us</NavLink>
               </NavItem>
             </Nav>
           </Col>
