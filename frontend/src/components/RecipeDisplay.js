@@ -17,14 +17,14 @@ function RecipeDisplay(props) {
       {props.props.map(function (recipe, index) {
         return (
           <Col key={index} lg="4" md="6" className="pb-4">
-            <Link to={{ pathname: "/recipe", state: recipe.creator }}>
+            <Link to={{ pathname: "/recipe", state: {recipeId: recipe.id} }}>
               <Card>
                 <CardImg top width="100%" src={recipe.image} alt={recipe.title} />
                 <CardBody>
                   <CardTitle className="h4 mt--2">{recipe.title}</CardTitle>
                   <CardSubtitle className="mt--3 mb-3">
                     <i className="ni ni-favourite-28 text-danger" />
-                    <small className="ml-2 text-default">{recipe.likes.length} people liked this</small>
+                    <small className="ml-2 text-default">{recipe.likes.likesNumber} people liked this</small>
                   </CardSubtitle>
                   <CardSubtitle>
                     <i className="ni ni-satisfied text-danger" />

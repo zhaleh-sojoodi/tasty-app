@@ -148,8 +148,8 @@ const addRecipe = async (req, res, next) => {
             ratings : []
         },
         likes : {
-            likesNumber : 0 ,
-            likes : []
+          likesNumber: 0,
+          likes: []
         },
         category,
         ingredients,
