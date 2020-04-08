@@ -12,6 +12,7 @@ import MyRecipes from './views/MyRecipes';
 import CreateRecipe from './views/CreateRecipe';
 import EditRecipe from './views/EditRecipe';
 import SearchResults from './views/SearchResults';
+import PageNotFound from './views/PageNotFound';
 
 const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
   return (
@@ -63,7 +64,7 @@ class App extends Component {
         <Route path="/" exact render={props => <Dashboard {...props} />} />
         <Route path="/login" exact render={props => <Login {...props} />} />
         <Route path="/register" exact render={props => <Register {...props} />} />
-        <Route path="/recipe" exact render={props => <Recipe {...props} />} />
+        <Route path="/recipe/:id" exact render={props => <Recipe {...props} />} />
         <Route path="/search" exact render={props => <SearchResults {...props} />} />
         <ProtectedRoute path="/myprofile" exact component={MyProfile} />
         <ProtectedRoute path="/profile/:id" exact component={Profile} />
@@ -72,6 +73,7 @@ class App extends Component {
         <ProtectedRoute path="/my-recipes" exact component={MyRecipes} />} />
         <ProtectedRoute path="/create-recipe" exact component={CreateRecipe} />} />
         <ProtectedRoute path="/edit-recipe" exact component={EditRecipe} />} />
+        <Route component={PageNotFound} />
       </Switch>
       </>
     );
