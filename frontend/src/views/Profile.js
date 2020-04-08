@@ -36,7 +36,7 @@ function Profile(props) {
 
       // Unable to fetch data, profile does not exist
       if(!response.ok) {
-        console.error("Unable to get user profile.");
+        console.log("Unable to get user profile.");
         setProfileExists(false);
         return;
       }
@@ -140,7 +140,7 @@ function Profile(props) {
           <Container>
             <Card className="card-profile shadow mt--300 pb-5">
 
-              {/* Profile Exists */}
+              {/* If Profile Exists */}
               { profileExists ?
               <div className="px-4">
                 <Row className="justify-content-center">
