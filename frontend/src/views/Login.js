@@ -34,45 +34,57 @@ function Login(props) {
     }
   }, [])
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  // const [message, setMessage] = useState("");
   const [redirect, setRedirect] = useState(false);
+  const [formData, setFormData] = useState({
+    email: "",
+    password: ""
+  });
+  const { email, password } = formData;
 
-  function login() {
-    fetch(BASE_URL + "/login", {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: email,
-        password: password
-      })
-    })
-      // Response received.
-      .then(response => response.json())
-      // Data retrieved.
-      .then(json => {
-        if (json.token !== "" && json.token != null) {
-          sessionStorage.setItem(AUTH_TOKEN, json["token"]);
-          sessionStorage.setItem(USER_NAME, json.name);
-          sessionStorage.setItem(USER_ID, json["userId"]);
-          setRedirect(true);
-        }
-        if (json.message === "Invalid Credentials") {
-          //setMessage(json.message);
-        }
-      })
-      // Data not retrieved.
-      .catch(function (error) {
-        console.log("caught error");
-      })
+  const onChange = e => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  }
+
+  const onSubmit = async e => {
+    e.preventDefault();
+    try {
+      const uri = BASE_URL + "/login";
+      const response = await fetch(uri, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({email, password})
+      });
+
+      // Unable to login user
+      if(!response.ok ||
+      response.status === 401 ||
+      response.status === 500
+      ) {
+        console.log("Unable to sign in.");
+        return;
+      }
+
+      // Successful fetch, set session variables
+      let data = await response.json();
+      
+      if(data.token !== "" && data.token) {
+        sessionStorage.setItem(AUTH_TOKEN, data.token);
+        sessionStorage.setItem(USER_NAME, data.name);
+        sessionStorage.setItem(USER_ID, data.userId);
+        setRedirect(true);
+      }
+    } catch(e) {
+      console.error(e);
+    }
   }
 
   function getPrevLocation() {
     if (props.location.state === undefined) {
+      return '/';
+    } else if (props.location.state.prevLocation === "/profile/:id") {
       return '/';
     }
     return props.location.state.prevLocation
@@ -89,8 +101,8 @@ function Login(props) {
       }} /> : null}
 
       <NavigationBar {...props} />
-      <main className="main">
-        <section className="section section-shaped section-lg" style={{ minHeight: '100vh' }}>
+      <main className="main main-login">
+        <section className="section-auth section section-shaped section-lg">
           <div className="shape shape-style-1 bg-gradient-default bg-gradient-red">
             <span />
             <span />
@@ -109,7 +121,7 @@ function Login(props) {
                     <div className="text-center text-muted mb-4">
                       <small>Welcome back!</small>
                     </div>
-                    <Form role="form">
+                    <Form role="form" onSubmit={e => onSubmit(e)}>
                       {/* Email */}
                       <FormGroup className="mb-3">
                         <InputGroup className="input-group-alternative">
@@ -118,7 +130,14 @@ function Login(props) {
                               <i className="ni ni-email-83" />
                             </InputGroupText>
                           </InputGroupAddon>
-                          <Input placeholder="Email" type="email" value={email} onChange={e => { setEmail(e.target.value) }} />
+                          <Input
+                            id="email"
+                            name="email"
+                            type="email"
+                            value={email}
+                            placeholder="Email"
+                            onChange={e => onChange(e)}
+                          />
                         </InputGroup>
                       </FormGroup>
                       {/* Password */}
@@ -130,20 +149,23 @@ function Login(props) {
                             </InputGroupText>
                           </InputGroupAddon>
                           <Input
-                            placeholder="Password"
+                            id="password"
+                            name="password"
                             type="password"
+                            value={password}
+                            placeholder="Password"
+                            onChange={e => onChange(e)}
                             autoComplete="off"
-                            onChange={e => { setPassword(e.target.value) }}
                           />
                         </InputGroup>
                       </FormGroup>
                       {/* Submit Form */}
                       <div className="text-center">
                         <Button
-                          className="my-4"
+                          type="submit"
                           color="danger"
-                          type="button"
-                          onClick={() => login()}
+                          className="my-4"
+                          // onClick={() => login()}
                         >
                           Sign In
                         </Button>
