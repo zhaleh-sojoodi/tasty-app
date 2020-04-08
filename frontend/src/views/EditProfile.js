@@ -55,7 +55,10 @@ function EditProfile(props) {
       const response = await fetch(uri, settings);
 
       // Unable to fetch data, profile does not exist
-      if(!response.ok) {
+      if(!response.ok ||
+        response.status == 500 ||
+        response.status == 422
+      ) {
         console.error("Unable to get user profile.");
         forceLogout();
         return;
