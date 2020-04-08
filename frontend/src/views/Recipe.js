@@ -21,7 +21,10 @@ function Recipe(props) {
   const [recipeBelongsToUser, setRecipeBelongsToUser] = useState(false);
   const [creator, setCreator] = useState({});
   const [creatorID, setCreatorID] = useState();
+
   const [averageRating, changeAverageRating] = useState();
+  const [likes, setLikes] = useState();
+  const [likeButtonColor, setLikeButtonColor] = useState();
 
   const settings = {
     method: 'GET',
@@ -29,6 +32,22 @@ function Recipe(props) {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
     }
+  }
+
+  function checkUserLikesRecipe(users) {
+    let id = sessionStorage.getItem("user_id") ? sessionStorage.getItem("user_id") : forceLogout();
+    let userLikesRecipe = false;
+
+    if(!users.length) {
+      userLikesRecipe = false;
+    } else {
+      users.forEach((user) => {
+        if(id === user) {
+          userLikesRecipe = true;
+        }
+      })
+    }
+    return userLikesRecipe ? "danger" : "default";
   }
 
   const fetchRecipe = async(id) => {
@@ -48,6 +67,8 @@ function Recipe(props) {
       let data = await response.json();
       setRecipe(data.recipe);
       setCreatorID(data.recipe.creator);
+      setLikes(data.recipe.likes.likesNumber);
+      setLikeButtonColor(checkUserLikesRecipe(data.recipe.likes.likes));
     } catch(e) {
       console.error(e);
     }
@@ -93,6 +114,7 @@ function Recipe(props) {
         response.status == 500
       ) {
         alert("Could not create recipe. Please try again.");
+        setRecipeExists(false);
         throw response;
       } else if (response.status == 404) {
         forceLogout();
@@ -102,6 +124,48 @@ function Recipe(props) {
       // Successful delete
       let data = await response.json();
     } catch(err) {
+      setRecipeExists(false);
+      console.error(err);
+    }
+  }
+
+  const toggleLike = async() => {
+    let token;
+    let userID;
+
+    if(sessionStorage.getItem("auth_token") && sessionStorage.getItem("user_id")) {
+      token = sessionStorage.getItem("auth_token");
+      userID = sessionStorage.getItem("user_id");
+    } else {
+      forceLogout();
+      return;
+    }
+
+    try {
+      const uri = BASE_URL + `/recipe/${userID}/${recipe.id}`;
+      const response = await fetch(uri, {
+        method: 'PUT',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      // Unable to like/unlike recipe
+      if(!response.ok ||
+        response.status == 404 ||
+        response.status == 500
+      ) {
+        console.log("Can't like or unlike your recipe.")
+        throw response;
+      }
+
+      // Successful like/unlike
+      let data = await response.json();
+      setLikes(data.likes.likesNumber);
+    } catch(err) {
+      setRecipeExists(false);
       console.error(err);
     }
   }
@@ -133,7 +197,7 @@ function Recipe(props) {
     } else {
       setRecipeExists(false);
     }
-  }, [creatorID])
+  }, [creatorID, likes])
 
   // useEffect(() => {
   //   const getRecipe = async () => {
@@ -187,13 +251,16 @@ function Recipe(props) {
                 {/* Like Button */}
                 <Button
                   className="btn-icon btn-3 align-self-center"
-                  color="danger"
+                  color={ likeButtonColor }
                   type="button"
+                  onClick={() => toggleLike()}
                 >
                   <span className="btn-inner--icon">
                     <i className="ni ni-favourite-28" />
                   </span>
-                  <span className="btn-inner--text">{recipe.likes && recipe.likes.likesNumber}</span>
+                  <span className="btn-inner--text">
+                  { likes && likes }
+                  </span>
                 </Button>
               </div>
               <hr className="mt-2 mb-3" />
@@ -206,7 +273,7 @@ function Recipe(props) {
                     <i className="col-1 ni ni-scissors m-1 recipe-details-icon" />
                     <Col>
                       <strong>Prep Time</strong>
-                      <p>{recipe.preparationTime} minutes</p>
+                      <p>{ recipe && recipe.preparationTime} minutes</p>
                     </Col>
                   </Row>
                 </Col>
@@ -217,7 +284,7 @@ function Recipe(props) {
                     <i className="col-1 ni ni-settings-gear-65 m-1 recipe-details-icon" />
                     <Col>
                       <strong>Difficulty</strong>
-                      <p>{recipe.difficulty}</p>
+                      <p>{ recipe && recipe.difficulty}</p>
                     </Col>
                   </Row>
                 </Col>
@@ -228,7 +295,7 @@ function Recipe(props) {
                     <i className="col-1 ni ni-time-alarm m-1 recipe-details-icon" />
                     <Col>
                       <strong>Cooking Time</strong>
-                      <p>{recipe.cookingTime} minutes</p>
+                      <p>{ recipe && recipe.cookingTime} minutes</p>
                     </Col>
                   </Row>
                 </Col>
@@ -239,7 +306,7 @@ function Recipe(props) {
                     <i className="col-1 ni ni-single-02 m-1 recipe-details-icon" />
                     <Col>
                       <strong>Servings</strong>
-                      <p>{recipe.servings} people</p>
+                      <p>{ recipe && recipe.servings} people</p>
                     </Col>
                   </Row>
                 </Col>
@@ -251,7 +318,7 @@ function Recipe(props) {
                     <Col>
                       <strong>Total Time</strong>
                       <p>
-                        {recipe.cookingTime + recipe.preparationTime} minutes
+                        { recipe && recipe.cookingTime + recipe.preparationTime} minutes
                       </p>
                     </Col>
                   </Row>
@@ -263,7 +330,7 @@ function Recipe(props) {
                     <i className="col-1 ni ni-folder-17 m-1 recipe-details-icon" />
                     <Col>
                       <strong>Category</strong>
-                      <p>{recipe.category}</p>
+                      <p>{ recipe && recipe.category}</p>
                     </Col>
                   </Row>
                 </Col>
@@ -271,7 +338,7 @@ function Recipe(props) {
               <hr className="mt-3 mb-3" />
 
               {/* Description */}
-              <p>{recipe.description !== "" ? recipe.description : "No description available."}</p>
+              <p>{ recipe && recipe.description !== "" ? recipe.description : "No description available."}</p>
               <hr className="mt-3 mb-3" />
 
               {/* Ingredients */}
@@ -286,7 +353,7 @@ function Recipe(props) {
               {/* Directions */}
               <h4>Directions</h4>
               <ol className="mb-5">
-                {recipe.directions && recipe.directions.map(function (step, i) {
+                { recipe && recipe.directions && recipe.directions.map(function (step, i) {
                   return <li key={i}>{step}</li>;
                 })}
               </ol>
@@ -345,7 +412,7 @@ function Recipe(props) {
               {/* Edit Recipe (Only when the recipe belongs to the current user) */}
               { recipeBelongsToUser &&
               <div className="mt-5 mb-3 d-flex flex-column justify-content-center align-items-center">
-                <Link to="/edit-recipe" className="text-muted">
+                <Link to={`/edit-recipe/${recipe.id}`} className="text-muted">
                   Edit recipe
                 </Link>
               </div>
