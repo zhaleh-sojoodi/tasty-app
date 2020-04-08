@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import recipePlaceholder from "../assets/img/placeholders/recipe.png";
+import profilePlaceholder from "../assets/img/placeholders/profile.jpg";
 
 import Ratings from "react-ratings-declarative";
 import NavigationBar from "../components/NavigationBar";
@@ -56,8 +58,8 @@ function Recipe(props) {
   // Note: Add [averageRating] to the dependency array of useEffect once the POST to submit the user's rating is completed.
 
   return (
-    <div>
-      <NavigationBar />
+    <>
+      <NavigationBar {...props} />
       <main className="main">
         <Container className="mt-5">
           <Row>
@@ -66,7 +68,8 @@ function Recipe(props) {
               {/* Image */}
               <img
                 className="img-fluid"
-                src={props.location.state.image}
+                src={ recipePlaceholder }
+                // src={props.location.state.image}
                 alt={props.location.state.title}
               />
 
@@ -162,7 +165,7 @@ function Recipe(props) {
               <hr className="mt-3 mb-3" />
 
               {/* Description */}
-              <p>{recipe.description === "" ? recipe.description : "No description available."}</p>
+              <p>{recipe.description !== "" ? recipe.description : "No description available."}</p>
               <hr className="mt-3 mb-3" />
 
               {/* Ingredients */}
@@ -199,11 +202,10 @@ function Recipe(props) {
                       borderRadius: "50%",
                       width: "150px",
                       height: "150px",
-                      objectFit: "cover",
-                      objectPosition: "35% 100%",
+                      objectFit: "cover"
                     }}
                     className="img-fluid mx-auto d-block mb-3"
-                    src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"
+                    src={ profilePlaceholder }
                     alt={creator.name}
                   />
                 </Link>
@@ -256,7 +258,7 @@ function Recipe(props) {
         </Container>
       </main>
       <Footer />
-    </div>
+    </>
   );
 }
 
