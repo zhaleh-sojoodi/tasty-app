@@ -59,7 +59,7 @@ function EditProfile(props) {
         response.status == 500 ||
         response.status == 422
       ) {
-        console.error("Unable to get user profile.");
+        console.log("Unable to get user profile.");
         forceLogout();
         return;
       }
