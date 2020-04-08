@@ -1,3 +1,4 @@
+const fs = require('fs')
 const {validationResult} = require('express-validator')
 const mongoose = require('mongoose')
 const httpError = require('../models/http-error')
@@ -126,6 +127,7 @@ const addRecipe = async (req, res, next) => {
     const newRecipe = new Recipe ({
         title,
         description, 
+        imageURL : req.file.path,
         difficulty,
         cookingTime,
         preparationTime, 
@@ -320,6 +322,8 @@ const deleteRecipe = async (req, res, next) => {
         return next(new httpError('You are not allowed to delete the recipe', 401))
     }
     
+    const imagePath = recipe.imageURL
+
     try {
         const sess = await mongoose.startSession();
         sess.startTransaction();
@@ -331,6 +335,11 @@ const deleteRecipe = async (req, res, next) => {
         console.log(err)
         return next(new httpError('Deleting the recipe failed'), 500)
     }
+
+    fs.unlink(imagePath, err => {
+        console.log(err)
+    })
+
     res.json({ message : "Deleted recipe"})
 }
 

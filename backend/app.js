@@ -12,7 +12,7 @@ dotenv.config()
 const app = express()
 app.use(bodyParser.json())
 
-//return the file 
+//access the file to outside the server
 app.use('uploads/images', express.static(path.join('uploads', 'images')))
 
 //enable Cors
