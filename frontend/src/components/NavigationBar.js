@@ -34,8 +34,8 @@ function NavigationBar() {
 
   function logout() {
     sessionStorage.removeItem(AUTH_TOKEN);
-    sessionStorage.removeItem(USER_EMAIL);
-    sessionStorage.removeItem(USER_ID);
+    sessionStorage.removeItem("AUTH_EMAIL");
+    sessionStorage.removeItem("user_id");
     setRedirect(true);
   }
 
@@ -97,7 +97,7 @@ function NavigationBar() {
                   <DropdownItem to={`/profile/${userID}`} tag={Link}>My Profile</DropdownItem>
                   <DropdownItem to="/create-recipe" tag={Link}>Create Recipe</DropdownItem>
                   <DropdownItem to="/liked" tag={Link}>Liked Recipes</DropdownItem>
-                  <DropdownItem to="/my-recipes" tag={Link}>Your Recipes</DropdownItem>
+                  <DropdownItem to="/my-recipes" tag={Link}>My Recipes</DropdownItem>
                   <DropdownItem onClick={() => logout()}>Logout</DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
