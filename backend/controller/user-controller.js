@@ -146,7 +146,7 @@ const update = async (req, res, next) => {
     try {
         user = await User.findById(userId)
     } catch(err) {
-        return next(new httpError('could not find the recipe by privided Id', 500))
+        return next(new httpError('Could not find a user with the provided ID.', 500))
     }
 
     user.name = name

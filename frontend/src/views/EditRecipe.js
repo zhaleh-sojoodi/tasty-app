@@ -15,10 +15,10 @@ import {
 import NavigationBar from "components/NavigationBar";
 import Footer from "components/Footer";
 
-function EditRecipe() {
+function EditRecipe(props) {
   return (
-    <div>
-      <NavigationBar />
+    <>
+      <NavigationBar {...props} />
       <main className="main">
         <Container className="mt-4 mb-4" style={{ minHeight: "90vh" }}>
           <h1 className="display-3 mb-3">Edit Recipe</h1>
@@ -144,7 +144,7 @@ function EditRecipe() {
         </Container>
       </main>
       <Footer />
-    </div>
+    </>
   );
 }
 

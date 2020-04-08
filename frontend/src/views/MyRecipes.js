@@ -5,12 +5,13 @@ import { Container, Button } from 'reactstrap';
 
 import NavigationBar from 'components/NavigationBar';
 import Footer from 'components/Footer';
+import RecipeGrid from 'components/RecipeGrid';
 import RecipeList from 'components/RecipeList';
 
 const BASE_URL = "http://localhost:5000/api/recipe";
 const USER_ID = 'user_id';
 
-function MyRecipes() {
+function MyRecipes(props) {
   const [recipes, setRecipes] = useState();
   
   useEffect(() => {
@@ -29,7 +30,6 @@ function MyRecipes() {
         const response = await fetch(uri, settings);
         let data = await response.json();
         setRecipes(data.recipes);
-        console.log(data.recipes);
       } catch(e) {
         console.error(e);
       }
@@ -38,8 +38,8 @@ function MyRecipes() {
   }, []);
 
   return (
-    <div>
-      <NavigationBar />
+    <>
+      <NavigationBar {...props} />
       <main className="main">
         <Container className="mt-4 d-flex justify-content-between">
           <h2 className="display-3 mb-3">My Recipes</h2>
@@ -54,11 +54,11 @@ function MyRecipes() {
           </Button>
         </Container>
         <Container>
-          {recipes && <RecipeList props = {recipes} /> }
+          {recipes && <RecipeGrid props={recipes} /> }
         </Container>
         </main>
       <Footer />
-    </div>
+    </>
   );
 }
 
