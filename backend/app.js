@@ -7,10 +7,16 @@ const dotenv = require('dotenv');
 const httpError = require('./models/http-error')
 const userRoute = require('./routes/user-route')
 const recipeRoute = require('./routes/recipe-route')
+const {Storage} = require('@google-cloud/storage')
 
 dotenv.config()
 const app = express()
 app.use(bodyParser.json())
+
+const gc = new Storage({
+    keyFilename: path.join(__dirname, '../compact-citizen-273600-1bca00eb71ea.json'),
+    projectId: 'compact-citizen-273600'
+})
 
 //return the file 
 app.use('uploads/images', express.static(path.join('uploads', 'images')))
