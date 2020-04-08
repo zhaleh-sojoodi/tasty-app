@@ -107,7 +107,7 @@ function Register(props) {
 
       <NavigationBar {...props} />
       <main className="main">
-        <section className="section section-shaped section-lg" style={{minHeight:'95vh'}}>
+        <section className="section-auth section section-shaped section-lg">
           <div className="shape shape-style-1 bg-gradient-default bg-gradient-red">
             <span />
             <span />
