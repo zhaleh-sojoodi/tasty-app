@@ -24,9 +24,6 @@ import {
 } from 'reactstrap';
 
 const APP_NAME = "Tasty";
-const AUTH_TOKEN = "auth_token";
-const USER_NAME = "user_name";
-const USER_ID = "user_id";
 
 function NavigationBar(props) {
   const [searchValue, setSearchValue] = useState("");
@@ -34,14 +31,14 @@ function NavigationBar(props) {
   const [username, setUsername] = useState();
 
   function logout() {
-    sessionStorage.removeItem(AUTH_TOKEN);
-    sessionStorage.removeItem(USER_NAME);
+    sessionStorage.removeItem("auth_token");
+    sessionStorage.removeItem("user_name");
     sessionStorage.removeItem("user_id");
     setRedirect(true);
   }
 
   function checkUserLoggedIn() {
-    if (sessionStorage.getItem(AUTH_TOKEN) != null) {
+    if (sessionStorage.getItem("auth_token") != null) {
       return true;
     }
     return false;
@@ -67,8 +64,8 @@ function NavigationBar(props) {
   }
 
   useEffect(() => {
-    if(sessionStorage.getItem(USER_NAME)) {
-      setUsername(sessionStorage.getItem(USER_NAME));
+    if(sessionStorage.getItem("user_name")) {
+      setUsername(sessionStorage.getItem("user_name"));
     }
   }, [])
 
@@ -132,11 +129,17 @@ function NavigationBar(props) {
 
               {/* Login Button */}
               <NavItem to="/login" className="d-none d-lg-block ml-lg-4" >
-                <Button className="btn-neutral btn-icon" color="default" href="/login" style={checkUserLoggedIn() ? {display: 'none'} : {display: 'initial'}}>
+                <Button
+                className="btn-neutral btn-icon"
+                color="default"
+                tag={Link}
+                to="/login"
+                style={checkUserLoggedIn() ? {display: 'none'} : {display: 'initial'}}
+                >
                   <span className="btn-inner--icon">
-                    <i className="fa fa-cloud-download mr-2" />
+                    <i className="fa fa-cloud-download mr-2 text-danger" />
                   </span>
-                  <span className="nav-link-inner--text ml-1">
+                  <span className="nav-link-inner--text ml-1 text-danger">
                     Login
                   </span>
                 </Button>
