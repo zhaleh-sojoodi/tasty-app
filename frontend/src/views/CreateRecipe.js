@@ -119,7 +119,6 @@ function CreateRecipe(props) {
       return response.json();
     })
     .then(json => {
-      console.log(json);
       if (json !== null) {
         setRecipeId(json._id);
       }
@@ -131,11 +130,15 @@ function CreateRecipe(props) {
 
   return (
     <>
-      {recipeId !== "" ? <Redirect to={{
+      {/* {recipeId !== "" ? <Redirect to={{
         pathname: "/recipe",
         state: {
           recipeId: recipeId
         }
+      }} /> : null} */}
+
+      {recipeId !== "" ? <Redirect to={{
+        pathname: `/recipe/${recipeId}`,
       }} /> : null}
 
       <NavigationBar {...props} />
