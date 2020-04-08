@@ -12,6 +12,7 @@ import MyRecipes from './views/MyRecipes';
 import CreateRecipe from './views/CreateRecipe';
 import EditRecipe from './views/EditRecipe';
 import SearchResults from './views/SearchResults';
+import AboutUs from './views/AboutUs';
 import PageNotFound from './views/PageNotFound';
 
 const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
@@ -66,6 +67,7 @@ class App extends Component {
         <Route path="/register" exact render={props => <Register {...props} />} />
         <Route path="/recipe/:id" exact render={props => <Recipe {...props} />} />
         <Route path="/search" exact render={props => <SearchResults {...props} />} />
+        <Route path="/about" exact render={props => <AboutUs {...props} />} />
         <ProtectedRoute path="/myprofile" exact component={MyProfile} />
         <ProtectedRoute path="/profile/:id" exact component={Profile} />
         <ProtectedRoute path="/edit-profile" exact component={EditProfile} />
