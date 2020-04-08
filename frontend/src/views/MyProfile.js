@@ -10,15 +10,20 @@ import Footer from "../components/Footer";
 import RecipeGrid from "../components/RecipeGrid";
 
 const BASE_URL = "http://localhost:5000/api";
-const USER_ID = "user_id";
 
-function Profile(props) {
+function MyProfile(props) {
 
   const [userData, setUserData] = useState();
   const [userRecipes, setUserRecipes] = useState([]);
   const [userLikedRecipes, setUserLikedRecipes] = useState([]);
   const [profileExists, setProfileExists] = useState(true);
   const [profileBelongsToUser, setProfileBelongsToUser] = useState(false);
+
+  function logout() {
+    sessionStorage.removeItem("auth_token");
+    sessionStorage.removeItem("user_name");
+    sessionStorage.removeItem("user_id");
+  }
 
   const fetchUserData = async(id) => {
     const settings = {
@@ -87,20 +92,15 @@ function Profile(props) {
   }
 
   useEffect(() => {
-    // Check if ID params exist in URL
-    if(props.match.params.id) {
-
-      // Fetch user data with given ID
-      fetchUserData(props.match.params.id);
-
-      // Check if profile fetched belongs to current user
-      if(props.match.params.id === sessionStorage.getItem(USER_ID)) {
+    // Check if user is logged in
+    if(sessionStorage.getItem("auth_token") && sessionStorage.getItem("user_id")) {
+        fetchUserData(sessionStorage.getItem("user_id"));
         setProfileBelongsToUser(true);
-      }
     } else {
-      setProfileExists(false);
+        setProfileExists(false);
+        logout();
     }
-  }, [props.match.params.id])
+  }, [])
 
   return (
     <>
@@ -140,7 +140,7 @@ function Profile(props) {
           <Container>
             <Card className="card-profile shadow mt--300 pb-5">
 
-              {/* If Profile Exists */}
+              {/* Profile Exists */}
               { profileExists ?
               <div className="px-4">
                 <Row className="justify-content-center">
@@ -219,4 +219,4 @@ function Profile(props) {
   );
 }
 
-export default Profile;
+export default MyProfile;
