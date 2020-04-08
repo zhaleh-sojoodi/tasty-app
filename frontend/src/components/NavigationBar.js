@@ -19,14 +19,15 @@ import {
   InputGroup,
   InputGroupAddon,
   InputGroupText,
-  Input
+  Input,
+  Form
 } from 'reactstrap';
 
 const AUTH_TOKEN = "auth_token";
-const USER_EMAIL = "user_email";
+const USER_NAME = "user_name";
 const USER_ID = "user_id";
 
-function NavigationBar() {
+function NavigationBar(props) {
   const [searchValue, setSearchValue] = useState("");
   const [redirect, setRedirect] = useState(false);
   const [username, setUsername] = useState();
@@ -34,7 +35,7 @@ function NavigationBar() {
 
   function logout() {
     sessionStorage.removeItem(AUTH_TOKEN);
-    sessionStorage.removeItem("AUTH_EMAIL");
+    sessionStorage.removeItem(USER_NAME);
     sessionStorage.removeItem("user_id");
     setRedirect(true);
   }
@@ -46,9 +47,27 @@ function NavigationBar() {
     return false;
   }
 
+  const onSubmit = e => {
+    e.preventDefault();
+
+    // Process search if search is not empty
+    if(searchValue !== "") {
+      // Hard refresh if user is on Search Results page
+      if(window.location.href === "http://localhost:3000/search") {
+        window.location.reload();
+      }
+
+      // Redirect to search results page with query
+      props.history.push({
+        pathname: '/search',
+        state: {query: searchValue}
+      })
+    }
+  }
+
   useEffect(() => {
-    if(sessionStorage.getItem(USER_EMAIL)) {
-      setUsername(sessionStorage.getItem(USER_EMAIL));
+    if(sessionStorage.getItem(USER_NAME)) {
+      setUsername(sessionStorage.getItem(USER_NAME));
     }
     if(sessionStorage.getItem(USER_ID)) {
       setUserID(sessionStorage.getItem(USER_ID));
@@ -78,6 +97,9 @@ function NavigationBar() {
               </Row>
             </div>
             <Nav className="navbar-nav-hover align-items-lg-center ml-lg-auto" navbar>
+
+              {/* Search Bar */}
+              <Form onSubmit={e => onSubmit(e)}>
               <FormGroup className="mb-0">
                 <InputGroup className="input-group-alternative">
                   <InputGroupAddon addonType="prepend">
@@ -85,16 +107,24 @@ function NavigationBar() {
                       <i className="ni ni-zoom-split-in" />
                     </InputGroupText>
                   </InputGroupAddon>
-                  <Input placeholder="Search" type="text" value={searchValue} onChange={(value) => setSearchValue(value.target.value)} />
+                  <Input
+                    placeholder="Search"
+                    type="text"
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                  />
                 </InputGroup>
               </FormGroup>
+              </Form>
+
+              {/* Profile Menu */}
               <UncontrolledDropdown nav style={checkUserLoggedIn() ? {display: 'initial'} : {display: 'none'}}>
                 <DropdownToggle nav caret>
                   <i className="ni ni-collection d-lg-none mr-1" />
                   <span className="nav-link-inner--text">{ username && username }</span>
                 </DropdownToggle>
                 <DropdownMenu>
-                  <DropdownItem to={`/profile/${userID}`} tag={Link}>My Profile</DropdownItem>
+                  <DropdownItem to="/myprofile" tag={Link}>My Profile</DropdownItem>
                   <DropdownItem to="/create-recipe" tag={Link}>Create Recipe</DropdownItem>
                   <DropdownItem to="/liked" tag={Link}>Liked Recipes</DropdownItem>
                   <DropdownItem to="/my-recipes" tag={Link}>My Recipes</DropdownItem>
@@ -102,6 +132,7 @@ function NavigationBar() {
                 </DropdownMenu>
               </UncontrolledDropdown>
 
+              {/* Login Button */}
               <NavItem to="/login" className="d-none d-lg-block ml-lg-4" >
                 <Button className="btn-neutral btn-icon" color="default" href="/login" style={checkUserLoggedIn() ? {display: 'none'} : {display: 'initial'}}>
                   <span className="btn-inner--icon">
