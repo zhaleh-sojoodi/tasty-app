@@ -100,7 +100,7 @@ function Profile(props) {
     } else {
       setProfileExists(false);
     }
-  }, [])
+  }, [props.match.params.id])
 
   return (
     <>
