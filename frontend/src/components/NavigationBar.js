@@ -78,9 +78,9 @@ function NavigationBar(props) {
       <Navbar className="navbar-dark bg-danger" expand="lg">
         <Container>
           <NavbarBrand className="tasty" href="/">{APP_NAME}</NavbarBrand>
-          <button className="navbar-toggler" id="navbar-danger">
+          <Button className="navbar-toggler" id="navbar-danger">
             <span className="navbar-toggler-icon" />
-          </button>
+          </Button>
           <UncontrolledCollapse navbar toggler="#navbar-danger">
             <div className="navbar-collapse-header">
               <Row>
