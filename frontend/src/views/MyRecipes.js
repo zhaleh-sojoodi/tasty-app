@@ -5,6 +5,7 @@ import { Container, Button } from 'reactstrap';
 
 import NavigationBar from 'components/NavigationBar';
 import Footer from 'components/Footer';
+import RecipeGrid from 'components/RecipeGrid';
 import RecipeList from 'components/RecipeList';
 
 const BASE_URL = "http://localhost:5000/api/recipe";
@@ -29,7 +30,6 @@ function MyRecipes(props) {
         const response = await fetch(uri, settings);
         let data = await response.json();
         setRecipes(data.recipes);
-        console.log(data.recipes);
       } catch(e) {
         console.error(e);
       }
@@ -54,7 +54,7 @@ function MyRecipes(props) {
           </Button>
         </Container>
         <Container>
-          {recipes && <RecipeList props = {recipes} /> }
+          {recipes && <RecipeGrid props={recipes} /> }
         </Container>
         </main>
       <Footer />
