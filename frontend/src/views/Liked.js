@@ -5,7 +5,6 @@ import { Container } from 'reactstrap';
 
 import NavigationBar from 'components/NavigationBar';
 import Footer from 'components/Footer';
-import RecipeList from 'components/RecipeList';
 import RecipeGrid from 'components/RecipeGrid';
 
 const BASE_URL = "http://localhost:5000/api";
@@ -30,7 +29,7 @@ function Liked(props) {
       const response = await fetch(uri, settings);
 
       // No recipes found
-      if(response.status == 500) {
+      if(response.status === 500) {
         console.log("Unable to get user's liked recipes.");
         return;
       }
