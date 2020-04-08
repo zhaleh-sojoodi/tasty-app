@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import forceLogout from "../utils/forceLogout";
 
 import {
   Container,
@@ -40,14 +41,6 @@ function EditProfile(props) {
     }
   }
 
-  const logout = _ => {
-    sessionStorage.removeItem('auth_token');
-    sessionStorage.removeItem('user_email');
-    sessionStorage.removeItem('user_id');
-    window.location.reload(true);
-    alert("Something went wrong. Please sign in again.");
-  }
-
   const fetchUserData = async(id) => {
     const uri = BASE_URL + "/user/" + id;
     const settings = {
@@ -64,7 +57,7 @@ function EditProfile(props) {
       // Unable to fetch data, profile does not exist
       if(!response.ok) {
         console.error("Unable to get user profile.");
-        logout();
+        forceLogout();
         return;
       }
 
@@ -82,6 +75,7 @@ function EditProfile(props) {
   const updateProfile = async(id) => {
     let token = sessionStorage.getItem("auth_token");
     const uri = BASE_URL + "/user/" + id;
+
     const settings = {
       method: 'PATCH',
       headers: {
@@ -96,13 +90,12 @@ function EditProfile(props) {
       const response = await fetch(uri, settings);
 
       // Unable to update profile
-      if(!response.ok) {
-        console.error("Unable to update profile.");
+      if(response.status == 401) {
+        forceLogout();
         return;
       }
 
       // Successful fetch, redirect to user's profile
-      alert("Your profile has been updated.");
       props.history.push("/profile/" + id);
     } catch(err) {
       console.error(err);
@@ -111,16 +104,16 @@ function EditProfile(props) {
 
   useEffect(() => {
     // Fetch user data by user ID
-    if(sessionStorage.getItem(USER_ID)) {
-        fetchUserData(sessionStorage.getItem(USER_ID));
+    if(sessionStorage.getItem("user_id")) {
+      fetchUserData(sessionStorage.getItem("user_id"));
     } else {
-        logout();
+      forceLogout();
     }
   }, [])
 
   return (
-    <div>
-      <NavigationBar />
+    <>
+      <NavigationBar {...props} />
       <main className="main">
         <Container className="mt-4 mb-4" style={{ minHeight: "90vh" }}>
           <h1 className="display-3 mb-3">Edit Profile</h1>
@@ -156,7 +149,7 @@ function EditProfile(props) {
         </Container>
       </main>
       <Footer />
-    </div>
+    </>
   );
 }
 
