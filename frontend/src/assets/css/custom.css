@@ -5,3 +5,7 @@
 .recipe-details-icon {
     color: #f5365c;
 }
+
+.main {
+    min-height: 90vh;
+}
