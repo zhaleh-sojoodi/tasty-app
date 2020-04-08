@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Redirect } from 'react-router-dom';
+import capitalize from '../utils/capitalize';
 
 import {
   Container,
@@ -19,7 +20,7 @@ const BASE_URL = "http://localhost:5000/api/recipe";
 const AUTH_TOKEN = 'auth_token';
 const USER_ID = 'user_id';
 
-function CreateRecipe() {
+function CreateRecipe(props) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [preparationTime, setPreparationTime] = useState("");
@@ -27,22 +28,22 @@ function CreateRecipe() {
   const [servings, setServings] = useState(2);
   const [difficulty, setDifficulty] = useState("easy");
   const [category, setCategory] = useState("breakfast");
-  const [ingredients, setIngredients] = useState([]);
-  const [directions, setDirections] = useState([]);
+  const [ingredients, setIngredients] = useState("");
+  const [directions, setDirections] = useState("");
   const [errorMessage, setErrorMessage] = useState([]);
   const [recipeId, setRecipeId] = useState("");
 
   function sortStringToArray(string) {
     if (string !== "") {
-    var array = [];
-    string.split('\n').forEach((item) => {
-      if (item.length > 0)
-        array.push(item)
-    });
-    return array;
-  } else {
-    return string;
-  }
+      var array = [];
+      string.split('\n').forEach((item) => {
+        if (item.length > 0)
+          array.push(item)
+      });
+      return array;
+    } else {
+      return string;
+    }
   }
 
   function checkForm() {
@@ -79,7 +80,6 @@ function CreateRecipe() {
   }
 
   function submitForm(ingredientsArray, directionsArray) {
-    console.log("Submit form");
     let authToken = sessionStorage.getItem(AUTH_TOKEN);
     let userId = sessionStorage.getItem(USER_ID);
     let recipe = {
@@ -88,8 +88,8 @@ function CreateRecipe() {
       preparationTime: preparationTime,
       cookingTime: cookingTime,
       servings: servings,
-      difficulty: difficulty,
-      category: category,
+      difficulty: capitalize(difficulty),
+      category: capitalize(category),
       ingredients: ingredientsArray,
       directions: directionsArray,
       creator: userId
@@ -103,35 +103,45 @@ function CreateRecipe() {
       },
       body: JSON.stringify(recipe)
     })
-      // Response received.
-      .then(response => response.json())
-      // Data retrieved.
-      .then(json => {
-        console.log(json);
-        if (json !== null) {
-          console.log("ADDED SUCCESSFUL");
-          setRecipeId(json._id);
-        }
-      })
-      // Data not retrieved.
-      .catch(function (error) {
-        console.log("caught error");
-      })
+    .then((response) => {
+      // Check response status
+      if(
+        !response.ok ||
+        response.status == 401 ||
+        response.status == 500 ||
+        response.status == 404 ||
+        response.status == 422
+      ) {
+        alert("Could not create recipe. Please try again.");
+        throw response;
+      }
+
+      return response.json();
+    })
+    .then(json => {
+      console.log(json);
+      if (json !== null) {
+        setRecipeId(json._id);
+      }
+    })
+    .catch(function (error) {
+      console.error(error)
+    })
   }
 
   return (
-    <div>
+    <>
       {recipeId !== "" ? <Redirect to={{
         pathname: "/recipe",
         state: {
           recipeId: recipeId
         }
       }} /> : null}
-      <NavigationBar />
-      <main className="main">
-        <Container className="mt-4 mb-4" style={{ minHeight: '90vh' }}>
-          <h1 className="display-3 mb-3">Create a Recipe</h1>
 
+      <NavigationBar {...props} />
+      <main className="main">
+        <Container className="mt-4 mb-4">
+          <h1 className="display-3 mb-3">Create a Recipe</h1>
           <Form>
             <FormGroup>
               <Label for="title">Recipe Title</Label>
@@ -170,7 +180,6 @@ function CreateRecipe() {
                     value={preparationTime}
                     onChange={e => setPreparationTime(e.target.value)}
                     placeholder={"Enter time in minutes"}
-
                   />
                 </FormGroup>
               </Col>
@@ -214,9 +223,9 @@ function CreateRecipe() {
                     value={difficulty}
                     onChange={e => setDifficulty(e.target.value)}
                   >
-                    <option>Easy</option>
-                    <option>Medium</option>
-                    <option>Hard</option>
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
                   </Input>
                 </FormGroup>
               </Col>
@@ -231,14 +240,12 @@ function CreateRecipe() {
                 value={category}
                 onChange={e => setCategory(e.target.value)}
               >
-                <option value="breakfast">Breakfast</option>
-                <option value="lunch">Lunch</option>
-                <option value="dinner">Dinner</option>
+                <option value="entree">Entree</option>
                 <option value="desserts">Desserts</option>
                 <option value="drinks">Drinks</option>
                 <option value="snacks">Snacks</option>
                 <option value="vegetarian">Vegetarian</option>
-                <option value="">Vegan</option>
+                <option value="vegan">Vegan</option>
               </Input>
             </FormGroup>
 
@@ -287,7 +294,7 @@ function CreateRecipe() {
         </Container>
       </main>
       <Footer />
-    </div>
+    </>
   );
 }
 
