@@ -41,7 +41,7 @@ function MyProfile(props) {
 
       // Unable to fetch data, profile does not exist
       if(!response.ok) {
-        console.error("Unable to get user profile.");
+        console.log("Unable to get user profile.");
         setProfileExists(false);
         return;
       }
