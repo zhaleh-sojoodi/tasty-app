@@ -7,10 +7,7 @@ import {
   Form,
   FormGroup,
   Label,
-  Input,
-  FormText,
-  Row,
-  Col,
+  Input
 } from "reactstrap";
 
 import NavigationBar from "components/NavigationBar";
@@ -56,8 +53,8 @@ function EditProfile(props) {
 
       // Unable to fetch data, profile does not exist
       if(!response.ok ||
-        response.status == 500 ||
-        response.status == 422
+        response.status === 500 ||
+        response.status === 422
       ) {
         console.log("Unable to get user profile.");
         forceLogout();
@@ -93,7 +90,7 @@ function EditProfile(props) {
       const response = await fetch(uri, settings);
 
       // Unable to update profile
-      if(response.status == 401) {
+      if(response.status === 401) {
         forceLogout();
         return;
       }
