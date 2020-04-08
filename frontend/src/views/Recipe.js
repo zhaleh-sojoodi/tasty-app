@@ -11,11 +11,9 @@ import recipePlaceholder from "../assets/img/placeholders/recipe.png";
 import profilePlaceholder from "../assets/img/placeholders/profile.jpg";
 
 const BASE_URL = "http://localhost:5000/api";
-const AUTH_TOKEN = 'auth_token';
 
 function Recipe(props) {
 
-  
   const [recipe, setRecipe] = useState({});
   const [recipeExists, setRecipeExists] = useState(true);
   const [recipeBelongsToUser, setRecipeBelongsToUser] = useState(false);
@@ -24,7 +22,7 @@ function Recipe(props) {
 
   const [averageRating, changeAverageRating] = useState();
   const [likes, setLikes] = useState();
-  const [likeButtonColor, setLikeButtonColor] = useState();
+  const [likeButtonColor, setLikeButtonColor] = useState("default");
 
   const settings = {
     method: 'GET',
@@ -50,6 +48,10 @@ function Recipe(props) {
     return userLikesRecipe ? "danger" : "default";
   }
 
+  function checkLoggedIn() {
+    return sessionStorage.getItem("auth_token") ? true : false;
+  }
+
   const fetchRecipe = async(id) => {
     // Get recipe data
     try {
@@ -57,7 +59,7 @@ function Recipe(props) {
       const response = await fetch(uri, settings);
 
       // Unable to fetch recipe
-      if(!response.ok || response.status == 500) {
+      if(!response.ok || response.status === 500) {
         console.log("Unable to retrieve recipe.");
         setRecipeExists(false);
         return;
@@ -68,7 +70,9 @@ function Recipe(props) {
       setRecipe(data.recipe);
       setCreatorID(data.recipe.creator);
       setLikes(data.recipe.likes.likesNumber);
-      setLikeButtonColor(checkUserLikesRecipe(data.recipe.likes.likes));
+      if(checkLoggedIn()) {
+        setLikeButtonColor(checkUserLikesRecipe(data.recipe.likes.likes));
+      }
     } catch(e) {
       console.error(e);
     }
@@ -110,19 +114,16 @@ function Recipe(props) {
       // Unable to delete recipe
       if(
         !response.ok ||
-        response.status == 401 ||
-        response.status == 500
+        response.status === 401 ||
+        response.status === 500
       ) {
         alert("Could not create recipe. Please try again.");
         setRecipeExists(false);
         throw response;
-      } else if (response.status == 404) {
+      } else if (response.status === 404) {
         forceLogout();
         throw response;
       }
-
-      // Successful delete
-      let data = await response.json();
     } catch(err) {
       setRecipeExists(false);
       console.error(err);
@@ -133,40 +134,43 @@ function Recipe(props) {
     let token;
     let userID;
 
-    if(sessionStorage.getItem("auth_token") && sessionStorage.getItem("user_id")) {
-      token = sessionStorage.getItem("auth_token");
-      userID = sessionStorage.getItem("user_id");
-    } else {
-      forceLogout();
-      return;
-    }
-
-    try {
-      const uri = BASE_URL + `/recipe/${userID}/${recipe.id}`;
-      const response = await fetch(uri, {
-        method: 'PUT',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      // Unable to like/unlike recipe
-      if(!response.ok ||
-        response.status == 404 ||
-        response.status == 500
-      ) {
-        console.log("Can't like or unlike your recipe.")
-        throw response;
+    // Continue only if there is a user logged in
+    if(checkLoggedIn()) {
+      if(sessionStorage.getItem("user_id")) {
+        token = sessionStorage.getItem("auth_token");
+        userID = sessionStorage.getItem("user_id");
+      } else {
+        forceLogout();
+        return;
       }
 
-      // Successful like/unlike
-      let data = await response.json();
-      setLikes(data.likes.likesNumber);
-    } catch(err) {
-      setRecipeExists(false);
-      console.error(err);
+      try {
+        const uri = BASE_URL + `/recipe/${userID}/${recipe.id}`;
+        const response = await fetch(uri, {
+          method: 'PUT',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        // Unable to like/unlike recipe
+        if(!response.ok ||
+          response.status === 404 ||
+          response.status === 500
+        ) {
+          console.log("Can't like or unlike your recipe.")
+          throw response;
+        }
+
+        // Successful like/unlike
+        let data = await response.json();
+        setLikes(data.likes.likesNumber);
+      } catch(err) {
+        setRecipeExists(false);
+        console.error(err);
+      }
     }
   }
 
@@ -198,6 +202,7 @@ function Recipe(props) {
       setRecipeExists(false);
     }
   }, [creatorID, likes])
+  // Note: Add [averageRating] to the dependency array of useEffect once the POST to submit the user's rating is completed.
 
   // useEffect(() => {
   //   const getRecipe = async () => {
@@ -364,14 +369,14 @@ function Recipe(props) {
               {/* Author Details */}
               <div className="p-3 mb-4 shadow">
                 {/* Creator Name */}
-                <Link to={ creatorID && "/profile/" + creatorID }>
+                <Link to={`/profile/${creatorID}`}>
                   <h3 className="mt-3 display-4 text-center">
                   { creator && creator.name }
                   </h3>
                 </Link>
 
                 {/* Creator Profile Picture */}
-                <Link to={ creatorID && "/profile/" + creatorID }>
+                <Link to={`/profile/${creatorID}`}>
                   <img
                     style={{
                       borderRadius: "50%",
@@ -412,7 +417,11 @@ function Recipe(props) {
               {/* Edit Recipe (Only when the recipe belongs to the current user) */}
               { recipeBelongsToUser &&
               <div className="mt-5 mb-3 d-flex flex-column justify-content-center align-items-center">
-                <Link to={`/edit-recipe/${recipe.id}`} className="text-muted">
+                <Link
+                  to="/edit-recipe"
+                  // to={`/edit-recipe/${recipe.id}`}
+                  className="text-muted"
+                >
                   Edit recipe
                 </Link>
               </div>
