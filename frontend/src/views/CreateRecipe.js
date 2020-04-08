@@ -107,10 +107,10 @@ function CreateRecipe(props) {
       // Check response status
       if(
         !response.ok ||
-        response.status == 401 ||
-        response.status == 500 ||
-        response.status == 404 ||
-        response.status == 422
+        response.status === 401 ||
+        response.status === 500 ||
+        response.status === 404 ||
+        response.status === 422
       ) {
         alert("Could not create recipe. Please try again.");
         throw response;
