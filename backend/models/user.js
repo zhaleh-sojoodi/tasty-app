@@ -24,12 +24,8 @@ const userSchema = new Schema({
     recipes : [{
         type : mongoose.Types.ObjectId, 
         require : true, ref : 'Recipe'
-    }],
-    likes : [{
-        type: mongoose.Types.ObjectId,
-        ref : 'Recipe'
     }]
-    
+ 
 });
 
 //to check if the email exists already  

@@ -210,7 +210,7 @@ const toggleLike = async (req, res, next) => {
     if (!user) {
         return next(new httpError('could not find the user for provided id'), 404)
     }
-
+   
     let recipe 
     try {
         recipe = await Recipe.findById(recipeId)
@@ -220,26 +220,25 @@ const toggleLike = async (req, res, next) => {
     if (!recipe) {
         return next(new httpError('could not find the recipe for provided id'), 404)
     }
-
+   
     //check if the recipe is already in likes array 
-    const isInArray = user.likes.some(function (like) {
-        return like.equals(recipeId);
+    const isInArray = recipe.likes.likes.some(function (like) {
+        return like.equals(userId);
     });
-    try {    
+   
+    try {
         const sess = await mongoose.startSession()
         sess.startTransaction()
         if (isInArray) {
-            recipe.likes --
-            user.likes.pull(recipe)
+            recipe.likes.likesNumber --
+            recipe.likes.likes.pull(user)
         } else {
-            recipe.likes ++
-            user.likes.push(recipe)
+            recipe.likes.likesNumber ++
+            recipe.likes.likes.push(user)
         }
-        await recipe.save({ session: sess })
-        await user.save({ session : sess })
+        await recipe.save({ session : sess})
         await sess.commitTransaction()
-    } catch (err) {
-        console.log(err)
+    } catch(err) {
         return next(new httpError('Adding a recipe in favourite list failed'), 500)
     }
 
@@ -304,7 +303,7 @@ const deleteRecipe = async (req, res, next) => {
         sess.startTransaction();
         await recipe.remove({ session : sess })
         recipe.creator.recipes.pull(recipe)
-        await recipe.creator.save({ session: sess})
+        await recipe.creator.save({ session: sess })
         sess.commitTransaction()
     } catch (err) {
         console.log(err)
