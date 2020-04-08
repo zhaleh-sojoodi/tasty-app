@@ -31,6 +31,21 @@ const getRecipesByUserId = async (req, res, next) => {
     })
 
 }
+const getRecipesByCategory = async(req, res, next) => {
+    const category = req.params.category
+    let recipes
+    try{
+        recipes = await Recipe.find({category})
+    }
+    catch(err){
+        return next (new httpError('Could not find the recipe', 500))
+
+    }
+    if(!category){
+        return next(new httpError('Could not find the recipe by provided category' , 404))
+    }
+    res.json({ recipes: recipes.map( recipe => recipe.toObject({ getters: true }) ) })
+}
 
 const getRecipeByRecipeId = async (req, res, next) => {
     const recipeId = req.params.recipeId
@@ -49,28 +64,6 @@ const getRecipeByRecipeId = async (req, res, next) => {
     res.json({ recipe : recipe.toObject({ getters : true }) })
 }
 
-const getLikedRecipesByUserId = async (req, res, next) => {
-    const userId = req.params.userId
-    
-    let user
-    try {
-        user = await User.findById(userId).populate('likes')
-    } catch(err) {
-        return next(new httpError('Could not find the user'), 500)
-    }
-    if(!user) {
-        return next(new httpError('Could not find the recipe by provided id' , 404))
-    }
-
-    let likedRecipes
-    try {
-        likedRecipes = user.likes
-    } catch(err) {
-        return next(new httpError('Feting liked recipes failed'), 500)
-    }
-
-    res.json({likedRecipes : likedRecipes.map(recipe => recipe.toObject({ getters: true })) })
-}
 const getRecipesBySearch = async (req, res, next) => {
     const search = req.params.search
 
@@ -320,10 +313,10 @@ function escapeRegex(text) {
 exports.getAllRecipes = getAllRecipes
 exports.getRecipesByUserId = getRecipesByUserId
 exports.getRecipeByRecipeId = getRecipeByRecipeId
-exports.getLikedRecipesByUserId = getLikedRecipesByUserId
 exports.getPopularRecipes = getPopularRecipes
 exports.getTopRatedRecipes = getTopRatedRecipes
 exports.getRecipesBySearch = getRecipesBySearch
+exports.getRecipesByCategory = getRecipesByCategory
 exports.addRecipe = addRecipe
 exports.rateRecipe = rateRecipe
 exports.toggleLike = toggleLike

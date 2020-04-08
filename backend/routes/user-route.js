@@ -2,6 +2,7 @@ const express = require('express')
 const { check } = require('express-validator')
 const userController = require('../controller/user-controller')
 const imageUpload = require('../middleware/image-upload')
+const checkAuth = require('../middleware/check-auth')
 
 const router = express.Router()
 
@@ -18,6 +19,7 @@ router.post(
     ],
     userController.signup)
 router.post('/login', userController.login)
+router.use(checkAuth)
 router.patch('/:userId', userController.update)
 
 module.exports = router 
