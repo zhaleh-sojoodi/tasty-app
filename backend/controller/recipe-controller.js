@@ -99,7 +99,7 @@ const getRecipesBySearch = async (req, res, next) => {
 const getPopularRecipes = async (req, res, next) => {
     let recipes
     try {
-        recipes = await Recipe.find({}).sort({ "likes" : -1})
+        recipes = await Recipe.find({}).sort({ "likes.likesNumber" : -1})
     } catch {
         return next(new httpError('Fetching popular recipes failed', 500))
     }
