@@ -49,7 +49,6 @@ const getRecipeByRecipeId = async (req, res, next) => {
     res.json({ recipe : recipe.toObject({ getters : true }) })
 }
 
-<<<<<<< HEAD
 const getRecipesByCategory = async(req, res, next) => {
     const category = req.params.category
     let recipes
@@ -66,7 +65,6 @@ const getRecipesByCategory = async(req, res, next) => {
     res.json({ recipes: recipes.map( recipe => recipe.toObject({ getters: true }) ) })
 }
 
-=======
 const getLikedRecipesByUserId = async (req, res, next) => {
     const userId = req.params.userId
     
@@ -89,7 +87,6 @@ const getLikedRecipesByUserId = async (req, res, next) => {
 
     res.json({likedRecipes : likedRecipes.map(recipe => recipe.toObject({ getters: true })) })
 }
->>>>>>> master
 const getRecipesBySearch = async (req, res, next) => {
     const search = req.params.search
 
@@ -124,12 +121,9 @@ const getTopRatedRecipes = async (req, res, next) => {
     res.json({ recipes: recipes.map( recipe => recipe.toObject({ getters: true }) ) })
 }
 
-<<<<<<< HEAD
 
 
 
-=======
->>>>>>> master
 const addRecipe = async (req, res, next) => {
     const error = validationResult(req)
     if (!error.isEmpty()) {
