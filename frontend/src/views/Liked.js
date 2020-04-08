@@ -11,7 +11,7 @@ import { mostPopular } from "../dummydata";
 // const BASE_URL = "http://localhost:5000/api/";
 // const USER_ID = 'user_id';
 
-function Liked() {
+function Liked(props) {
   let likedRecipes = mostPopular;
 
   // const [recipes, setRecipes] = useState([]);
@@ -54,17 +54,17 @@ function Liked() {
   // })
 
   return (
-    <div>
-      <NavigationBar />
-        <main className="main">
-        <Container className="mt-4 mb-4">
-          <h2 className="display-3 mb-3">Liked Recipes</h2>
-          <RecipeList props = {likedRecipes} />
-          <hr />
-        </Container>
-        </main>
-      <Footer />
-    </div >
+    <>
+    <NavigationBar {...props} />
+    <main className="main">
+    <Container className="mt-4 mb-4">
+      <h2 className="display-3 mb-3">Liked Recipes</h2>
+      <RecipeList props = {likedRecipes} />
+      <hr />
+    </Container>
+    </main>
+    <Footer />
+    </>
   );
 }
 
