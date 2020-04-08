@@ -23,6 +23,7 @@ import {
   Form
 } from 'reactstrap';
 
+const APP_NAME = "Tasty";
 const AUTH_TOKEN = "auth_token";
 const USER_NAME = "user_name";
 const USER_ID = "user_id";
@@ -31,7 +32,6 @@ function NavigationBar(props) {
   const [searchValue, setSearchValue] = useState("");
   const [redirect, setRedirect] = useState(false);
   const [username, setUsername] = useState();
-  const [userID, setUserID] = useState(null);
 
   function logout() {
     sessionStorage.removeItem(AUTH_TOKEN);
@@ -52,8 +52,9 @@ function NavigationBar(props) {
 
     // Process search if search is not empty
     if(searchValue !== "") {
-      // Hard refresh if user is on Search Results page
-      if(window.location.href === "http://localhost:3000/search") {
+      // Hard refresh if user is already on Search Results page
+      let currentURL = window.location.href;
+      if(currentURL.slice(currentURL.length - 7) === "/search") {
         window.location.reload();
       }
 
@@ -69,9 +70,6 @@ function NavigationBar(props) {
     if(sessionStorage.getItem(USER_NAME)) {
       setUsername(sessionStorage.getItem(USER_NAME));
     }
-    if(sessionStorage.getItem(USER_ID)) {
-      setUserID(sessionStorage.getItem(USER_ID));
-    }
   }, [])
 
   return (
@@ -79,7 +77,7 @@ function NavigationBar(props) {
       {redirect ? <Redirect to='/' /> : null}
       <Navbar className="navbar-dark bg-danger" expand="lg">
         <Container>
-          <NavbarBrand href="/">Logo</NavbarBrand>
+          <NavbarBrand className="tasty" href="/">{APP_NAME}</NavbarBrand>
           <button className="navbar-toggler" id="navbar-danger">
             <span className="navbar-toggler-icon" />
           </button>
@@ -87,7 +85,7 @@ function NavigationBar(props) {
             <div className="navbar-collapse-header">
               <Row>
                 <Col className="collapse-brand" xs="6">
-                  <Link to="/">Logo</Link>
+                  <Link className="tasty" to="/">{APP_NAME}</Link>
                 </Col>
                 <Col className="collapse-close" xs="6">
                   <button className="navbar-toggler" id="navbar-danger">
