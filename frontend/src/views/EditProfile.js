@@ -24,7 +24,7 @@ function EditProfile(props) {
     profilepicture: ""
   });
 
-  const { name, biography, profilepicture } = formData;
+  const { name, biography } = formData;
 
   const onChange = e => setFormData({...formData, [e.target.name]: e.target.value});
 
@@ -81,7 +81,10 @@ function EditProfile(props) {
     const fileField = document.querySelector('input[type="file"]');
     formData.append("name", name);
     formData.append("biography", biography);
-    formData.append("image", fileField.files[0]);
+
+    if(fileField) {
+      formData.append("image", fileField.files[0]);
+    }
 
     const settings = {
       method: 'PATCH',
@@ -102,6 +105,7 @@ function EditProfile(props) {
 
       // Successful fetch, redirect to user's profile
       props.history.push("/profile/" + id);
+      window.location.reload();
     } catch(err) {
       console.error(err);
     }
@@ -155,7 +159,6 @@ function EditProfile(props) {
                 type="file"
                 name="profilepicture"
                 id="profilepicture"
-                onChange={e => onChange(e)}
               />
               <FormText color="muted">
                 For best results, upload an image that is at least 100x100 pixels.
