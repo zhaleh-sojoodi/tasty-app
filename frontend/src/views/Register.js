@@ -95,6 +95,10 @@ function Register(props) {
     return props.location.state.prevLocation
   }
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [])
+
   return (
     <>
       {/* Redirect to page where user was before logging in. */}

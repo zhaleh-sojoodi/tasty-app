@@ -87,6 +87,8 @@ function Profile(props) {
   }
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+    
     // Check if ID params exist in URL
     if(props.match.params.id) {
 

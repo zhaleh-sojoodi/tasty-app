@@ -112,6 +112,7 @@ function EditProfile(props) {
   }
 
   useEffect(() => {
+    window.scrollTo(0, 0)
     // Fetch user data by user ID
     if(sessionStorage.getItem("user_id")) {
       fetchUserData(sessionStorage.getItem("user_id"));
@@ -124,7 +125,7 @@ function EditProfile(props) {
     <>
       <NavigationBar {...props} />
       <main className="main">
-        <Container className="mt-4 mb-4" style={{ minHeight: "90vh" }}>
+        <Container className="mt-4 mb-4">
           <h1 className="display-3 mb-3">Edit Profile</h1>
 
           <Form onSubmit={e => onSubmit(e)}>

@@ -146,6 +146,7 @@ function Dashboard(props) {
   </section>
 
   useEffect(() => {
+    window.scrollTo(0, 0)
     getMostPopular();
     getHighestRated();
   }, []);

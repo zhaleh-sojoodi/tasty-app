@@ -156,7 +156,7 @@ function CreateRecipe(props) {
     }
   }
 
-  useEffect(() => {}, [errors])
+  useEffect(() => {window.scrollTo(0, 0)}, [errors])
 
   return (
     <>
@@ -291,7 +291,7 @@ function CreateRecipe(props) {
                 type="textarea"
                 name="ingredients"
                 id="ingredients"
-                rows="5"
+                rows="10"
                 placeholder="Put each ingredient on its own line"
                 value={ingredients}
                 onChange={e => onChange(e)}
@@ -304,7 +304,7 @@ function CreateRecipe(props) {
                 type="textarea"
                 name="directions"
                 id="directions"
-                rows="5"
+                rows="10"
                 placeholder="Put each direction on its own line"
                 value={directions}
                 onChange={e => onChange(e)}
@@ -324,10 +324,10 @@ function CreateRecipe(props) {
             </FormGroup>
 
             <Button
-                color="default"
-                onClick={e => onSubmit(e)}
+              color="default"
+              onClick={e => onSubmit(e)}
             >
-                Create Recipe
+              Create Recipe
             </Button>
           </Form>
 

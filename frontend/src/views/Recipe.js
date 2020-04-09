@@ -271,6 +271,8 @@ function Recipe(props) {
   }
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+
     // Check if ID params exist in URL
     if(props.match.params.id) {
       // Fetch recipe data with params ID
@@ -493,8 +495,7 @@ function Recipe(props) {
               { recipeBelongsToUser &&
               <div className="mt-5 mb-3 d-flex flex-column justify-content-center align-items-center">
                 <Link
-                  to="/edit-recipe"
-                  // to={`/edit-recipe/${recipe.id}`}
+                  to={`/edit-recipe/${recipe.id}`}
                   className="text-muted"
                 >
                   Edit recipe
