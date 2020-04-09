@@ -243,22 +243,25 @@ const rateRecipe = async (req, res, next) => {
         sess.startTransaction({ session : sess })
         if (!isInArray) {
             recipe.ratings.ratings.push( {user : user, rating : rate} )
-            
         }
         else {
             recipe.ratings.ratings.some(function (recipe) { if (recipe.user == userId) { recipe.rating = rate} })
         }
+
+        // Save new average rating
+        let total = 0;
+        recipe.ratings.ratings.map((recipe) =>{
+            total = total + recipe.rating
+        } )
+        recipe.ratings.averageRating = total / recipe.ratings.ratings.length
+
         await recipe.save({ session : sess})
         await sess.commitTransaction()
     } catch (err) {
         console.log(err)
         return next(new httpError('Rating a recipe failed'), 500)
     }
-    let total = 0;
-   recipe.ratings.ratings.map((recipe) =>{
-        total = total + recipe.rating
-    } )
-    recipe.ratings.averageRating = total / recipe.ratings.ratings.length
+    
     console.log(recipe.ratings.averageRating)
     res.json({ recipe : recipe.toObject({ getters : true }) })
 }
