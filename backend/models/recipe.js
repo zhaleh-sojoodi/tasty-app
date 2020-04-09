@@ -7,7 +7,7 @@ const recipeSchema = new Schema({
     required: true
   },
   description: { type: String },
-  imageURL: { type: String },
+  imageURL: String,
   difficulty: {
     type: String,
     required: true
