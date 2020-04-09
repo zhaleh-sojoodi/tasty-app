@@ -6,7 +6,7 @@ import Ratings from "react-ratings-declarative";
 import NavigationBar from "../components/NavigationBar";
 import Footer from "../components/Footer";
 
-import { Button, Container, Row, Col, Alert } from "reactstrap";
+import { Button, Container, Row, Col } from "reactstrap";
 import recipePlaceholder from "../assets/img/placeholders/recipe.png";
 import profilePlaceholder from "../assets/img/placeholders/profile.jpg";
 
@@ -294,15 +294,6 @@ function Recipe(props) {
       <NavigationBar {...props} />
       <main className="main">
         <Container className="mt-5">
-          {/* <Alert color="warning">
-            <span className="alert-inner--icon">
-              <i className="ni ni-like-2" />
-            </span>{" "}
-            <span className="alert-inner--text">
-              <strong>Warning!</strong> This is a warning alert—check it out
-              that has an icon too!
-            </span>
-          </Alert> */}
 
           {/* If Recipe Exists */}
           { recipeExists ?
