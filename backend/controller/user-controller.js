@@ -1,6 +1,10 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { validationResult } = require('express-validator')
+const uuid = require('uuid/v4') ;
+const mime = require ('mime-types');
+const { Storage }  = require ('@google-cloud/storage');
+const path = require('path')
 const httpError = require('../models/http-error')
 const User = require('../models/user')
 
@@ -37,6 +41,24 @@ const signup = async (req, res, next) => {
     if(!error.isEmpty()) {
         return next(new httpError('Invalid input passed.', 422))
     }
+
+    const type = mime.lookup(req.file.originalname);
+    const gc = new Storage({
+        keyFilename: path.join(__dirname, "../recipe-app-273623-1d4d668a2ea8.json"),
+        projectId: process.env.GOOGLE_PROJECT_ID
+      });
+      
+    const bucket = gc.bucket(process.env.BUCKET_NAME) 
+      
+	
+	const blob = bucket.file(`${uuid()}.${mime.extensions[type][0]}`);
+
+	const stream = blob.createWriteStream({
+		resumable: true,
+		contentType: type,
+		predefinedAcl: 'publicRead',
+	});
+
     const { name, email, password, biography } = req.body;
     
     let existingUser;
@@ -60,6 +82,7 @@ const signup = async (req, res, next) => {
         email,
         password : hashedPassword,
         biography,
+        imageURL : `https://storage.googleapis.com/${bucket.name}/${blob.name}`,
         recipes : []
     });
     
@@ -81,14 +104,28 @@ const signup = async (req, res, next) => {
         return next(new httpError('Signing up failed'), 500)
     }
 
-    res.json({ userId : newUser.id, 
+    stream.on('error', err => {
+		next(err);
+	});
+
+	stream.on('finish', () => {
+		res.status(200).json({
+			data: {
+                imageUrl: `https://storage.googleapis.com/${bucket.name}/${blob.name}`,
+                userId : newUser.id, 
                 email : newUser.email,  
                 token : token, 
                 biography : newUser.biography, 
                 name : newUser.name
-            })
-    }
 
+			},
+        });
+        
+    });
+
+    stream.end(req.file.buffer);
+}
+   
 const login = async (req, res, next) => {
     const { email, password } = req.body
 

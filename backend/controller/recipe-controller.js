@@ -1,13 +1,14 @@
 const fs = require('fs')
 const {validationResult} = require('express-validator')
 const mongoose = require('mongoose')
-const httpError = require('../models/http-error')
-const Recipe = require('../models/recipe')
-const User = require('../models/user')
 const uuid = require('uuid/v4') ;
 const mime = require ('mime-types');
 const { Storage }  = require ('@google-cloud/storage');
 const path = require('path')
+const httpError = require('../models/http-error')
+const Recipe = require('../models/recipe')
+const User = require('../models/user')
+
 
 
 const getAllRecipes = async (req, res, next) => {
@@ -135,7 +136,7 @@ const addRecipe = async (req, res, next) => {
         projectId: process.env.GOOGLE_PROJECT_ID
       });
       
-    const bucket = gc.bucket("recipe-app-final") 
+    const bucket = gc.bucket(process.env.BUCKET_NAME) 
       
 	
 	const blob = bucket.file(`${uuid()}.${mime.extensions[type][0]}`);
@@ -364,6 +365,12 @@ const deleteRecipe = async (req, res, next) => {
     }
     
     const imagePath = recipe.imageURL
+    const gc = new Storage({
+        keyFilename: path.join(__dirname, "../recipe-app-273623-1d4d668a2ea8.json"),
+        projectId: process.env.GOOGLE_PROJECT_ID
+      });
+    const parts = imagePath.split('/')
+    const filename = parts[(parts.length)-1]
 
     try {
         const sess = await mongoose.startSession();
@@ -377,9 +384,14 @@ const deleteRecipe = async (req, res, next) => {
         return next(new httpError('Deleting the recipe failed'), 500)
     }
 
-    fs.unlink(imagePath, err => {
+    //delete the file from the bucket in google cloud
+    try {
+        await gc.bucket(process.env.BUCKET_NAME).file(filename).delete()
+    } catch (err) {
         console.log(err)
-    })
+        return next(new httpError('Deleting the recipe file from cloud failed'), 500)
+    }
+    
 
     res.json({ message : "Deleted recipe"})
 }
