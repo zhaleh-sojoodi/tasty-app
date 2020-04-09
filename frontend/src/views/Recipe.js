@@ -88,6 +88,7 @@ function Recipe(props) {
 
       // Successful fetch
       let data = await response.json();
+      console.log(data)
 
       // Set recipe data
       setRecipe(data.recipe);
@@ -302,7 +303,7 @@ function Recipe(props) {
             <Col lg="8">
               {/* Image */}
               <img
-                className="img-fluid"
+                className="img-fluid recipe-detail-img"
                 src={ recipe && recipe.imageURL ? recipe.imageURL : recipePlaceholder }
                 alt={ recipe && recipe.title }
               />
@@ -370,7 +371,7 @@ function Recipe(props) {
                     <i className="col-1 ni ni-single-02 m-1 recipe-details-icon" />
                     <Col>
                       <strong>Servings</strong>
-                      <p>{ recipe && recipe.servings} people</p>
+                      <p>{ recipe.servings == 1 ? <>{recipe.servings} person</> : <>{recipe.servings} people</>}</p>
                     </Col>
                   </Row>
                 </Col>
@@ -402,7 +403,9 @@ function Recipe(props) {
               <hr className="mt-3 mb-3" />
 
               {/* Description */}
-              <p>{ recipe && recipe.description !== "" ? recipe.description : "No description available."}</p>
+              <p>
+                { recipe.description && recipe.description !== "" ? recipe.description : "No description available."}
+              </p>
               <hr className="mt-3 mb-3" />
 
               {/* Ingredients */}
