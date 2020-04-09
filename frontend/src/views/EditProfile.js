@@ -7,23 +7,24 @@ import {
   Form,
   FormGroup,
   Label,
-  Input
+  Input,
+  FormText
 } from "reactstrap";
 
 import NavigationBar from "components/NavigationBar";
 import Footer from "components/Footer";
 
 const BASE_URL = "http://localhost:5000/api";
-const USER_ID = "user_id";
 
 function EditProfile(props) {
 
   const [formData, setFormData] = useState({
     name: "",
-    biography: ""
+    biography: "",
+    profilepicture: ""
   });
 
-  const { name, biography } = formData;
+  const { name, biography, profilepicture } = formData;
 
   const onChange = e => setFormData({...formData, [e.target.name]: e.target.value});
 
@@ -32,9 +33,9 @@ function EditProfile(props) {
 
     // Check if name field is empty
     if(name === "" || !name) {
-        alert("Name field cannot be empty.");
+      alert("Name field cannot be empty.");
     } else {
-        updateProfile(sessionStorage.getItem(USER_ID));
+      updateProfile(sessionStorage.getItem("user_id"));
     }
   }
 
@@ -74,16 +75,20 @@ function EditProfile(props) {
 
   const updateProfile = async(id) => {
     let token = sessionStorage.getItem("auth_token");
-    const uri = BASE_URL + "/user/" + id;
+    const uri = BASE_URL + "/user";
+
+    const formData = new FormData();
+    const fileField = document.querySelector('input[type="file"]');
+    formData.append("name", name);
+    formData.append("biography", biography);
+    formData.append("image", fileField.files[0]);
 
     const settings = {
       method: 'PATCH',
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify(formData)
+      body: formData
     }
 
     try {
@@ -142,6 +147,19 @@ function EditProfile(props) {
                 placeholder=""
                 onChange={e => onChange(e)}
               />
+            </FormGroup>
+
+            <FormGroup>
+              <Label for="recipeimage">Profile Picture</Label>
+              <Input
+                type="file"
+                name="profilepicture"
+                id="profilepicture"
+                onChange={e => onChange(e)}
+              />
+              <FormText color="muted">
+                For best results, upload an image that is at least 100x100 pixels.
+              </FormText>
             </FormGroup>
 
             <Button color="default" type="submit">Save Changes</Button>
