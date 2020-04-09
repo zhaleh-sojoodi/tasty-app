@@ -104,6 +104,8 @@ function EditProfile(props) {
       }
 
       // Successful fetch, redirect to user's profile
+      let data = await response.json();
+      sessionStorage.setItem("user_name", data.data.name);
       props.history.push("/profile/" + id);
       window.location.reload();
     } catch(err) {
