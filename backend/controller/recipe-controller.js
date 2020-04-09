@@ -360,11 +360,17 @@ const deleteRecipe = async (req, res, next) => {
     }
 
     //Check if the creator is the user logged in 
-    if(recipe.creator.id !== req.userData.userId) {
-        return next(new httpError('You are not allowed to delete the recipe', 401))
-    }
+    // if(recipe.creator.id !== req.userData.userId) {
+    //     return next(new httpError('You are not allowed to delete the recipe', 401))
+    // }
     
     const imagePath = recipe.imageURL
+    const gc = new Storage({
+        keyFilename: path.join(__dirname, "../recipe-app-273623-1d4d668a2ea8.json"),
+        projectId: process.env.GOOGLE_PROJECT_ID
+      });
+    const parts = imagePath.split('/')
+    const filename = parts[(parts.length)-1]
 
     try {
         const sess = await mongoose.startSession();
@@ -378,9 +384,14 @@ const deleteRecipe = async (req, res, next) => {
         return next(new httpError('Deleting the recipe failed'), 500)
     }
 
-    fs.unlink(imagePath, err => {
+    //delete the file from the bucket in google cloud
+    try {
+        await gc.bucket(process.env.BUCKET_NAME).file(filename).delete()
+    } catch (err) {
         console.log(err)
-    })
+        return next(new httpError('Deleting the recipe file from cloud failed'), 500)
+    }
+    
 
     res.json({ message : "Deleted recipe"})
 }

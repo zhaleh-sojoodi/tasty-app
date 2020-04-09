@@ -19,7 +19,7 @@ router.get('/all/recipes/search/title/:search', recipeController.getRecipesBySea
 router.put('/rate', recipeController.rateRecipe)
 router.put('/:userId/:recipeId', recipeController.toggleLike)
 
-router.use(checkAuth)
+//router.use(checkAuth)
 
 router.post(
     '/' , 
