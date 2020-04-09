@@ -88,7 +88,6 @@ function Recipe(props) {
 
       // Successful fetch
       let data = await response.json();
-      console.log(data)
 
       // Set recipe data
       setRecipe(data.recipe);
