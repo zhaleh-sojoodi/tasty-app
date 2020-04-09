@@ -100,7 +100,8 @@ function CreateRecipe(props) {
 
         // Redirect to created recipe
         if(data.recipe._id) {
-            props.history.push(`/recipe/${data.recipe._id}`);
+          props.history.push(`/recipe/${data.recipe._id}`);
+          window.location.reload();
         }
     } catch(e) {
         console.error(e);
