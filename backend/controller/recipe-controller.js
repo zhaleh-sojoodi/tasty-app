@@ -1,13 +1,14 @@
 const fs = require('fs')
 const {validationResult} = require('express-validator')
 const mongoose = require('mongoose')
-const httpError = require('../models/http-error')
-const Recipe = require('../models/recipe')
-const User = require('../models/user')
 const uuid = require('uuid/v4') ;
 const mime = require ('mime-types');
 const { Storage }  = require ('@google-cloud/storage');
 const path = require('path')
+const httpError = require('../models/http-error')
+const Recipe = require('../models/recipe')
+const User = require('../models/user')
+
 
 
 const getAllRecipes = async (req, res, next) => {
@@ -135,7 +136,7 @@ const addRecipe = async (req, res, next) => {
         projectId: process.env.GOOGLE_PROJECT_ID
       });
       
-    const bucket = gc.bucket("recipe-app-final") 
+    const bucket = gc.bucket(process.env.BUCKET_NAME) 
       
 	
 	const blob = bucket.file(`${uuid()}.${mime.extensions[type][0]}`);
