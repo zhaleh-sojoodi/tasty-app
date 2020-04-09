@@ -12,7 +12,7 @@ const PageNotFound = (props) => {
     <Container className="mt-5">
     <div className="px-4 d-flex flex-column justify-content-center">
       <h1 className="text-center mt-5">
-        Sorry, this page doesn't exist <span role="img" aria-label="Crying Emoji">😢</span>
+        Sorry, this page doesn't exist <span role="img" aria-label="Ghost emoji">👻</span>
       </h1>
       <Link
         className="text-default text-center mt-3"
