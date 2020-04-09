@@ -303,7 +303,7 @@ function Recipe(props) {
               {/* Image */}
               <img
                 className="img-fluid"
-                src={ recipePlaceholder }
+                src={ recipe && recipe.imageURL ? recipe.imageURL : recipePlaceholder }
                 alt={ recipe && recipe.title }
               />
 
