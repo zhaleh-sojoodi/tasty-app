@@ -93,6 +93,13 @@ body {
     max-height: 200px;
 }
 
+.recipe-detail-img {
+    object-fit: cover;
+    width: 100%;
+    min-height: 45vh;
+    max-height: 45vh;
+}
+
 @media only screen and (max-width: 468px) {
     .onboarding h1 {
         font-size: 1.25rem;
