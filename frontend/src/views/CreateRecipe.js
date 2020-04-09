@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-import { Redirect } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
 import capitalize from '../utils/capitalize';
+import forceLogout from '../utils/forceLogout';
 
 import {
+  Alert,
   Container,
   Button,
   Form,
@@ -10,28 +11,137 @@ import {
   Label,
   Input,
   Row,
-  Col
+  Col,
+  FormText
 } from "reactstrap";
 
 import NavigationBar from "components/NavigationBar";
 import Footer from "components/Footer";
 
 const BASE_URL = "http://localhost:5000/api/recipe";
-const AUTH_TOKEN = 'auth_token';
-const USER_ID = 'user_id';
 
 function CreateRecipe(props) {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [preparationTime, setPreparationTime] = useState("");
-  const [cookingTime, setCookingTime] = useState("");
-  const [servings, setServings] = useState(2);
-  const [difficulty, setDifficulty] = useState("easy");
-  const [category, setCategory] = useState("breakfast");
-  const [ingredients, setIngredients] = useState("");
-  const [directions, setDirections] = useState("");
-  const [errorMessage, setErrorMessage] = useState([]);
-  const [recipeId, setRecipeId] = useState("");
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    preparationtime: "",
+    cookingtime: "",
+    servings: "",
+    difficulty: "Easy",
+    category: "Entree",
+    ingredients: "",
+    directions: ""
+  });
+  const [errors, setErrors] = useState([]);
+
+  const {
+    title,
+    description,
+    preparationtime,
+    cookingtime,
+    servings,
+    difficulty,
+    category,
+    ingredients,
+    directions
+  } = formData;
+
+  const createRecipe = async() => {
+    let id;
+    if(sessionStorage.getItem("user_id")) {
+        id = sessionStorage.getItem("user_id");
+    } else {
+        forceLogout();
+        return;
+    }
+    let token = sessionStorage.getItem("auth_token");
+    const uri = BASE_URL;
+
+    // Set form data
+    const formData = new FormData();
+    const fileField = document.querySelector('input[type="file"]');
+    formData.append('title', title);
+    if(description !== "") formData.append('description', description);
+    formData.append('preparationTime', preparationtime);
+    formData.append('cookingTime', cookingtime);
+    formData.append('servings', servings);
+    formData.append('difficulty', capitalize(difficulty));
+    formData.append('category', capitalize(category));
+    formData.append('ingredients', JSON.stringify(sortStringToArray(ingredients)));
+    formData.append('directions', JSON.stringify(sortStringToArray(directions)));
+    if(fileField) formData.append('image', fileField.files[0]);
+    formData.append('creator', id);
+
+    // Fetch
+    try {
+        const response = await fetch(uri, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            body: formData
+        });
+
+        // Bad response
+        if(response.status === 404) {
+            console.log("404...")
+            throw response;
+        } else if(
+            !response.ok ||
+            response.status === 422 ||
+            response.status === 500
+        ) {
+            setErrors(["Something went wrong, please try again."]);
+            throw response;
+        }
+
+        // Success
+        let data = await response.json();
+
+        // Redirect to created recipe
+        if(data.recipe._id) {
+            props.history.push(`/recipe/${data.recipe._id}`);
+        }
+    } catch(e) {
+        console.error(e);
+    }
+  }
+
+  const onChange = e => {
+    setFormData({...formData, [e.target.name]: e.target.value});
+  }
+
+  const onSubmit = e => {
+    e.preventDefault();
+    
+    let formErrors = [];
+
+    if(title === "") {
+        formErrors.push("Recipe title is required.")
+    }
+    if(preparationtime === "") {
+        formErrors.push("Preparation time is required.")
+    }
+    if(cookingtime === "") {
+        formErrors.push("Cooking time is required.")
+    }
+    if(servings === "") {
+        formErrors.push("Servings is required.")
+    }
+    if(ingredients === "") {
+        formErrors.push("Ingredients cannot be empty.")
+    }
+    if(directions === "") {
+        formErrors.push("Directions cannot be empty.")
+    }
+
+    if (formErrors.length === 0) {
+        setErrors([]);
+        createRecipe();
+    } else {
+        setErrors(formErrors);
+    }
+  }
 
   function sortStringToArray(string) {
     if (string !== "") {
@@ -46,104 +156,27 @@ function CreateRecipe(props) {
     }
   }
 
-  function checkForm() {
-    try {
-      if (title === "") {
-        setErrorMessage(errorMessage.push("Title is missing."));
-      }
-      if (preparationTime === "") {
-        setErrorMessage(errorMessage.push("Preparation Time is missing."));
-      }
-      if (cookingTime === "") {
-        setErrorMessage(errorMessage.push("Cooking Time is missing."));
-      }
-      if (ingredients !== "") {
-        var ingredientsArray = sortStringToArray(ingredients);
-      } else {
-        setErrorMessage(errorMessage.push("Ingredients section is missing."));
-      }
-      if (directions !== "") {
-        var directionsArray = sortStringToArray(directions);
-      } else {
-        setErrorMessage(errorMessage.push("Directions section is missing."));
-      }
-    } catch (error) {
-      console.log(error);
-    }
-    if (errorMessage.length === 0) {
-      submitForm(ingredientsArray, directionsArray);
-    } else {
-      console.log("display errors");
-      console.log(errorMessage);
-    }
-    setErrorMessage([]);
-  }
-
-  function submitForm(ingredientsArray, directionsArray) {
-    let authToken = sessionStorage.getItem(AUTH_TOKEN);
-    let userId = sessionStorage.getItem(USER_ID);
-    let recipe = {
-      title: title,
-      description: description,
-      preparationTime: preparationTime,
-      cookingTime: cookingTime,
-      servings: servings,
-      difficulty: capitalize(difficulty),
-      category: capitalize(category),
-      ingredients: ingredientsArray,
-      directions: directionsArray,
-      creator: userId
-    }
-    fetch(BASE_URL, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authToken}`
-      },
-      body: JSON.stringify(recipe)
-    })
-    .then((response) => {
-      // Check response status
-      if(
-        !response.ok ||
-        response.status === 401 ||
-        response.status === 500 ||
-        response.status === 404 ||
-        response.status === 422
-      ) {
-        alert("Could not create recipe. Please try again.");
-        throw response;
-      }
-
-      return response.json();
-    })
-    .then(json => {
-      if (json !== null) {
-        setRecipeId(json._id);
-      }
-    })
-    .catch(function (error) {
-      console.error(error)
-    })
-  }
+  useEffect(() => {}, [errors])
 
   return (
     <>
-      {/* {recipeId !== "" ? <Redirect to={{
-        pathname: "/recipe",
-        state: {
-          recipeId: recipeId
-        }
-      }} /> : null} */}
-
-      {recipeId !== "" ? <Redirect to={{
-        pathname: `/recipe/${recipeId}`,
-      }} /> : null}
-
-      <NavigationBar {...props} />
+    <NavigationBar {...props} />
       <main className="main">
         <Container className="mt-4 mb-4">
+        
+          {/* Display Form Errors */}
+          { errors.length > 0 &&
+          <>
+          <Alert color="default">
+          <ul className="my-3">
+          { errors.map((error, i) =>{
+            return <li key={i}>{error}</li>
+          }) }
+          </ul>
+          </Alert>
+          </>
+          }
+
           <h1 className="display-3 mb-3">Create a Recipe</h1>
           <Form>
             <FormGroup>
@@ -154,7 +187,7 @@ function CreateRecipe(props) {
                 id="title"
                 placeholder="Name of your recipe"
                 value={title}
-                onChange={e => setTitle(e.target.value)}
+                onChange={e => onChange(e)}
               />
             </FormGroup>
 
@@ -167,7 +200,7 @@ function CreateRecipe(props) {
                 rows="3"
                 placeholder="Give a brief description of your recipe here"
                 value={description}
-                onChange={e => setDescription(e.target.value)}
+                onChange={e => onChange(e)}
               />
             </FormGroup>
 
@@ -180,9 +213,9 @@ function CreateRecipe(props) {
                     name="preparationtime"
                     id="preparationtime"
                     min={0}
-                    value={preparationTime}
-                    onChange={e => setPreparationTime(e.target.value)}
+                    value={preparationtime}
                     placeholder={"Enter time in minutes"}
+                    onChange={e => onChange(e)}
                   />
                 </FormGroup>
               </Col>
@@ -196,8 +229,8 @@ function CreateRecipe(props) {
                     id="cookingtime"
                     placeholder={"Enter time in minutes"}
                     min={0}
-                    value={cookingTime}
-                    onChange={e => setCookingTime(e.target.value)}
+                    value={cookingtime}
+                    onChange={e => onChange(e)}
                   />
                 </FormGroup>
               </Col>
@@ -211,7 +244,7 @@ function CreateRecipe(props) {
                     id="servings"
                     placeholder="2"
                     value={servings}
-                    onChange={e => setServings(e.target.value)}
+                    onChange={e => onChange(e)}
                   />
                 </FormGroup>
               </Col>
@@ -224,7 +257,7 @@ function CreateRecipe(props) {
                     name="difficulty"
                     id="difficulty"
                     value={difficulty}
-                    onChange={e => setDifficulty(e.target.value)}
+                    onChange={e => onChange(e)}
                   >
                     <option value="easy">Easy</option>
                     <option value="medium">Medium</option>
@@ -241,7 +274,7 @@ function CreateRecipe(props) {
                 name="category"
                 id="category"
                 value={category}
-                onChange={e => setCategory(e.target.value)}
+                onChange={e => onChange(e)}
               >
                 <option value="entree">Entree</option>
                 <option value="desserts">Desserts</option>
@@ -261,7 +294,7 @@ function CreateRecipe(props) {
                 rows="5"
                 placeholder="Put each ingredient on its own line"
                 value={ingredients}
-                onChange={e => setIngredients(e.target.value)}
+                onChange={e => onChange(e)}
               />
             </FormGroup>
 
@@ -272,14 +305,13 @@ function CreateRecipe(props) {
                 name="directions"
                 id="directions"
                 rows="5"
-                placeholder="Put each step on its own line"
+                placeholder="Put each direction on its own line"
                 value={directions}
-                onChange={e => setDirections(e.target.value)}
+                onChange={e => onChange(e)}
               />
             </FormGroup>
 
-            {/* Pending backend integration */}
-            {/* <FormGroup>
+            <FormGroup>
               <Label for="recipeimage">Recipe Image</Label>
               <Input
                 type="file"
@@ -289,15 +321,21 @@ function CreateRecipe(props) {
               <FormText color="muted">
                 For best results, upload an image that is at least 800x600 pixels.
               </FormText>
-            </FormGroup> */}
+            </FormGroup>
 
-            <Button color="default" onClick={() => checkForm()}>Create</Button>
+            <Button
+                color="default"
+                onClick={e => onSubmit(e)}
+            >
+                Create Recipe
+            </Button>
           </Form>
 
         </Container>
       </main>
       <Footer />
-    </>
+     
+    </> 
   );
 }
 
