@@ -360,9 +360,9 @@ const deleteRecipe = async (req, res, next) => {
     }
 
     //Check if the creator is the user logged in 
-    // if(recipe.creator.id !== req.userData.userId) {
-    //     return next(new httpError('You are not allowed to delete the recipe', 401))
-    // }
+    if(recipe.creator.id !== req.userData.userId) {
+        return next(new httpError('You are not allowed to delete the recipe', 401))
+    }
     
     const imagePath = recipe.imageURL
     const gc = new Storage({
