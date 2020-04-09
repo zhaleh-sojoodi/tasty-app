@@ -4,6 +4,11 @@ const mongoose = require('mongoose')
 const httpError = require('../models/http-error')
 const Recipe = require('../models/recipe')
 const User = require('../models/user')
+const uuid = require('uuid/v4') ;
+const mime = require ('mime-types');
+const { Storage }  = require ('@google-cloud/storage');
+const path = require('path')
+
 
 const getAllRecipes = async (req, res, next) => {
     let recipes 
@@ -120,14 +125,34 @@ const getTopRatedRecipes = async (req, res, next) => {
 const addRecipe = async (req, res, next) => {
     const error = validationResult(req)
     if (!error.isEmpty()) {
+        console.log(error)
         return next(new httpError('Invalid input passed.', 422))
     }
+
+    const type = mime.lookup(req.file.originalname);
+    const gc = new Storage({
+        keyFilename: path.join(__dirname, "../recipe-app-273623-1d4d668a2ea8.json"),
+        projectId: process.env.GOOGLE_PROJECT_ID
+      });
+      
+    const bucket = gc.bucket("recipe-app-final") 
+      
+	
+	const blob = bucket.file(`${uuid()}.${mime.extensions[type][0]}`);
+
+	const stream = blob.createWriteStream({
+		resumable: true,
+		contentType: type,
+		predefinedAcl: 'publicRead',
+	});
+
+	
     const {title, description, difficulty, cookingTime, preparationTime, category, ingredients, directions, servings, creator } = req.body
    
     const newRecipe = new Recipe ({
         title,
         description, 
-        imageURL : req.file.path,
+        imageURL : `https://storage.googleapis.com/${bucket.name}/${blob.name}`,
         difficulty,
         cookingTime,
         preparationTime, 
@@ -166,7 +191,23 @@ const addRecipe = async (req, res, next) => {
         console.log(err)
         return next(new httpError('Adding a recipe failed'), 500)
     }
-    res.json(newRecipe)
+
+    stream.on('error', err => {
+		next(err);
+	});
+
+	stream.on('finish', () => {
+		res.status(200).json({
+			data: {
+                url: `https://storage.googleapis.com/${bucket.name}/${blob.name}`,
+                recipe : newRecipe
+			},
+        });
+        
+    });
+
+    stream.end(req.file.buffer);
+
 }
 
 const rateRecipe = async (req, res, next) => {

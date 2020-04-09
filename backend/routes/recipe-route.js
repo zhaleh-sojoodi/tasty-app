@@ -2,7 +2,7 @@ const express = require('express')
 const { check } = require('express-validator')
 const recipeController = require('../controller/recipe-controller')
 const checkAuth = require('../middleware/check-auth')
-const imageUpload = require('../middleware/image-upload')
+const multer = require ('multer');
 
 
 const router = express.Router()
@@ -19,11 +19,11 @@ router.get('/all/recipes/search/title/:search', recipeController.getRecipesBySea
 router.put('/rate', recipeController.rateRecipe)
 router.put('/:userId/:recipeId', recipeController.toggleLike)
 
-router.use(checkAuth)
+//router.use(checkAuth)
 
 router.post(
-    '/', 
-    imageUpload.single('image'),
+    '/' , 
+    multer().single('image'),
     [
         check("title").not().isEmpty(),
         check("difficulty").not().isEmpty(),
@@ -33,7 +33,7 @@ router.post(
         check("ingredients").not().isEmpty(),
         check("directions").not().isEmpty(),
     ], 
-    recipeController.addRecipe )
+     recipeController.addRecipe )
 router.patch(
     '/:recipeId',
     [
