@@ -3,7 +3,10 @@ const jwt = require('jsonwebtoken')
 const { validationResult } = require('express-validator')
 const httpError = require('../models/http-error')
 const User = require('../models/user')
+<<<<<<< HEAD
 const {Storage} = require('@google-cloud/storage')
+=======
+>>>>>>> master
 
 const getUsers = async (req, res, next) => {
     let users;
@@ -147,7 +150,7 @@ const update = async (req, res, next) => {
     try {
         user = await User.findById(userId)
     } catch(err) {
-        return next(new httpError('could not find the recipe by privided Id', 500))
+        return next(new httpError('Could not find a user with the provided ID.', 500))
     }
 
     user.name = name

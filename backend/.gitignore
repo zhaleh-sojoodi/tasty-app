@@ -2,5 +2,9 @@ node_modules
 
 # API keys and secrets
 .env
+<<<<<<< HEAD
 
 compact-citizen-273600-1bca00eb71ea.json
+=======
+recipe-app-273623-1d4d668a2ea8.json
+>>>>>>> master

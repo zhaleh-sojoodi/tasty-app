@@ -7,7 +7,7 @@ const recipeSchema = new Schema({
     required: true
   },
   description: { type: String },
-  imageURL: { type: String },
+  imageURL: String,
   difficulty: {
     type: String,
     required: true
@@ -26,7 +26,7 @@ const recipeSchema = new Schema({
       {
         user: {
           type: Schema.Types.ObjectId,
-          ref: 'users'
+          ref: 'User'
         },
         rating: {
           type: Number,

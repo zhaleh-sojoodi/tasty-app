@@ -22,6 +22,8 @@ import Footer from "../components/Footer";
 
 const BASE_URL = "http://localhost:5000/api/user";
 const AUTH_TOKEN = "auth_token";
+const USER_NAME = "user_name";
+const USER_ID = "user_id";
 
 function Register(props) {
 
@@ -72,8 +74,8 @@ function Register(props) {
         // Check if token was received
         if (json.token !== "" && json.token != null) {
           sessionStorage.setItem(AUTH_TOKEN, json["token"]);
-          sessionStorage.setItem("AUTH_EMAIL", json.email);
-
+          sessionStorage.setItem(USER_NAME, json.name);
+          sessionStorage.setItem(USER_ID, json["userId"]);
           setRedirect(true);
         }
         if (json.message === "Signing up failed") {
@@ -103,9 +105,9 @@ function Register(props) {
         }
       }} /> : null}
 
-      <NavigationBar />
+      <NavigationBar {...props} />
       <main className="main">
-        <section className="section section-shaped section-lg" style={{minHeight:'95vh'}}>
+        <section className="section-auth section section-shaped section-lg">
           <div className="shape shape-style-1 bg-gradient-default bg-gradient-red">
             <span />
             <span />

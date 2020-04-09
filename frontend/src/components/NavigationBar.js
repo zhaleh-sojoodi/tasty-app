@@ -19,50 +19,70 @@ import {
   InputGroup,
   InputGroupAddon,
   InputGroupText,
-  Input
+  Input,
+  Form
 } from 'reactstrap';
 
-const AUTH_TOKEN = "auth_token";
+const APP_NAME = "Tasty";
 
-function NavigationBar() {
+function NavigationBar(props) {
   const [searchValue, setSearchValue] = useState("");
   const [redirect, setRedirect] = useState(false);
-  const [username, setUsername] = useState(null);
+  const [username, setUsername] = useState();
 
   function logout() {
-    sessionStorage.removeItem(AUTH_TOKEN);
-    sessionStorage.removeItem("AUTH_EMAIL");
+    sessionStorage.removeItem("auth_token");
+    sessionStorage.removeItem("user_name");
     sessionStorage.removeItem("user_id");
     setRedirect(true);
   }
 
   function checkUserLoggedIn() {
-    if (sessionStorage.getItem(AUTH_TOKEN) != null) {
+    if (sessionStorage.getItem("auth_token") != null) {
       return true;
     }
     return false;
   }
 
-  useEffect(() => {
-    if(sessionStorage.getItem("AUTH_EMAIL")) {
-      setUsername(sessionStorage.getItem("AUTH_EMAIL"));
+  const onSubmit = e => {
+    e.preventDefault();
+
+    // Process search if search is not empty
+    if(searchValue !== "") {
+      // Hard refresh if user is already on Search Results page
+      let currentURL = window.location.href;
+      if(currentURL.slice(currentURL.length - 7) === "/search") {
+        window.location.reload();
+      }
+
+      // Redirect to search results page with query
+      props.history.push({
+        pathname: '/search',
+        state: {query: searchValue}
+      })
     }
-  }, [username])
+  }
+
+  useEffect(() => {
+    if(sessionStorage.getItem("user_name")) {
+      setUsername(sessionStorage.getItem("user_name"));
+    }
+  }, [])
 
   return (
     <header className="header-global">
       {redirect ? <Redirect to='/' /> : null}
       <Navbar className="navbar-dark bg-danger" expand="lg">
         <Container>
-          <NavbarBrand href="/">Logo</NavbarBrand>
-          <button className="navbar-toggler" id="navbar-danger">
+          <NavbarBrand className="tasty" href="/">{APP_NAME}</NavbarBrand>
+          <Button className="navbar-toggler" id="navbar-danger">
             <span className="navbar-toggler-icon" />
-          </button>
+          </Button>
           <UncontrolledCollapse navbar toggler="#navbar-danger">
             <div className="navbar-collapse-header">
               <Row>
                 <Col className="collapse-brand" xs="6">
-                  <Link to="/">Logo</Link>
+                  <Link className="tasty" to="/">{APP_NAME}</Link>
                 </Col>
                 <Col className="collapse-close" xs="6">
                   <button className="navbar-toggler" id="navbar-danger">
@@ -72,6 +92,9 @@ function NavigationBar() {
               </Row>
             </div>
             <Nav className="navbar-nav-hover align-items-lg-center ml-lg-auto" navbar>
+
+              {/* Search Bar */}
+              <Form onSubmit={e => onSubmit(e)}>
               <FormGroup className="mb-0">
                 <InputGroup className="input-group-alternative">
                   <InputGroupAddon addonType="prepend">
@@ -79,16 +102,24 @@ function NavigationBar() {
                       <i className="ni ni-zoom-split-in" />
                     </InputGroupText>
                   </InputGroupAddon>
-                  <Input placeholder="Search" type="text" value={searchValue} onChange={(value) => setSearchValue(value.target.value)} />
+                  <Input
+                    placeholder="Search"
+                    type="text"
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                  />
                 </InputGroup>
               </FormGroup>
+              </Form>
+
+              {/* Profile Menu */}
               <UncontrolledDropdown nav style={checkUserLoggedIn() ? {display: 'initial'} : {display: 'none'}}>
                 <DropdownToggle nav caret>
                   <i className="ni ni-collection d-lg-none mr-1" />
                   <span className="nav-link-inner--text">{ username && username }</span>
                 </DropdownToggle>
                 <DropdownMenu>
-                  <DropdownItem to="/profile" tag={Link}>My Profile</DropdownItem>
+                  <DropdownItem to="/myprofile" tag={Link}>My Profile</DropdownItem>
                   <DropdownItem to="/create-recipe" tag={Link}>Create Recipe</DropdownItem>
                   <DropdownItem to="/liked" tag={Link}>Liked Recipes</DropdownItem>
                   <DropdownItem to="/my-recipes" tag={Link}>My Recipes</DropdownItem>
@@ -96,12 +127,19 @@ function NavigationBar() {
                 </DropdownMenu>
               </UncontrolledDropdown>
 
+              {/* Login Button */}
               <NavItem to="/login" className="d-none d-lg-block ml-lg-4" >
-                <Button className="btn-neutral btn-icon" color="default" href="/login" style={checkUserLoggedIn() ? {display: 'none'} : {display: 'initial'}}>
+                <Button
+                className="btn-neutral btn-icon"
+                color="default"
+                tag={Link}
+                to="/login"
+                style={checkUserLoggedIn() ? {display: 'none'} : {display: 'initial'}}
+                >
                   <span className="btn-inner--icon">
-                    <i className="fa fa-cloud-download mr-2" />
+                    <i className="fa fa-cloud-download mr-2 text-danger" />
                   </span>
-                  <span className="nav-link-inner--text ml-1">
+                  <span className="nav-link-inner--text ml-1 text-danger">
                     Login
                   </span>
                 </Button>

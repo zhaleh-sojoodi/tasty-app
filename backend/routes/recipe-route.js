@@ -2,8 +2,8 @@ const express = require('express')
 const { check } = require('express-validator')
 const recipeController = require('../controller/recipe-controller')
 const checkAuth = require('../middleware/check-auth')
-//const imageUpload = require('../middleware/image-upload')
-//const {Storage} = require('@google-cloud/storage')
+const multer = require ('multer');
+
 
 const router = express.Router()
 
@@ -11,19 +11,19 @@ const router = express.Router()
 router.get('/', recipeController.getAllRecipes)
 router.get('/:recipeId', recipeController.getRecipeByRecipeId)
 router.get('/user/:userId' , recipeController.getRecipesByUserId )
-router.get('/user/list/likes/:userId', recipeController.getLikedRecipesByUserId)
+router.get('/user/all/list/like/recipes/:userId' , recipeController.getLikedRecipesByUserId)
+router.get('/all/top/rated' , recipeController.getTopRatedRecipes)
 router.get('/all/popular' , recipeController.getPopularRecipes)
 router.get('/all/recipes/categories/:category', recipeController.getRecipesByCategory)
-router.get('/all/top/rated' , recipeController.getTopRatedRecipes)
 router.get('/all/recipes/search/title/:search', recipeController.getRecipesBySearch)
 router.put('/rate', recipeController.rateRecipe)
 router.put('/:userId/:recipeId', recipeController.toggleLike)
 
-router.use(checkAuth)
+//router.use(checkAuth)
 
 router.post(
-    '/', 
-    //imageUpload.single('image') ,
+    '/' , 
+    multer().single('image'),
     [
         check("title").not().isEmpty(),
         check("difficulty").not().isEmpty(),
@@ -33,7 +33,7 @@ router.post(
         check("ingredients").not().isEmpty(),
         check("directions").not().isEmpty(),
     ], 
-    recipeController.addRecipe )
+     recipeController.addRecipe )
 router.patch(
     '/:recipeId',
     [

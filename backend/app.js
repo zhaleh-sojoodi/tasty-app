@@ -1,4 +1,3 @@
-const fs = require('fs')
 const path = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
@@ -14,49 +13,14 @@ dotenv.config()
 const app = express()
 app.use(bodyParser.json())
 
-//google clouds
-const gc = new Storage({
-    keyFilename: path.join(__dirname, './compact-citizen-273600-1bca00eb71ea.json'),
-    projectId: 'compact-citizen-273600'
-})
-const RecipeFilesBucket = gc.bucket('recipe-files')
-//print bucket info in console
-gc.getBuckets().then(x => console.log(x))
-
-const resolvers = {
-    Query: {
-      files: () => files
-    },
-    Mutation: {
-      uploadFile: async (_, { file }) => {
-        const { createReadStream, filename } = await file;
-  
-        await new Promise(res =>
-          createReadStream()
-            .pipe(
-              coolFilesBucket.file(filename).createWriteStream({
-                resumable: false,
-                gzip: true
-              })
-            )
-            .on("finish", res)
-        );
-  
-        files.push(filename);
-  
-        return true;
-      }
-    }
-  };
-
-//return the file 
+//access the file to outside the server
 app.use('uploads/images', express.static(path.join('uploads', 'images')))
 
 //enable Cors
 app.use(function(req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, PATCH')
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, PATCH, PUT')
     next();
 });
 
@@ -70,11 +34,7 @@ app.use((req,res,next) => {
 })
 
 app.use((error,req,res,next) => {
-    if (req.file) {
-        fs.unlink (req.file.path, err => {
-            console.log(err)
-        })
-    }
+
     if(res.headerSent) {
         return next(error)
     }
@@ -83,10 +43,11 @@ app.use((error,req,res,next) => {
 });
 
 mongoose.set('useCreateIndex', true)
-mongoose.connect(process.env.DB_CONN , {useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect(process.env.DB_CONN)
 .then(() => {
     app.listen(5000)
 })
 .catch(err => {
     console.log(err)
 })
+

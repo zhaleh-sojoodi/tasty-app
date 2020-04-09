@@ -1,11 +1,17 @@
+const fs = require('fs')
 const {validationResult} = require('express-validator')
 const mongoose = require('mongoose')
 const httpError = require('../models/http-error')
 const Recipe = require('../models/recipe')
 const User = require('../models/user')
+const uuid = require('uuid/v4') ;
+const mime = require ('mime-types');
+const { Storage }  = require ('@google-cloud/storage');
+const path = require('path')
+
 
 const getAllRecipes = async (req, res, next) => {
-    let recipes
+    let recipes 
     try {
         recipes = await Recipe.find({})
     } catch {
@@ -49,6 +55,25 @@ const getRecipeByRecipeId = async (req, res, next) => {
     res.json({ recipe : recipe.toObject({ getters : true }) })
 }
 
+<<<<<<< HEAD
+=======
+const getLikedRecipesByUserId = async (req, res, next) => {
+    const userId = req.params.userId
+   
+    let likedRecipes 
+    try {
+         likedRecipes = await Recipe.find({ 'likes.likes' : userId})
+
+    } catch (err) {
+        console.log(err)
+        return next(new httpError('Fetching recipes failed', 500))
+    }
+    
+     res.json({ likedRecipes : likedRecipes.map(recipe => recipe.toObject({ getters: true })) })
+    
+}
+
+>>>>>>> master
 const getRecipesByCategory = async(req, res, next) => {
     const category = req.params.category
     let recipes
@@ -65,6 +90,7 @@ const getRecipesByCategory = async(req, res, next) => {
     res.json({ recipes: recipes.map( recipe => recipe.toObject({ getters: true }) ) })
 }
 
+<<<<<<< HEAD
 const getLikedRecipesByUserId = async (req, res, next) => {
     const userId = req.params.userId
     
@@ -87,6 +113,9 @@ const getLikedRecipesByUserId = async (req, res, next) => {
 
     res.json({likedRecipes : likedRecipes.map(recipe => recipe.toObject({ getters: true })) })
 }
+=======
+
+>>>>>>> master
 const getRecipesBySearch = async (req, res, next) => {
     const search = req.params.search
 
@@ -104,7 +133,7 @@ const getRecipesBySearch = async (req, res, next) => {
 const getPopularRecipes = async (req, res, next) => {
     let recipes
     try {
-        recipes = await Recipe.find({}).sort({ "likes" : -1})
+        recipes = await Recipe.find({}).sort({ "likes.likesNumber" : -1})
     } catch {
         return next(new httpError('Fetching popular recipes failed', 500))
     }
@@ -121,19 +150,43 @@ const getTopRatedRecipes = async (req, res, next) => {
     res.json({ recipes: recipes.map( recipe => recipe.toObject({ getters: true }) ) })
 }
 
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> master
 const addRecipe = async (req, res, next) => {
     const error = validationResult(req)
     if (!error.isEmpty()) {
+        console.log(error)
         return next(new httpError('Invalid input passed.', 422))
     }
+
+    const type = mime.lookup(req.file.originalname);
+    const gc = new Storage({
+        keyFilename: path.join(__dirname, "../recipe-app-273623-1d4d668a2ea8.json"),
+        projectId: process.env.GOOGLE_PROJECT_ID
+      });
+      
+    const bucket = gc.bucket("recipe-app-final") 
+      
+	
+	const blob = bucket.file(`${uuid()}.${mime.extensions[type][0]}`);
+
+	const stream = blob.createWriteStream({
+		resumable: true,
+		contentType: type,
+		predefinedAcl: 'publicRead',
+	});
+
+	
     const {title, description, difficulty, cookingTime, preparationTime, category, ingredients, directions, servings, creator } = req.body
    
     const newRecipe = new Recipe ({
         title,
         description, 
+        imageURL : `https://storage.googleapis.com/${bucket.name}/${blob.name}`,
         difficulty,
         cookingTime,
         preparationTime, 
@@ -172,7 +225,23 @@ const addRecipe = async (req, res, next) => {
         console.log(err)
         return next(new httpError('Adding a recipe failed'), 500)
     }
-    res.json(newRecipe)
+
+    stream.on('error', err => {
+		next(err);
+	});
+
+	stream.on('finish', () => {
+		res.status(200).json({
+			data: {
+                url: `https://storage.googleapis.com/${bucket.name}/${blob.name}`,
+                recipe : newRecipe
+			},
+        });
+        
+    });
+
+    stream.end(req.file.buffer);
+
 }
 
 const rateRecipe = async (req, res, next) => {
@@ -197,22 +266,33 @@ const rateRecipe = async (req, res, next) => {
     if (!recipe) {
         return next(new httpError('could not find the recipe for provided id'), 404)
     }
-   
+    
+    const isInArray = recipe.ratings.ratings.some(function (rating) {
+        return rating.user.equals(userId);
+    }); 
+    
     try {
         const sess = await mongoose.startSession()
         sess.startTransaction({ session : sess })
-        recipe.ratings.ratings.push( {user : user, rating : rate} )
-        const ave = (recipe.ratings.averageRating + rate ) / (recipe.ratings.ratings.length)
-        recipe.ratings.averageRating = ave
+        if (!isInArray) {
+            recipe.ratings.ratings.push( {user : user, rating : rate} )
+            
+        }
+        else {
+            recipe.ratings.ratings.some(function (recipe) { if (recipe.user == userId) { recipe.rating = rate} })
+        }
         await recipe.save({ session : sess})
-        await user.save({ session : sess })
         await sess.commitTransaction()
-
     } catch (err) {
         console.log(err)
         return next(new httpError('Rating a recipe failed'), 500)
     }
-
+    let total = 0;
+   recipe.ratings.ratings.map((recipe) =>{
+        total = total + recipe.rating
+    } )
+    recipe.ratings.averageRating = total / recipe.ratings.ratings.length
+    console.log(recipe.ratings.averageRating)
     res.json({ recipe : recipe.toObject({ getters : true }) })
 }
 
@@ -317,6 +397,8 @@ const deleteRecipe = async (req, res, next) => {
         return next(new httpError('You are not allowed to delete the recipe', 401))
     }
     
+    const imagePath = recipe.imageURL
+
     try {
         const sess = await mongoose.startSession();
         sess.startTransaction();
@@ -328,6 +410,11 @@ const deleteRecipe = async (req, res, next) => {
         console.log(err)
         return next(new httpError('Deleting the recipe failed'), 500)
     }
+
+    fs.unlink(imagePath, err => {
+        console.log(err)
+    })
+
     res.json({ message : "Deleted recipe"})
 }
 
@@ -338,12 +425,12 @@ function escapeRegex(text) {
 
 exports.getAllRecipes = getAllRecipes
 exports.getRecipesByUserId = getRecipesByUserId
-exports.getRecipesByCategory = getRecipesByCategory
 exports.getRecipeByRecipeId = getRecipeByRecipeId
 exports.getLikedRecipesByUserId = getLikedRecipesByUserId
 exports.getPopularRecipes = getPopularRecipes
 exports.getTopRatedRecipes = getTopRatedRecipes
 exports.getRecipesBySearch = getRecipesBySearch
+exports.getRecipesByCategory = getRecipesByCategory
 exports.addRecipe = addRecipe
 exports.rateRecipe = rateRecipe
 exports.toggleLike = toggleLike
