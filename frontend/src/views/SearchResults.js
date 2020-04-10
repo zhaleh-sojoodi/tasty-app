@@ -42,6 +42,7 @@ function SearchResults(props) {
   }
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     setQuery(props.location.state.query);
     fetchRecipes(encodeURIComponent(props.location.state.query));
   }, [])

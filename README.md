@@ -28,7 +28,7 @@ This app allows users to share and discover new recipes.
 * Users can print out recipes
 
 ## Database Schema (ERD)
-In progress.
+<img src="https://github.com/nicole-ling/recipe-app/blob/master/backend/db-schema.jpg" width="600px" height="350px" />
 
 ## Wireframes
 View wireframes on Figma, with this [invite link](https://www.figma.com/file/mBoGae8rnqbR7CeMHdjX3S/Recipe-App?node-id=24%3A56).

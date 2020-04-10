@@ -72,7 +72,7 @@ body {
 }
 
 .welcome h1 {
-    z-index: 9999;
+    z-index: 1;
     color: white;
 }
 
@@ -87,7 +87,36 @@ body {
     object-position: 0 75%;
 }
 
+.recipe-grid-img {
+    object-fit: cover;
+    min-height: 200px;
+    max-height: 200px;
+}
+
+.recipe-detail-img {
+    object-fit: cover;
+    width: 100%;
+    min-height: 45vh;
+    max-height: 45vh;
+}
+
+@media only screen and (max-width: 468px) {
+    .onboarding h1 {
+        font-size: 1.25rem;
+        width: 75%;
+    }
+
+    .welcome h1 {
+        font-size: 1.25rem;
+        width: 75%;
+    }
+}
+
 @media only screen and (max-width: 768px) {
+    .onboarding h1 {
+        font-size: 1.5rem;
+    }
+
     .welcome h1 {
         font-size: 1.5rem;
     }

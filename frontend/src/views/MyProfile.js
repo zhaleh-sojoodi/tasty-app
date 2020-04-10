@@ -92,6 +92,8 @@ function MyProfile(props) {
   }
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+    
     // Check if user is logged in
     if(sessionStorage.getItem("auth_token") && sessionStorage.getItem("user_id")) {
         fetchUserData(sessionStorage.getItem("user_id"));

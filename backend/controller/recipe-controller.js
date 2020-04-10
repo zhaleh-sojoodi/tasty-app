@@ -1,13 +1,14 @@
-const fs = require('fs')
+
 const {validationResult} = require('express-validator')
 const mongoose = require('mongoose')
-const httpError = require('../models/http-error')
-const Recipe = require('../models/recipe')
-const User = require('../models/user')
 const uuid = require('uuid/v4') ;
 const mime = require ('mime-types');
 const { Storage }  = require ('@google-cloud/storage');
 const path = require('path')
+const httpError = require('../models/http-error')
+const Recipe = require('../models/recipe')
+const User = require('../models/user')
+
 
 
 const getAllRecipes = async (req, res, next) => {
@@ -163,55 +164,98 @@ const addRecipe = async (req, res, next) => {
         return next(new httpError('Invalid input passed.', 422))
     }
 
-    const type = mime.lookup(req.file.originalname);
-    const gc = new Storage({
-        keyFilename: path.join(__dirname, "../recipe-app-273623-1d4d668a2ea8.json"),
-        projectId: process.env.GOOGLE_PROJECT_ID
-      });
-      
-    const bucket = gc.bucket("recipe-app-final") 
-      
-	
-	const blob = bucket.file(`${uuid()}.${mime.extensions[type][0]}`);
-
-	const stream = blob.createWriteStream({
-		resumable: true,
-		contentType: type,
-		predefinedAcl: 'publicRead',
-	});
-
-	
-    const {title, description, difficulty, cookingTime, preparationTime, category, ingredients, directions, servings, creator } = req.body
-   
-    const newRecipe = new Recipe ({
-        title,
-        description, 
-        imageURL : `https://storage.googleapis.com/${bucket.name}/${blob.name}`,
-        difficulty,
-        cookingTime,
-        preparationTime, 
-        ratings : {
-            averageRating : 0 , 
-            ratings : []
-        },
-        likes : {
-          likesNumber: 0,
-          likes: []
-        },
-        category,
-        ingredients,
-        directions, 
-        servings, 
-        creator
-    })
     let user;
     try {
-        user = await User.findById(creator)
+        user = await User.findById(req.userData.userId)
     } catch(err) {
-        return next(new httpError('finding a user failed'), 500)
+        return next(new httpError('finding a user failed'), 401)
     }
     if (!user) {
-        return next(new httpError('could not find the user for provided id'), 404)
+        return next(new httpError('could not find the user for provided id'), 401)
+    }
+
+    const {
+        title,
+        description,
+        difficulty,
+        cookingTime,
+        preparationTime,
+        category,
+        ingredients,
+        directions,
+        servings
+    } = req.body
+
+    let newRecipe;
+
+    // If image was uploaded
+    if(req.file) {
+        const type = mime.lookup(req.file.originalname);
+        const gc = new Storage({
+            keyFilename: path.join(__dirname, "../recipe-app-273623-1d4d668a2ea8.json"),
+            projectId: process.env.GOOGLE_PROJECT_ID
+        });
+      
+        const bucket = gc.bucket(process.env.BUCKET_NAME) 
+        const blob = bucket.file(`${uuid()}.${mime.extensions[type][0]}`);
+        const stream = blob.createWriteStream({
+            resumable: true,
+            contentType: type,
+            predefinedAcl: 'publicRead',
+        });
+
+        stream.on('error', err => {
+            next(err);
+        });
+
+        stream.on('finish', () => {
+            console.log("Finish stream.")
+        });
+    
+        stream.end(req.file.buffer);
+
+        newRecipe = new Recipe({
+            title,
+            description, 
+            imageURL : `https://storage.googleapis.com/${bucket.name}/${blob.name}`,
+            difficulty,
+            cookingTime,
+            preparationTime, 
+            ratings : {
+                averageRating : 0 , 
+                ratings : []
+            },
+            likes : {
+            likesNumber: 0,
+            likes: []
+            },
+            category,
+            ingredients: JSON.parse(ingredients),
+            directions: JSON.parse(directions), 
+            servings,
+            creator: user.id
+        })
+    } else {
+        newRecipe = new Recipe({
+            title,
+            description,
+            difficulty,
+            cookingTime,
+            preparationTime, 
+            ratings : {
+                averageRating : 0 , 
+                ratings : []
+            },
+            likes : {
+            likesNumber: 0,
+            likes: []
+            },
+            category,
+            ingredients: JSON.parse(ingredients),
+            directions: JSON.parse(directions),  
+            servings, 
+            creator: user.id
+        })
     }
 
     try {
@@ -226,23 +270,9 @@ const addRecipe = async (req, res, next) => {
         return next(new httpError('Adding a recipe failed'), 500)
     }
 
-    stream.on('error', err => {
-		next(err);
-	});
-
-	stream.on('finish', () => {
-		res.status(200).json({
-			data: {
-                url: `https://storage.googleapis.com/${bucket.name}/${blob.name}`,
-                recipe : newRecipe
-			},
-        });
-        
-    });
-
-    stream.end(req.file.buffer);
-
+    res.status(200).json({ recipe: newRecipe });
 }
+
 
 const rateRecipe = async (req, res, next) => {
     const {userId, recipeId, rate} = req.body
@@ -276,23 +306,23 @@ const rateRecipe = async (req, res, next) => {
         sess.startTransaction({ session : sess })
         if (!isInArray) {
             recipe.ratings.ratings.push( {user : user, rating : rate} )
-            
         }
         else {
             recipe.ratings.ratings.some(function (recipe) { if (recipe.user == userId) { recipe.rating = rate} })
         }
+        // Save new average rating
+        let total = 0;
+        recipe.ratings.ratings.map((recipe) =>{
+            total = total + recipe.rating
+        } )
+        recipe.ratings.averageRating = total / recipe.ratings.ratings.length
         await recipe.save({ session : sess})
         await sess.commitTransaction()
     } catch (err) {
         console.log(err)
         return next(new httpError('Rating a recipe failed'), 500)
     }
-    let total = 0;
-   recipe.ratings.ratings.map((recipe) =>{
-        total = total + recipe.rating
-    } )
-    recipe.ratings.averageRating = total / recipe.ratings.ratings.length
-    console.log(recipe.ratings.averageRating)
+
     res.json({ recipe : recipe.toObject({ getters : true }) })
 }
 
@@ -351,7 +381,16 @@ const updateRecipe = async (req,res, next) => {
     }
 
     const recipeId = req.params.recipeId
-    const {title, ingredients, directions} = req.body
+    const {
+        title,
+        description,
+        difficulty,
+        cookingTime,
+        preparationTime,
+        category,
+        ingredients,
+        directions,
+        servings} = req.body
 
     let recipe
     try {
@@ -367,9 +406,15 @@ const updateRecipe = async (req,res, next) => {
     }
 
     recipe.title = title
+    recipe.description = description
+    recipe.difficulty = difficulty
+    recipe.cookingTime = cookingTime
+    recipe.preparationTime = preparationTime
+    recipe.category = category
     recipe.ingredients = ingredients
     recipe.directions = directions
-
+    recipe.servings = servings
+    
     try {
         await recipe.save()
     } catch (err) {
@@ -383,13 +428,12 @@ const deleteRecipe = async (req, res, next) => {
     let recipe 
     try {
         recipe = await Recipe.findById(recipeId).populate('creator')
-
     } catch (err) {
         return next(new httpError('Deleting the recipe failed'), 500)
     }
 
     if(!recipe) {
-        return next(new httpError('Couldnot find the recipe by provided id', 404))
+        return next(new httpError('Could not find the recipe by provided id', 404))
     }
 
     //Check if the creator is the user logged in 
@@ -398,7 +442,7 @@ const deleteRecipe = async (req, res, next) => {
     }
     
     const imagePath = recipe.imageURL
-
+    
     try {
         const sess = await mongoose.startSession();
         sess.startTransaction();
@@ -411,10 +455,24 @@ const deleteRecipe = async (req, res, next) => {
         return next(new httpError('Deleting the recipe failed'), 500)
     }
 
-    fs.unlink(imagePath, err => {
-        console.log(err)
-    })
+    //delete the file from the bucket in google cloud
+    if(imagePath && imagePath !== "") {
+        const gc = new Storage({
+            keyFilename: path.join(__dirname, "../recipe-app-273623-1d4d668a2ea8.json"),
+            projectId: process.env.GOOGLE_PROJECT_ID
+        });
+        const parts = imagePath.split('/')
+        const filename = parts[(parts.length)-1]
 
+        // Delete file from bucket in google cloud
+        try {
+            await gc.bucket(process.env.BUCKET_NAME).file(filename).delete()
+        } catch (err) {
+            console.log(err)
+            return next(new httpError('Deleting the recipe file from cloud failed'), 500)
+        }
+    }
+    
     res.json({ message : "Deleted recipe"})
 }
 

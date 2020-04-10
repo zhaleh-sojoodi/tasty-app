@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from "react-router-dom";
 import NavigationBar from "../components/NavigationBar";
+import Footer from "../components/Footer";
 
 import { Container } from "reactstrap";
 
 const PageNotFound = (props) => {
+  
+  useEffect(() => {window.scrollTo(0, 0)},[])
+
   return (
     <>
     <NavigationBar {...props} />
@@ -23,6 +27,7 @@ const PageNotFound = (props) => {
     </div>
     </Container>
     </main>
+    <Footer />
     </>
   )
 }

@@ -1,5 +1,6 @@
 const express = require('express')
 const { check } = require('express-validator')
+const multer = require('multer')
 const userController = require('../controller/user-controller')
 const checkAuth = require('../middleware/check-auth')
 
@@ -13,13 +14,17 @@ router.post(
         check('name').not().isEmpty(),
         check('email').normalizeEmail().isEmail(),
         check('password').isLength({ min : 6 }),
-        check('biography').isLength({ max : 50})
     ],
     userController.signup)
 router.post('/login', userController.login)
 
 router.use(checkAuth)
 
-router.patch('/:userId', userController.update)
+router.patch(
+    '/',
+    multer().single('image'),
+    [check('name').not().isEmpty()],
+    userController.update
+)
 
 module.exports = router 
