@@ -21,6 +21,7 @@ import Footer from "components/Footer";
 const BASE_URL = "http://localhost:5000/api/recipe";
 
 function CreateRecipe(props) {
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -137,10 +138,10 @@ function CreateRecipe(props) {
     }
 
     if (formErrors.length === 0) {
-        setErrors([]);
-        createRecipe();
+      setErrors([]);
+      createRecipe();
     } else {
-        setErrors(formErrors);
+      setErrors(formErrors);
     }
   }
 
