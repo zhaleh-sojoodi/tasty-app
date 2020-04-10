@@ -8,7 +8,6 @@ import Footer from 'components/Footer';
 import RecipeGrid from 'components/RecipeGrid';
 
 const BASE_URL = "http://localhost:5000/api";
-const USER_ID = 'user_id';
 
 function Liked(props) {
   const [recipes, setRecipes] = useState([]);
@@ -43,8 +42,9 @@ function Liked(props) {
   }
 
   useEffect(() => {
-    if(sessionStorage.getItem(USER_ID)) {
-      fetchRecipes(sessionStorage.getItem(USER_ID));
+    window.scrollTo(0, 0)
+    if(sessionStorage.getItem("user_id")) {
+      fetchRecipes(sessionStorage.getItem("user_id"));
     } else {
       forceLogout();
     }

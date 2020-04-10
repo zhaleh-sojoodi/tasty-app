@@ -68,7 +68,7 @@ function Dashboard(props) {
       >
         <img src={item.src} alt={item.altText} />
         <div className="onboarding">
-          <h1 className="text-center">
+          <h1 className="text-center mb-4">
             Find and share everyday cooking inspiration
           </h1>  
           <Button
@@ -146,6 +146,7 @@ function Dashboard(props) {
   </section>
 
   useEffect(() => {
+    window.scrollTo(0, 0)
     getMostPopular();
     getHighestRated();
   }, []);

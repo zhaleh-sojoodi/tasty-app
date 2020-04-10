@@ -272,7 +272,6 @@ const rateRecipe = async (req, res, next) => {
         sess.startTransaction({ session : sess })
         if (!isInArray) {
             recipe.ratings.ratings.push( {user : user, rating : rate} )
-            
         }
         else {
             recipe.ratings.ratings.some(function (recipe) { if (recipe.user == userId) { recipe.rating = rate} })
@@ -289,7 +288,7 @@ const rateRecipe = async (req, res, next) => {
         console.log(err)
         return next(new httpError('Rating a recipe failed'), 500)
     }
- 
+
     res.json({ recipe : recipe.toObject({ getters : true }) })
 }
 
@@ -394,13 +393,12 @@ const deleteRecipe = async (req, res, next) => {
     let recipe 
     try {
         recipe = await Recipe.findById(recipeId).populate('creator')
-
     } catch (err) {
         return next(new httpError('Deleting the recipe failed'), 500)
     }
 
     if(!recipe) {
-        return next(new httpError('Couldnot find the recipe by provided id', 404))
+        return next(new httpError('Could not find the recipe by provided id', 404))
     }
 
     //Check if the creator is the user logged in 

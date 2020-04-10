@@ -20,11 +20,15 @@ function RecipeGrid(props) {
         return (
           <Col key={index} lg="4" md="6" className="pb-4">
             <Link
-            // to={{ pathname: "/recipe", state: {recipeId: recipe.id} }}
             to={`/recipe/${recipe.id}`}
             >
-              <Card>
-                <CardImg top width="100%" src={ recipePlaceholder } alt={recipe.title} />
+              <Card className="h-100 shadow">
+                <CardImg
+                  top width="100%"
+                  src={ recipe.imageURL ? recipe.imageURL : recipePlaceholder }
+                  alt={recipe.title}
+                  className="recipe-grid-img img-fluid"
+                />
                 <CardBody>
                   <CardTitle className="h5 mt--2">{recipe.title}</CardTitle>
                   <CardSubtitle className="mt--3 mb-3">
