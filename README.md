@@ -1,7 +1,7 @@
 # Final Project: Recipe App
 > Members: Nicole, Zhaleh, Anthony, Vibha
 
- Delicious is a MERN stack app we had built. It incorporated everything we had learned in the previous 1 week, including React, Node, Express and MongoDB.
+ 'Tasty' is a MERN stack app we had built. It incorporated everything we had learned in the previous 1 week, including React, Node, Express and MongoDB.
 
 ## Roles
 **Frontend**: Nicole, Anthony<br>
