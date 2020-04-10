@@ -262,7 +262,6 @@ function Recipe(props) {
 
   function confirmDelete(e) {
     if(window.confirm(`Are you sure you want to delete ${recipe.title}?`)) {
-      console.log(recipe.id)
       deleteRecipe(recipe.id);
       props.history.push("/my-recipes");
       window.location.reload();
