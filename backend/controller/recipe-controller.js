@@ -1,4 +1,4 @@
-const fs = require('fs')
+
 const {validationResult} = require('express-validator')
 const mongoose = require('mongoose')
 const uuid = require('uuid/v4') ;
@@ -239,6 +239,7 @@ const addRecipe = async (req, res, next) => {
     res.status(200).json({ recipe: newRecipe });
 }
 
+
 const rateRecipe = async (req, res, next) => {
     const {userId, recipeId, rate} = req.body
 
@@ -275,22 +276,19 @@ const rateRecipe = async (req, res, next) => {
         else {
             recipe.ratings.ratings.some(function (recipe) { if (recipe.user == userId) { recipe.rating = rate} })
         }
-
         // Save new average rating
         let total = 0;
         recipe.ratings.ratings.map((recipe) =>{
             total = total + recipe.rating
         } )
         recipe.ratings.averageRating = total / recipe.ratings.ratings.length
-
         await recipe.save({ session : sess})
         await sess.commitTransaction()
     } catch (err) {
         console.log(err)
         return next(new httpError('Rating a recipe failed'), 500)
     }
-    
-    console.log(recipe.ratings.averageRating)
+
     res.json({ recipe : recipe.toObject({ getters : true }) })
 }
 
@@ -349,7 +347,16 @@ const updateRecipe = async (req,res, next) => {
     }
 
     const recipeId = req.params.recipeId
-    const {title, ingredients, directions} = req.body
+    const {
+        title,
+        description,
+        difficulty,
+        cookingTime,
+        preparationTime,
+        category,
+        ingredients,
+        directions,
+        servings} = req.body
 
     let recipe
     try {
@@ -365,9 +372,15 @@ const updateRecipe = async (req,res, next) => {
     }
 
     recipe.title = title
+    recipe.description = description
+    recipe.difficulty = difficulty
+    recipe.cookingTime = cookingTime
+    recipe.preparationTime = preparationTime
+    recipe.category = category
     recipe.ingredients = ingredients
     recipe.directions = directions
-
+    recipe.servings = servings
+    
     try {
         await recipe.save()
     } catch (err) {
@@ -393,10 +406,23 @@ const deleteRecipe = async (req, res, next) => {
     if(recipe.creator.id !== req.userData.userId) {
         return next(new httpError('You are not allowed to delete the recipe', 401))
     }
+    
+    const imagePath = recipe.imageURL
+    
+    try {
+        const sess = await mongoose.startSession();
+        sess.startTransaction();
+        await recipe.remove({ session : sess })
+        recipe.creator.recipes.pull(recipe)
+        await recipe.creator.save({ session: sess })
+        sess.commitTransaction()
+    } catch (err) {
+        console.log(err)
+        return next(new httpError('Deleting the recipe failed'), 500)
+    }
 
-    // If recipe had an image, delete it
-    if(recipe.imageURL && recipe.imageURL !== "") {
-        const imagePath = recipe.imageURL
+    //delete the file from the bucket in google cloud
+    if(imagePath && imagePath !== "") {
         const gc = new Storage({
             keyFilename: path.join(__dirname, "../recipe-app-273623-1d4d668a2ea8.json"),
             projectId: process.env.GOOGLE_PROJECT_ID
@@ -409,20 +435,8 @@ const deleteRecipe = async (req, res, next) => {
             await gc.bucket(process.env.BUCKET_NAME).file(filename).delete()
         } catch (err) {
             console.log(err)
-            // return next(new httpError('Deleting the recipe file from cloud failed'), 500)
+            return next(new httpError('Deleting the recipe file from cloud failed'), 500)
         }
-    }
-
-    try {
-        const sess = await mongoose.startSession();
-        sess.startTransaction();
-        await recipe.remove({ session : sess })
-        recipe.creator.recipes.pull(recipe)
-        await recipe.creator.save({ session: sess })
-        sess.commitTransaction()
-    } catch (err) {
-        console.log(err)
-        return next(new httpError('Deleting the recipe failed'), 500)
     }
     
     res.json({ message : "Deleted recipe"})
