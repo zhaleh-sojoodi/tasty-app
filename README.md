@@ -57,4 +57,9 @@ View wireframes on Figma, with this [invite link](https://www.figma.com/file/mBo
 ## Communication Plan
 Meet everyday for up to 30 minutes.
 
+## Key Learnings
+This project was a a brilliant learning curve about working in a group, managing team dynamics and delegating code accordingly as well as helping over come problems together. As git master we had to make sure everyone was working together and avoiding conflicts in our code. 
+
+Apart from working as a team, We learned the process of creating a back end, and connecting it to a front end successfully, from the very beginning to presenting our finished product.
+
 
