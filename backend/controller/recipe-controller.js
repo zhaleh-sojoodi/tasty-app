@@ -347,7 +347,8 @@ const updateRecipe = async (req,res, next) => {
     }
 
     const recipeId = req.params.recipeId
-    const {title,
+    const {
+        title,
         description,
         difficulty,
         cookingTime,
