@@ -21,15 +21,12 @@ import NavigationBar from "../components/NavigationBar";
 import Footer from "../components/Footer";
 
 const BASE_URL = "http://localhost:5000/api/user";
-const AUTH_TOKEN = "auth_token";
-const USER_NAME = "user_name";
-const USER_ID = "user_id";
 
 function Login(props) {
 
   useEffect(() => {
     // Redirect to dashboard if user is already logged in
-    if(sessionStorage.getItem(AUTH_TOKEN)) {
+    if(sessionStorage.getItem("auth_token")) {
       setRedirect(true);
     }
   }, [])
@@ -71,9 +68,9 @@ function Login(props) {
       let data = await response.json();
       
       if(data.token !== "" && data.token) {
-        sessionStorage.setItem(AUTH_TOKEN, data.token);
-        sessionStorage.setItem(USER_NAME, data.name);
-        sessionStorage.setItem(USER_ID, data.userId);
+        sessionStorage.setItem("auth_token", data.token);
+        sessionStorage.setItem("user_name", data.name);
+        sessionStorage.setItem("user_id", data.userId);
         setRedirect(true);
       }
     } catch(e) {
@@ -89,6 +86,10 @@ function Login(props) {
     }
     return props.location.state.prevLocation
   }
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [])
   
   return (
     <>

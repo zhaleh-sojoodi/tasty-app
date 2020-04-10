@@ -6,7 +6,6 @@ import { Container, Button } from 'reactstrap';
 import NavigationBar from 'components/NavigationBar';
 import Footer from 'components/Footer';
 import RecipeGrid from 'components/RecipeGrid';
-import RecipeList from 'components/RecipeList';
 
 const BASE_URL = "http://localhost:5000/api/recipe";
 const USER_ID = 'user_id';

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import {
   Container,
@@ -16,6 +16,11 @@ import NavigationBar from "components/NavigationBar";
 import Footer from "components/Footer";
 
 function EditRecipe(props) {
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   return (
     <>
       <NavigationBar {...props} />

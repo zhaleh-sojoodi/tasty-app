@@ -7,20 +7,21 @@ import {
   Form,
   FormGroup,
   Label,
-  Input
+  Input,
+  FormText
 } from "reactstrap";
 
 import NavigationBar from "components/NavigationBar";
 import Footer from "components/Footer";
 
 const BASE_URL = "http://localhost:5000/api";
-const USER_ID = "user_id";
 
 function EditProfile(props) {
 
   const [formData, setFormData] = useState({
     name: "",
-    biography: ""
+    biography: "",
+    profilepicture: ""
   });
 
   const { name, biography } = formData;
@@ -32,9 +33,9 @@ function EditProfile(props) {
 
     // Check if name field is empty
     if(name === "" || !name) {
-        alert("Name field cannot be empty.");
+      alert("Name field cannot be empty.");
     } else {
-        updateProfile(sessionStorage.getItem(USER_ID));
+      updateProfile(sessionStorage.getItem("user_id"));
     }
   }
 
@@ -74,16 +75,23 @@ function EditProfile(props) {
 
   const updateProfile = async(id) => {
     let token = sessionStorage.getItem("auth_token");
-    const uri = BASE_URL + "/user/" + id;
+    const uri = BASE_URL + "/user";
+
+    const formData = new FormData();
+    const fileField = document.querySelector('input[type="file"]');
+    formData.append("name", name);
+    formData.append("biography", biography);
+
+    if(fileField) {
+      formData.append("image", fileField.files[0]);
+    }
 
     const settings = {
       method: 'PATCH',
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify(formData)
+      body: formData
     }
 
     try {
@@ -96,13 +104,17 @@ function EditProfile(props) {
       }
 
       // Successful fetch, redirect to user's profile
+      let data = await response.json();
+      sessionStorage.setItem("user_name", data.data.name);
       props.history.push("/profile/" + id);
+      window.location.reload();
     } catch(err) {
       console.error(err);
     }
   }
 
   useEffect(() => {
+    window.scrollTo(0, 0)
     // Fetch user data by user ID
     if(sessionStorage.getItem("user_id")) {
       fetchUserData(sessionStorage.getItem("user_id"));
@@ -115,7 +127,7 @@ function EditProfile(props) {
     <>
       <NavigationBar {...props} />
       <main className="main">
-        <Container className="mt-4 mb-4" style={{ minHeight: "90vh" }}>
+        <Container className="mt-4 mb-4">
           <h1 className="display-3 mb-3">Edit Profile</h1>
 
           <Form onSubmit={e => onSubmit(e)}>
@@ -142,6 +154,18 @@ function EditProfile(props) {
                 placeholder=""
                 onChange={e => onChange(e)}
               />
+            </FormGroup>
+
+            <FormGroup>
+              <Label for="recipeimage">Profile Picture</Label>
+              <Input
+                type="file"
+                name="profilepicture"
+                id="profilepicture"
+              />
+              <FormText color="muted">
+                For best results, upload an image that is at least 100x100 pixels.
+              </FormText>
             </FormGroup>
 
             <Button color="default" type="submit">Save Changes</Button>

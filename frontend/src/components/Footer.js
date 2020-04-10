@@ -18,7 +18,7 @@ function Footer() {
           <Col md="6">
             <div className=" copyright">
               © {new Date().getFullYear()}{" "}
-              <a href="/">Recipe App</a>.
+              <a href="/">Tasty</a>.
             </div>
           </Col>
           <Col md="6">
