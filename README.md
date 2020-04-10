@@ -18,6 +18,16 @@
  <li>Google Clouds</li>
 </ul>
 
+## Brief
+In 9 days and in groups of 4 we had to:
+<ul>
+ <li>Build a full-stack application by making our own backend and our own front-end</li>
+ <li>Consume your API with a separate front-end built with React</li>
+ <li>Be a complete product which most likely means multiple relationships and CRUD functionality</li>
+ <li>Implement thoughtful user stories/wireframes that are significant enough to help you know layout of project</li>
+ 
+</ul>
+
 ## Must Have Features
 * Users can register and login with an account
 * Users can create new recipes
