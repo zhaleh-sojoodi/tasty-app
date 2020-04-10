@@ -7,6 +7,17 @@
 **Frontend**: Nicole, Anthony<br>
 **Backend**: Zhaleh, Vibha
 
+## Technologies Used
+<ul>
+ <li>ReactJs</li>
+ <li>Javascript</li>
+ <li>NodeJs</li>
+ <li>Express</li>
+ <li>MongoDb</li>
+ <li>Mongoose</li>
+ <li>Google Clouds</li>
+</ul>
+
 ## Must Have Features
 * Users can register and login with an account
 * Users can create new recipes
