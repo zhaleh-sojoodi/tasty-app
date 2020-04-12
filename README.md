@@ -1,31 +1,19 @@
 # Final Project: Recipe App
 > Members: Nicole, Zhaleh, Anthony, Vibha
 
- 'Tasty' is a MERN stack app we had built. It incorporated everything we had learned in the previous 1 week, including React, Node, Express and MongoDB.
+'Tasty' is an app where users can share and discover recipes. It is built on the MERN stack (MongoDB, Express, React, Node).
 
-## Roles
-**Frontend**: Nicole, Anthony<br>
-**Backend**: Zhaleh, Vibha
+## App Presentation
+[https://streamable.com/ffv9tj](https://streamable.com/ffv9tj)
 
 ## Technologies Used
 <ul>
- <li>ReactJs</li>
- <li>Javascript</li>
- <li>NodeJs</li>
+ <li>React</li>
+ <li>Node.js</li>
  <li>Express</li>
- <li>MongoDb</li>
+ <li>MongoDB</li>
  <li>Mongoose</li>
- <li>Google Clouds</li>
-</ul>
-
-## Brief
-In 9 days and in groups of 4 we had to:
-<ul>
- <li>Build a full-stack application by making our own backend and our own front-end</li>
- <li>Consume your API with a separate front-end built with React</li>
- <li>Be a complete product which most likely means multiple relationships and CRUD functionality</li>
- <li>Implement thoughtful user stories/wireframes that are significant enough to help you know layout of project</li>
- 
+ <li>Google Cloud Platform</li>
 </ul>
 
 ## Must Have Features
@@ -57,9 +45,6 @@ View wireframes on Figma, with this [invite link](https://www.figma.com/file/mBo
 ## Communication Plan
 Meet everyday for up to 30 minutes.
 
-## Key Learnings
-This project was a a brilliant learning curve about working in a group, managing team dynamics and delegating code accordingly as well as helping over come problems together. As git master we had to make sure everyone was working together and avoiding conflicts in our code. 
-
-Apart from working as a team, We learned the process of creating a back end, and connecting it to a front end successfully, from the very beginning to presenting our finished product.
-
-
+## Roles
+**Frontend**: Nicole, Anthony<br>
+**Backend**: Zhaleh, Vibha
