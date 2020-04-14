@@ -3,6 +3,21 @@
 
 'Tasty' is an app where users can share and discover recipes. It is built on the MERN stack (MongoDB, Express, React, Node).
 
+## Installation
+Install dependencies:
+```
+cd frontend && npm install
+cd backend && npm install
+```
+
+Run the client and the server:
+```
+cd frontend && npm start
+cd backend && npm start
+```
+
+View in your browser by going to `localhost:3000`
+
 ## App Presentation
 [https://streamable.com/ffv9tj](https://streamable.com/ffv9tj)
 
